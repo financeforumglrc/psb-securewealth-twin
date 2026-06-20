@@ -1,0 +1,101 @@
+                            <div id="maTab" class="hidden">
+                                <div class="section-title"><i class="fas fa-handshake"></i> M&A Accretion / Dilution Model</div>
+                                <p style="color: var(--text-light); margin-bottom: 16px;">Evaluate the earnings impact of acquiring the modeled target company.</p>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                                    <div class="card">
+                                        <h4 style="margin-bottom: 12px; color: var(--primary);">Target Company</h4>
+                                        <div style="background: var(--bg-light); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                                            <div style="font-size: 0.85rem; color: var(--text-light);">Company</div>
+                                            <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-dark);" id="maTargetName">—</div>
+                                        </div>
+                                        <div style="display: flex; gap: 8px;">
+                                            <div style="flex: 1; background: var(--bg-light); padding: 10px; border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 0.8rem; color: var(--text-light);">Revenue (Y5)</div>
+                                                <div style="font-weight: 700; color: var(--primary);" id="maTargetRev">—</div>
+                                            </div>
+                                            <div style="flex: 1; background: var(--bg-light); padding: 10px; border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 0.8rem; color: var(--text-light);">Net Income (Y5)</div>
+                                                <div style="font-weight: 700; color: var(--primary);" id="maTargetNi">—</div>
+                                            </div>
+                                        </div>
+                                        <div style="background: var(--bg-light); padding: 10px; border-radius: 8px; margin-top: 8px; text-align: center;">
+                                            <div style="font-size: 0.8rem; color: var(--text-light);">Standalone EPS</div>
+                                            <div style="font-weight: 700; color: var(--primary);" id="maTargetEps">—</div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <h4 style="margin-bottom: 12px; color: var(--primary);">Deal Terms</h4>
+                                        <div class="input-group" style="margin-bottom: 10px;">
+                                            <label>Acquisition Premium (%)</label>
+                                            <input type="range" id="maPremium" min="0" max="50" step="1" value="20" oninput="updateMA()" style="width: 100%;">
+                                            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600;"><span id="maPremiumVal">20</span>%</div>
+                                        </div>
+                                        <div class="input-group" style="margin-bottom: 10px;">
+                                            <label>Cash Consideration (%)</label>
+                                            <input type="range" id="maCashPct" min="0" max="100" step="5" value="50" oninput="updateMA()" style="width: 100%;">
+                                            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600;"><span id="maCashPctVal">50</span>%</div>
+                                        </div>
+                                        <div style="background: var(--bg-light); padding: 10px; border-radius: 8px; margin-top: 8px;">
+                                            <div style="font-size: 0.85rem; color: var(--text-light);">Stock Consideration</div>
+                                            <div style="font-size: 1.3rem; font-weight: 700; color: var(--primary);" id="maStockPctVal">50%</div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <h4 style="margin-bottom: 12px; color: var(--primary);">Synergies & Financing</h4>
+                                        <div class="input-group" style="margin-bottom: 10px;">
+                                            <label>Synergies (% of Target Revenue)</label>
+                                            <input type="range" id="maSynergyRate" min="0" max="15" step="0.5" value="3" oninput="updateMA()" style="width: 100%;">
+                                            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600;"><span id="maSynergyRateVal">3.0</span>%</div>
+                                        </div>
+                                        <div class="input-group" style="margin-bottom: 10px;">
+                                            <label>Financing Cost (%)</label>
+                                            <input type="range" id="maFinancingCost" min="4" max="14" step="0.1" value="8.5" oninput="updateMA()" style="width: 100%;">
+                                            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600;"><span id="maFinancingCostVal">8.50</span>%</div>
+                                        </div>
+                                        <div style="background: var(--bg-light); padding: 10px; border-radius: 8px; margin-top: 8px;">
+                                            <div style="font-size: 0.85rem; color: var(--text-light);">Acquisition Price</div>
+                                            <div style="font-size: 1.3rem; font-weight: 700; color: var(--primary);" id="maAcquisitionPrice">—</div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--accent)); color: white;">
+                                        <h4 style="margin-bottom: 12px; color: white;">Key Metrics</h4>
+                                        <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                            <div style="flex: 1; background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 0.8rem; opacity: 0.9;">Pro Forma EPS</div>
+                                                <div style="font-weight: 700; font-size: 1.1rem;" id="maPfEps">—</div>
+                                            </div>
+                                            <div style="flex: 1; background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 0.8rem; opacity: 0.9;">Accretion %</div>
+                                                <div style="font-weight: 700; font-size: 1.1rem;" id="maAccretion">—</div>
+                                            </div>
+                                        </div>
+                                        <div style="background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; margin-top: 8px; text-align: center;">
+                                            <div style="font-size: 0.8rem; opacity: 0.9;">Break-even Synergies</div>
+                                            <div style="font-weight: 700; font-size: 1.1rem;" id="maBreakEven">—</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card" style="margin-bottom: 20px;">
+                                    <h4 style="margin-bottom: 12px; color: var(--primary); padding: 16px 20px 0;">Pro Forma Summary</h4>
+                                    <div style="padding: 0 20px 20px; overflow-x: auto;">
+                                        <table class="data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Metric</th>
+                                                    <th style="text-align: right;">Standalone Acquirer</th>
+                                                    <th style="text-align: right;">Standalone Target</th>
+                                                    <th style="text-align: right;">Pro Forma Combined</th>
+                                                    <th style="text-align: right;">Accretion / (Dilution)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="maSummaryBody">
+                                                <tr><td colspan="5" style="text-align: center; color: var(--text-light);">Run analysis to populate results.</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <h4 style="margin-bottom: 12px; color: var(--primary); padding: 16px 20px 0;">EPS Accretion Analysis — 5 Year Outlook</h4>
+                                    <canvas id="maAccretionChart" style="height: 300px;"></canvas>
+                                </div>
+                            </div>

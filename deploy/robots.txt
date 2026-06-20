@@ -1,0 +1,26 @@
+# DS Financial Tax Tools - robots.txt
+# https://excel-lentminds.github.io/Tax-tools/
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin.html
+
+# Sitemap location
+Sitemap: https://excel-lentminds.github.io/Tax-tools/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Specific search engine directives
+User-agent: Googlebot
+Allow: /
+Disallow: /admin.html
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /

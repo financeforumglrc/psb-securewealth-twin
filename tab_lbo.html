@@ -1,0 +1,115 @@
+                            <div id="lboTab" class="hidden">
+                                <div class="section-title"><i class="fas fa-hand-holding-usd"></i> Leveraged Buyout (LBO) Model</div>
+                                <p style="color: var(--text-light); margin-bottom: 16px;">Interactive LBO analysis with sources & uses, debt schedule, and returns</p>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                                    <div class="card">
+                                        <h4 style="margin-bottom: 12px; color: var(--primary);">Entry Assumptions</h4>
+                                        <div class="input-group" style="margin-bottom: 10px;">
+                                            <label>Entry Enterprise Value (₹ Cr)</label>
+                                            <input type="range" id="lboEntryEv" min="100" max="10000" step="10" value="1000" oninput="updateLBO()" style="width: 100%;">
+                                            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600;">₹<span id="lboEntryEvVal">1000</span> Cr</div>
+                                        </div>
+                                        <div class="input-group" style="margin-bottom: 10px;">
+                                            <label>Debt/Equity Split (%)</label>
+                                            <input type="range" id="lboDebtEquity" min="0" max="90" step="1" value="60" oninput="updateLBO()" style="width: 100%;">
+                                            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600;"><span id="lboDebtEquityVal">60</span>%</div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <h4 style="margin-bottom: 12px; color: var(--primary);">Debt Terms</h4>
+                                        <div class="input-group" style="margin-bottom: 10px;">
+                                            <label>Term Loan Interest (%)</label>
+                                            <input type="range" id="lboTermLoanRate" min="4" max="16" step="0.1" value="8.5" oninput="updateLBO()" style="width: 100%;">
+                                            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600;"><span id="lboTermLoanRateVal">8.5</span>%</div>
+                                        </div>
+                                        <div class="input-group" style="margin-bottom: 10px;">
+                                            <label>High Yield Interest (%)</label>
+                                            <input type="range" id="lboHighYieldRate" min="6" max="20" step="0.1" value="12.5" oninput="updateLBO()" style="width: 100%;">
+                                            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600;"><span id="lboHighYieldRateVal">12.5</span>%</div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <h4 style="margin-bottom: 12px; color: var(--primary);">Exit Assumptions</h4>
+                                        <div class="input-group" style="margin-bottom: 10px;">
+                                            <label>Exit Multiple (x)</label>
+                                            <input type="range" id="lboExitMultiple" min="4" max="20" step="0.1" value="8.0" oninput="updateLBO()" style="width: 100%;">
+                                            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600;"><span id="lboExitMultipleVal">8.0</span>x</div>
+                                        </div>
+                                        <div class="input-group" style="margin-bottom: 10px;">
+                                            <label>Exit Year</label>
+                                            <input type="range" id="lboExitYear" min="1" max="5" step="1" value="5" oninput="updateLBO()" style="width: 100%;">
+                                            <div style="text-align: right; font-size: 0.85rem; color: var(--primary); font-weight: 600;">Year <span id="lboExitYearVal">5</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                                    <div class="card">
+                                        <h4 style="margin-bottom: 12px; color: var(--primary);">Sources & Uses</h4>
+                                        <table class="data-table" id="lboSourcesUsesTable">
+                                            <thead>
+                                                <tr><th>Item</th><th>Amount (₹ Cr)</th></tr>
+                                            </thead>
+                                            <tbody id="lboSourcesUsesBody">
+                                                <tr><td colspan="2" style="text-align:center;color:var(--text-light);">Run analysis to populate</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--accent)); color: white;">
+                                        <h4 style="margin-bottom: 12px; color: white;">Returns Summary</h4>
+                                        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+                                            <div style="flex: 1; background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 0.8rem; opacity: 0.9;">Entry Multiple</div>
+                                                <div style="font-weight: 700;" id="lboEntryMultiple">-</div>
+                                            </div>
+                                            <div style="flex: 1; background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 0.8rem; opacity: 0.9;">Exit EV</div>
+                                                <div style="font-weight: 700;" id="lboExitEv">-</div>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                                            <div style="flex: 1; background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 0.8rem; opacity: 0.9;">Net Debt at Exit</div>
+                                                <div style="font-weight: 700;" id="lboNetDebtExit">-</div>
+                                            </div>
+                                            <div style="flex: 1; background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 0.8rem; opacity: 0.9;">Equity Value at Exit</div>
+                                                <div style="font-weight: 700;" id="lboEquityExit">-</div>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                                            <div style="flex: 1; background: rgba(255,255,255,0.2); padding: 14px; border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 0.85rem; opacity: 0.9;">MOIC</div>
+                                                <div style="font-size: 1.8rem; font-weight: 800;" id="lboMoic">-</div>
+                                            </div>
+                                            <div style="flex: 1; background: rgba(255,255,255,0.2); padding: 14px; border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 0.85rem; opacity: 0.9;">IRR</div>
+                                                <div style="font-size: 1.8rem; font-weight: 800;" id="lboIrr">-</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card" style="margin-bottom: 20px;">
+                                    <h4 style="margin-bottom: 12px; color: var(--primary);">Debt Schedule</h4>
+                                    <div style="overflow-x: auto;">
+                                        <table class="data-table" id="lboDebtScheduleTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Year</th>
+                                                    <th>Term Loan Opening</th>
+                                                    <th>High Yield Opening</th>
+                                                    <th>Principal Repayment</th>
+                                                    <th>Interest Expense</th>
+                                                    <th>Total Debt Ending</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="lboDebtScheduleBody">
+                                                <tr><td colspan="6" style="text-align:center;color:var(--text-light);">Run analysis to populate</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <h4 style="margin-bottom: 12px;">Equity Value Build-Up</h4>
+                                    <canvas id="lboReturnsChart" style="height: 300px;"></canvas>
+                                </div>
+                            </div>

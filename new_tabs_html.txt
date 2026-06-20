@@ -1,0 +1,135 @@
+
+                            <!-- WACC Calculator -->
+                            <div id="waccTab" class="hidden">
+                                <div class="output-section">
+                                    <h4 class="section-title"><i class="fas fa-calculator"></i> WACC Calculator</h4>
+                                    <p class="section-desc">Interactive Cost of Capital Build-Up</p>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                                        <div class="card">
+                                            <h5 style="margin-bottom: 12px; color: var(--primary);">Cost of Equity (CAPM)</h5>
+                                            <div class="input-group" style="margin-bottom: 10px;"><label>Risk-Free Rate (%)</label><input type="range" id="waccRf" min="4" max="8" step="0.1" value="6.5" oninput="updateWACC()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="waccRfVal">6.5</span>%</div></div>
+                                            <div class="input-group" style="margin-bottom: 10px;"><label>Equity Risk Premium (%)</label><input type="range" id="waccErp" min="4" max="10" step="0.1" value="7.0" oninput="updateWACC()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="waccErpVal">7.0</span>%</div></div>
+                                            <div class="input-group" style="margin-bottom: 10px;"><label>Beta (β)</label><input type="range" id="waccBeta" min="0.3" max="2.5" step="0.05" value="1.1" oninput="updateWACC()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="waccBetaVal">1.1</span></div></div>
+                                            <div style="background:var(--bg-light);padding:10px;border-radius:8px;margin-top:8px;"><div style="font-size:0.85rem;color:var(--text-light);">Cost of Equity</div><div style="font-size:1.3rem;font-weight:700;color:var(--primary);" id="waccCoe">14.2%</div></div>
+                                        </div>
+                                        <div class="card">
+                                            <h5 style="margin-bottom: 12px; color: var(--primary);">Cost of Debt</h5>
+                                            <div class="input-group" style="margin-bottom: 10px;"><label>Pre-tax Cost of Debt (%)</label><input type="range" id="waccCod" min="4" max="14" step="0.1" value="8.5" oninput="updateWACC()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="waccCodVal">8.5</span>%</div></div>
+                                            <div class="input-group" style="margin-bottom: 10px;"><label>Tax Rate (%)</label><input type="range" id="waccTax" min="15" max="35" step="0.5" value="25.17" oninput="updateWACC()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="waccTaxVal">25.17</span>%</div></div>
+                                            <div style="background:var(--bg-light);padding:10px;border-radius:8px;margin-top:8px;"><div style="font-size:0.85rem;color:var(--text-light);">After-tax Cost of Debt</div><div style="font-size:1.3rem;font-weight:700;color:var(--primary);" id="waccCodAt">6.4%</div></div>
+                                        </div>
+                                        <div class="card">
+                                            <h5 style="margin-bottom: 12px; color: var(--primary);">Capital Structure</h5>
+                                            <div class="input-group" style="margin-bottom: 10px;"><label>Debt / (D+E) (%)</label><input type="range" id="waccDe" min="0" max="80" step="1" value="25" oninput="updateWACC()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="waccDeVal">25</span>%</div></div>
+                                            <div style="display:flex;gap:8px;margin-top:12px;">
+                                                <div style="flex:1;background:var(--bg-light);padding:10px;border-radius:8px;text-align:center;"><div style="font-size:0.8rem;color:var(--text-light);">Weight of Equity</div><div style="font-weight:700;color:var(--primary);" id="waccWe">75%</div></div>
+                                                <div style="flex:1;background:var(--bg-light);padding:10px;border-radius:8px;text-align:center;"><div style="font-size:0.8rem;color:var(--text-light);">Weight of Debt</div><div style="font-weight:700;color:var(--primary);" id="waccWd">25%</div></div>
+                                            </div>
+                                        </div>
+                                        <div class="card" style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;">
+                                            <h5 style="margin-bottom:12px;color:white;">WACC</h5>
+                                            <div style="font-size:3rem;font-weight:800;text-align:center;margin:16px 0;" id="waccResult">12.3%</div>
+                                            <div style="text-align:center;font-size:0.9rem;opacity:0.9;">= We × CoE + Wd × CoD(at)</div>
+                                            <div style="margin-top:16px;text-align:center;"><button onclick="applyWACCtoDCF()" class="btn btn-primary" style="background:white;color:var(--primary);border:none;">Apply to DCF</button></div>
+                                        </div>
+                                    </div>
+                                    <div class="card"><h5 style="margin-bottom:12px;">WACC Sensitivity — Beta vs Debt Mix</h5><canvas id="waccSensitivityChart" style="height:300px;"></canvas></div>
+                                </div>
+                            </div>
+
+                            <!-- Comparable Companies -->
+                            <div id="compsTab" class="hidden">
+                                <div class="output-section">
+                                    <h4 class="section-title"><i class="fas fa-balance-scale"></i> Comparable Companies</h4>
+                                    <p class="section-desc">Trading comps analysis with peer valuation multiples</p>
+                                    <div class="card" style="overflow-x:auto;">
+                                        <table class="data-table" id="compsTable">
+                                            <thead><tr><th>Company</th><th>EV/Revenue</th><th>EV/EBITDA</th><th>P/E</th><th>P/B</th><th>ROE</th><th>Rev Growth</th></tr></thead>
+                                            <tbody id="compsTableBody"></tbody>
+                                        </table>
+                                    </div>
+                                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px;">
+                                        <div class="card"><h5 style="margin-bottom:12px;">Valuation Multiples Comparison</h5><canvas id="compsBarChart" style="height:280px;"></canvas></div>
+                                        <div class="card"><h5 style="margin-bottom:12px;">EV/EBITDA vs Revenue Growth</h5><canvas id="compsScatterChart" style="height:280px;"></canvas></div>
+                                    </div>
+                                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;">
+                                        <div class="card" style="text-align:center;"><div style="font-size:0.85rem;color:var(--text-light);">Median EV/EBITDA</div><div style="font-size:1.6rem;font-weight:700;color:var(--primary);" id="compsMedianEvebitda">—</div></div>
+                                        <div class="card" style="text-align:center;"><div style="font-size:0.85rem;color:var(--text-light);">Implied EV Range (Rs Cr)</div><div style="font-size:1.6rem;font-weight:700;color:var(--primary);" id="compsEvRange">—</div></div>
+                                        <div class="card" style="text-align:center;"><div style="font-size:0.85rem;color:var(--text-light);">Premium / (Discount) to Median</div><div style="font-size:1.6rem;font-weight:700;color:var(--primary);" id="compsPremium">—</div></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- LBO Model -->
+                            <div id="lboTab" class="hidden">
+                                <div class="output-section">
+                                    <h4 class="section-title"><i class="fas fa-building"></i> LBO Model</h4>
+                                    <p class="section-desc">Leveraged Buyout analysis with debt schedule and returns</p>
+                                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:20px;">
+                                        <div class="card">
+                                            <h5 style="margin-bottom:12px;color:var(--primary);">Entry Assumptions</h5>
+                                            <div class="input-group" style="margin-bottom:10px;"><label>Entry EV (Rs Cr)</label><input type="number" id="lboEntryEV" class="form-input" style="width:100%"></div>
+                                            <div class="input-group" style="margin-bottom:10px;"><label>Debt / (D+E) (%)</label><input type="range" id="lboDe" min="40" max="85" step="1" value="65" oninput="updateLBO()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="lboDeVal">65</span>%</div></div>
+                                            <div class="input-group" style="margin-bottom:10px;"><label>Exit Multiple (x EBITDA)</label><input type="range" id="lboExitMultiple" min="6" max="16" step="0.5" value="10" oninput="updateLBO()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="lboExitVal">10</span>x</div></div>
+                                            <div class="input-group"><label>Holding Period (Years)</label><input type="range" id="lboHoldYears" min="3" max="7" step="1" value="5" oninput="updateLBO()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="lboHoldVal">5</span></div></div>
+                                        </div>
+                                        <div class="card">
+                                            <h5 style="margin-bottom:12px;color:var(--primary);">Debt Terms</h5>
+                                            <div class="input-group" style="margin-bottom:10px;"><label>Term Loan Interest (%)</label><input type="range" id="lboTlRate" min="6" max="12" step="0.25" value="8.5" oninput="updateLBO()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="lboTlVal">8.5</span>%</div></div>
+                                            <div class="input-group" style="margin-bottom:10px;"><label>High Yield Interest (%)</label><input type="range" id="lboHyRate" min="8" max="16" step="0.25" value="11" oninput="updateLBO()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="lboHyVal">11</span>%</div></div>
+                                            <div class="input-group"><label>TL Amortization (%/yr)</label><input type="range" id="lboAmort" min="5" max="25" step="1" value="15" oninput="updateLBO()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="lboAmortVal">15</span>%</div></div>
+                                        </div>
+                                        <div class="card" style="background:linear-gradient(135deg,#1f2937,#374151);color:white;">
+                                            <h5 style="margin-bottom:12px;color:white;">Returns</h5>
+                                            <div style="text-align:center;margin:12px 0;"><div style="font-size:0.85rem;opacity:0.8;">MOIC</div><div style="font-size:2.2rem;font-weight:800;" id="lboMOIC">2.4x</div></div>
+                                            <div style="text-align:center;margin:12px 0;"><div style="font-size:0.85rem;opacity:0.8;">IRR</div><div style="font-size:2.2rem;font-weight:800;" id="lboIRR">19.5%</div></div>
+                                            <div style="text-align:center;margin-top:8px;"><div style="font-size:0.8rem;opacity:0.7;">Equity Invested: <span id="lboEquityInvested">—</span></div></div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="overflow-x:auto;margin-bottom:16px;">
+                                        <h5 style="margin-bottom:12px;">Debt Schedule (Rs Cr)</h5>
+                                        <table class="data-table" id="lboDebtSchedule">
+                                            <thead><tr><th>Year</th><th>Opening Debt</th><th>TL Principal</th><th>HY Principal</th><th>Interest</th><th>Closing Debt</th></tr></thead>
+                                            <tbody id="lboDebtBody"></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="card"><h5 style="margin-bottom:12px;">Equity Value Build-Up</h5><canvas id="lboReturnsChart" style="height:280px;"></canvas></div>
+                                </div>
+                            </div>
+
+                            <!-- M&A Model -->
+                            <div id="maTab" class="hidden">
+                                <div class="output-section">
+                                    <h4 class="section-title"><i class="fas fa-handshake"></i> M&A Accretion / Dilution</h4>
+                                    <p class="section-desc">Merger model analysis with pro forma EPS and synergy impact</p>
+                                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:20px;">
+                                        <div class="card">
+                                            <h5 style="margin-bottom:12px;color:var(--primary);">Transaction Assumptions</h5>
+                                            <div class="input-group" style="margin-bottom:10px;"><label>Target Equity Value (Rs Cr)</label><input type="number" id="maTargetEq" class="form-input" style="width:100%"></div>
+                                            <div class="input-group" style="margin-bottom:10px;"><label>Premium to Current (%)</label><input type="range" id="maPremium" min="0" max="50" step="1" value="20" oninput="updateMA()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="maPremiumVal">20</span>%</div></div>
+                                            <div class="input-group" style="margin-bottom:10px;"><label>Cash Consideration (%)</label><input type="range" id="maCashPct" min="0" max="100" step="5" value="50" oninput="updateMA()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="maCashVal">50</span>%</div></div>
+                                            <div class="input-group"><label>Synergies (% Target Rev)</label><input type="range" id="maSynergy" min="0" max="15" step="0.5" value="5" oninput="updateMA()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="maSynergyVal">5</span>%</div></div>
+                                        </div>
+                                        <div class="card">
+                                            <h5 style="margin-bottom:12px;color:var(--primary);">Financing</h5>
+                                            <div class="input-group" style="margin-bottom:10px;"><label>Acquirer P/E (x)</label><input type="range" id="maAcqPE" min="10" max="40" step="1" value="20" oninput="updateMA()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="maAcqPEVal">20</span>x</div></div>
+                                            <div class="input-group" style="margin-bottom:10px;"><label>New Debt Interest (%)</label><input type="range" id="maDebtRate" min="6" max="12" step="0.25" value="8.5" oninput="updateMA()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="maDebtVal">8.5</span>%</div></div>
+                                            <div class="input-group"><label>Tax Rate (%)</label><input type="range" id="maTaxRate" min="20" max="35" step="0.5" value="25.17" oninput="updateMA()" style="width:100%"><div style="text-align:right;font-size:0.85rem;color:var(--primary);font-weight:600;"><span id="maTaxVal">25.17</span>%</div></div>
+                                        </div>
+                                        <div class="card" style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;">
+                                            <h5 style="margin-bottom:12px;color:white;">Pro Forma Impact</h5>
+                                            <div style="text-align:center;margin:10px 0;"><div style="font-size:0.85rem;opacity:0.9;">Acquirer Standalone EPS</div><div style="font-size:1.4rem;font-weight:700;" id="maAcqEPS">₹12.5</div></div>
+                                            <div style="text-align:center;margin:10px 0;"><div style="font-size:0.85rem;opacity:0.9;">Pro Forma EPS</div><div style="font-size:1.4rem;font-weight:700;" id="maPfEPS">₹13.8</div></div>
+                                            <div style="text-align:center;margin:10px 0;"><div style="font-size:0.85rem;opacity:0.9;">Accretion / (Dilution)</div><div style="font-size:1.8rem;font-weight:800;" id="maAccretion">+10.2%</div></div>
+                                        </div>
+                                    </div>
+                                    <div class="card" style="overflow-x:auto;margin-bottom:16px;">
+                                        <h5 style="margin-bottom:12px;">Pro Forma Summary</h5>
+                                        <table class="data-table" id="maProFormaTable">
+                                            <thead><tr><th>Metric</th><th>Acquirer</th><th>Target</th><th>Pro Forma</th><th>Accretion</th></tr></thead>
+                                            <tbody id="maProFormaBody"></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="card"><h5 style="margin-bottom:12px;">EPS Accretion Timeline</h5><canvas id="maAccretionChart" style="height:280px;"></canvas></div>
+                                </div>
+                            </div>

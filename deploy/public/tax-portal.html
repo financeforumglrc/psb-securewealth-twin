@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="World-Class Tax Calculator Portal - Advanced Income Tax, GST Calculator, Tax Regime Comparison with AI-powered recommendations. Professional tools by DS Financial Solutions.">
+    <meta name="keywords" content="Income Tax Calculator 2026, GST Calculator, Tax Regime Comparison, HRA Calculator, 80C Planner, Advance Tax">
+    <title>Advanced Tax Calculator Portal | DS Financial Solutions</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%231A237E' rx='15' width='100' height='100'/><text x='50' y='65' font-size='50' font-weight='bold' fill='%23FFB300' text-anchor='middle'>DS</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="tax-portal.css">
+</head>
+
+<body>
+    <div class="tax-app">
+        <!-- ==================== SIDEBAR ==================== -->
+        <aside class="tax-sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="logo-icon">DS</div>
+                    <span class="logo-text">DS Financial</span>
+                </a>
+            </div>
+
+            <div class="sidebar-content">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Tax Calculators</div>
+                    <ul class="sidebar-nav">
+                        <li class="sidebar-nav-item">
+                            <a class="sidebar-nav-link active" data-tool="regime-comparison">
+                                <i class="fas fa-balance-scale"></i>
+                                Tax Regime Comparison
+                                <span class="nav-badge pro">PRO</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-nav-item">
+                            <a class="sidebar-nav-link" data-tool="income-tax">
+                                <i class="fas fa-calculator"></i>
+                                Income Tax Calculator
+                            </a>
+                        </li>
+                        <li class="sidebar-nav-item">
+                            <a class="sidebar-nav-link" data-tool="hra">
+                                <i class="fas fa-home"></i>
+                                HRA Exemption
+                            </a>
+                        </li>
+                        <li class="sidebar-nav-item">
+                            <a class="sidebar-nav-link" data-tool="80c">
+                                <i class="fas fa-piggy-bank"></i>
+                                Section 80C Planner
+                            </a>
+                        </li>
+                        <li class="sidebar-nav-item">
+                            <a class="sidebar-nav-link" data-tool="advance-tax">
+                                <i class="fas fa-calendar-check"></i>
+                                Advance Tax
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">GST Tools</div>
+                    <ul class="sidebar-nav">
+                        <li class="sidebar-nav-item">
+                            <a class="sidebar-nav-link" data-tool="gst">
+                                <i class="fas fa-percent"></i>
+                                GST Calculator
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Specialized</div>
+                    <ul class="sidebar-nav">
+                        <li class="sidebar-nav-item">
+                            <a class="sidebar-nav-link" data-tool="crypto">
+                                <i class="fab fa-bitcoin"></i>
+                                Crypto/VDA Tax
+                                <span class="nav-badge">NEW</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-nav-item">
+                            <a class="sidebar-nav-link" data-tool="tds">
+                                <i class="fas fa-hand-holding-usd"></i>
+                                TDS Calculator
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-cta">
+                    <h4>🎯 Tax Optimization</h4>
+                    <p>Get personalized tax-saving recommendations</p>
+                    <a href="#" class="sidebar-cta-btn" onclick="showOptimizationTips()">
+                        <i class="fas fa-lightbulb"></i>
+                        Get Tips
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ==================== MAIN CONTENT ==================== -->
+        <main class="tax-main">
+            <!-- ==================== STATS DASHBOARD ==================== -->
+            <div class="stats-dashboard" id="statsDashboard">
+                <div class="stat-card blue">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-rupee-sign"></i></div>
+                        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 12%</div>
+                    </div>
+                    <div class="stat-value" id="statIncome">₹12,00,000</div>
+                    <div class="stat-label">Gross Income</div>
+                    <div class="stat-change">vs last year</div>
+                </div>
+
+                <div class="stat-card green">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 8%</div>
+                    </div>
+                    <div class="stat-value" id="statDeductions">₹2,95,000</div>
+                    <div class="stat-label">Total Deductions</div>
+                    <div class="stat-change">Chapter VI-A + Exemptions</div>
+                </div>
+
+                <div class="stat-card orange">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                        <div class="stat-trend down"><i class="fas fa-arrow-down"></i> 15%</div>
+                    </div>
+                    <div class="stat-value" id="statTax">₹78,000</div>
+                    <div class="stat-label">Tax Payable</div>
+                    <div class="stat-change">After rebates & cess</div>
+                </div>
+
+                <div class="stat-card purple">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                    </div>
+                    <div class="stat-value" id="statSavings">₹45,000</div>
+                    <div class="stat-label">Potential Savings</div>
+                    <div class="stat-change">With optimal regime</div>
+                </div>
+            </div>
+
+            <!-- ==================== TOOL PANELS ==================== -->
+            
+            <!-- TOOL 1: TAX REGIME COMPARISON (ADVANCED) -->
+            <div class="tool-panel active" id="panel-regime-comparison">
+                <div class="page-header">
+                    <div class="page-header-top">
+                        <div>
+                            <h1 class="page-title">Tax Regime Comparison PRO</h1>
+                            <p class="page-subtitle">AI-powered analysis with break-even calculation & optimization recommendations</p>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn btn-outline" onclick="resetCalculator()">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                            <button class="btn btn-primary" onclick="downloadDetailedReport()">
+                                <i class="fas fa-file-pdf"></i> Export Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calculator-layout">
+                    <!-- Input Panel -->
+                    <div class="calc-card">
+                        <div class="calc-card-header">
+                            <div class="calc-card-title">
+                                <div class="icon"><i class="fas fa-user-edit"></i></div>
+                                <div>
+                                    <h3>Income & Deductions</h3>
+                                    <span class="subtitle">Enter your financial details</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-card-body">
+                            <!-- Basic Details -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-user"></i> Basic Information
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Financial Year</label>
+                                        <select class="form-select" id="financialYear">
+                                            <option value="2025-26" selected>FY 2025-26 (AY 2026-27)</option>
+                                            <option value="2024-25">FY 2024-25 (AY 2025-26)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Age Category</label>
+                                        <select class="form-select" id="ageCategory">
+                                            <option value="general">Below 60 years</option>
+                                            <option value="senior">60-80 years (Senior)</option>
+                                            <option value="super-senior">Above 80 years</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Annual Gross Salary
+                                        <span class="hint">Include all allowances</span>
+                                    </label>
+                                    <div class="form-input-group">
+                                        <input type="number" class="form-input" id="grossSalary" value="1200000" min="0">
+                                        <span class="input-addon">₹ /year</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Other Income</label>
+                                        <input type="number" class="form-input" id="otherIncome" value="0" min="0" placeholder="Interest, rental, etc.">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Rental Income</label>
+                                        <input type="number" class="form-input" id="rentalIncome" value="0" min="0" placeholder="Annual rent received">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Deductions (Old Regime) -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-shield-alt"></i> Deductions (Old Regime Only)
+                                </div>
+
+                                <div class="deductions-accordion">
+                                    <!-- Section 80C -->
+                                    <div class="deduction-category open">
+                                        <div class="deduction-category-header" onclick="toggleCategory(this)">
+                                            <div class="deduction-category-title">
+                                                <i class="fas fa-piggy-bank"></i>
+                                                Section 80C Investments
+                                            </div>
+                                            <div class="deduction-category-total" id="total80C">₹1,50,000</div>
+                                        </div>
+                                        <div class="deduction-category-content">
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-university"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">EPF / VPF</div>
+                                                        <div class="deduction-limit">Employee contribution</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="ded80C_EPF" value="72000" max="150000" onchange="update80CTotal()">
+                                            </div>
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">PPF</div>
+                                                        <div class="deduction-limit">Max ₹1.5L/year</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="ded80C_PPF" value="50000" max="150000" onchange="update80CTotal()">
+                                            </div>
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-chart-line"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">ELSS Mutual Funds</div>
+                                                        <div class="deduction-limit">3-year lock-in</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="ded80C_ELSS" value="28000" max="150000" onchange="update80CTotal()">
+                                            </div>
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-shield-alt"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">Life Insurance</div>
+                                                        <div class="deduction-limit">LIC / Term Plans</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="ded80C_LIC" value="0" max="150000" onchange="update80CTotal()">
+                                            </div>
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-home"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">Home Loan Principal</div>
+                                                        <div class="deduction-limit">Repayment amount</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="ded80C_HomeLoan" value="0" max="150000" onchange="update80CTotal()">
+                                            </div>
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-user-graduate"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">Tuition Fees</div>
+                                                        <div class="deduction-limit">Max 2 children</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="ded80C_Tuition" value="0" max="150000" onchange="update80CTotal()">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Other Deductions -->
+                                    <div class="deduction-category">
+                                        <div class="deduction-category-header" onclick="toggleCategory(this)">
+                                            <div class="deduction-category-title">
+                                                <i class="fas fa-plus-circle"></i>
+                                                Other Deductions
+                                            </div>
+                                            <div class="deduction-category-total" id="totalOtherDed">₹1,45,000</div>
+                                        </div>
+                                        <div class="deduction-category-content">
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-heartbeat"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">80D - Health Insurance</div>
+                                                        <div class="deduction-limit">Self: ₹25K | Parents: ₹50K</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="ded80D" value="25000" max="100000" onchange="updateOtherDedTotal()">
+                                            </div>
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-home"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">HRA Exemption</div>
+                                                        <div class="deduction-limit">Based on rent paid</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="dedHRA" value="120000" onchange="updateOtherDedTotal()">
+                                            </div>
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-landmark"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">24(b) - Home Loan Interest</div>
+                                                        <div class="deduction-limit">Max ₹2,00,000</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="ded24b" value="0" max="200000" onchange="updateOtherDedTotal()">
+                                            </div>
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-chart-pie"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">80CCD(1B) - NPS</div>
+                                                        <div class="deduction-limit">Additional ₹50,000</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="ded80CCD" value="0" max="50000" onchange="updateOtherDedTotal()">
+                                            </div>
+                                            <div class="deduction-item">
+                                                <div class="deduction-info">
+                                                    <div class="deduction-icon"><i class="fas fa-graduation-cap"></i></div>
+                                                    <div>
+                                                        <div class="deduction-name">80E - Education Loan</div>
+                                                        <div class="deduction-limit">Interest paid (No limit)</div>
+                                                    </div>
+                                                </div>
+                                                <input type="number" class="deduction-input" id="ded80E" value="0" onchange="updateOtherDedTotal()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-block btn-lg" onclick="calculateRegimeComparison()">
+                                <i class="fas fa-calculator"></i>
+                                Compare Tax Regimes
+                            </button>
+
+                            <div class="pro-tip">
+                                <div class="pro-tip-header">
+                                    <i class="fas fa-lightbulb"></i> Pro Tip
+                                </div>
+                                <div class="pro-tip-text">
+                                    For income above ₹15L, New Regime often saves more tax. However, if your deductions exceed ₹3.75L, Old Regime might be better. Our calculator will find the optimal choice for you!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Panel -->
+                    <div class="calc-card">
+                        <div class="calc-card-header">
+                            <div class="calc-card-title">
+                                <div class="icon"><i class="fas fa-chart-bar"></i></div>
+                                <div>
+                                    <h3>Comparison Results</h3>
+                                    <span class="subtitle">Detailed breakdown & analysis</span>
+                                </div>
+                            </div>
+                            <div class="calc-card-actions">
+                                <button class="btn btn-icon btn-ghost" onclick="shareResults()" title="Share">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="calc-card-body" id="regimeResults">
+                            <!-- Savings Banner -->
+                            <div class="savings-banner" id="savingsBanner">
+                                <div class="savings-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="savings-title">You Save More With</div>
+                                <div class="savings-amount" id="savingsAmount">₹45,500</div>
+                                <div class="savings-regime" id="recommendedRegime">New Tax Regime</div>
+                            </div>
+
+                            <!-- Regime Cards -->
+                            <div class="regime-grid">
+                                <div class="regime-card" id="oldRegimeCard">
+                                    <div class="regime-header">
+                                        <div class="regime-title">Old Tax Regime</div>
+                                        <div class="regime-subtitle">With Exemptions & Deductions</div>
+                                    </div>
+                                    <div class="regime-amount">
+                                        <div class="regime-amount-label">Total Tax Payable</div>
+                                        <div class="regime-amount-value" id="oldRegimeTax">₹1,23,500</div>
+                                    </div>
+                                    <div class="regime-details">
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Gross Income</span>
+                                            <span class="regime-detail-value" id="oldGross">₹12,00,000</span>
+                                        </div>
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Standard Deduction</span>
+                                            <span class="regime-detail-value">₹50,000</span>
+                                        </div>
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Chapter VI-A Deductions</span>
+                                            <span class="regime-detail-value" id="oldChapter6">₹2,95,000</span>
+                                        </div>
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Net Taxable Income</span>
+                                            <span class="regime-detail-value" id="oldTaxable">₹8,55,000</span>
+                                        </div>
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Tax Before Cess</span>
+                                            <span class="regime-detail-value" id="oldTaxBeforeCess">₹1,18,750</span>
+                                        </div>
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Health & Edu. Cess (4%)</span>
+                                            <span class="regime-detail-value" id="oldCess">₹4,750</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="regime-card winner" id="newRegimeCard">
+                                    <span class="regime-badge"><i class="fas fa-check"></i> RECOMMENDED</span>
+                                    <div class="regime-header">
+                                        <div class="regime-title">New Tax Regime</div>
+                                        <div class="regime-subtitle">Lower Rates, Standard Deduction</div>
+                                    </div>
+                                    <div class="regime-amount">
+                                        <div class="regime-amount-label">Total Tax Payable</div>
+                                        <div class="regime-amount-value" id="newRegimeTax">₹78,000</div>
+                                    </div>
+                                    <div class="regime-details">
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Gross Income</span>
+                                            <span class="regime-detail-value" id="newGross">₹12,00,000</span>
+                                        </div>
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Standard Deduction</span>
+                                            <span class="regime-detail-value">₹75,000</span>
+                                        </div>
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Rebate u/s 87A</span>
+                                            <span class="regime-detail-value" id="newRebate">₹0</span>
+                                        </div>
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Net Taxable Income</span>
+                                            <span class="regime-detail-value" id="newTaxable">₹11,25,000</span>
+                                        </div>
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Tax Before Cess</span>
+                                            <span class="regime-detail-value" id="newTaxBeforeCess">₹75,000</span>
+                                        </div>
+                                        <div class="regime-detail-item">
+                                            <span class="regime-detail-label">Health & Edu. Cess (4%)</span>
+                                            <span class="regime-detail-value" id="newCess">₹3,000</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Break-even Analysis -->
+                            <div class="alert info">
+                                <div class="alert-icon"><i class="fas fa-info"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Break-even Analysis</div>
+                                    <div class="alert-text" id="breakEvenText">
+                                        At your income level, you would need deductions of ₹4,50,000 or more for Old Regime to be beneficial.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tax Slab Breakdown -->
+                            <div class="slab-table-card">
+                                <div class="slab-table-header">
+                                    <div class="slab-table-title">
+                                        <i class="fas fa-layer-group"></i>
+                                        Tax Slab Breakdown (FY 2025-26)
+                                    </div>
+                                </div>
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Income Slab</th>
+                                            <th>Old Regime</th>
+                                            <th>New Regime</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>₹0 - ₹2,50,000</td>
+                                            <td class="rate">NIL</td>
+                                            <td class="rate">NIL</td>
+                                        </tr>
+                                        <tr>
+                                            <td>₹2,50,001 - ₹3,00,000</td>
+                                            <td class="rate">5%</td>
+                                            <td class="rate">NIL</td>
+                                        </tr>
+                                        <tr>
+                                            <td>₹3,00,001 - ₹5,00,000</td>
+                                            <td class="rate">5%</td>
+                                            <td class="rate">5%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>₹5,00,001 - ₹7,00,000</td>
+                                            <td class="rate">20%</td>
+                                            <td class="rate">5%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>₹7,00,001 - ₹10,00,000</td>
+                                            <td class="rate">20%</td>
+                                            <td class="rate">10%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>₹10,00,001 - ₹12,00,000</td>
+                                            <td class="rate">30%</td>
+                                            <td class="rate">15%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>₹12,00,001 - ₹15,00,000</td>
+                                            <td class="rate">30%</td>
+                                            <td class="rate">20%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Above ₹15,00,000</td>
+                                            <td class="rate">30%</td>
+                                            <td class="rate">30%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Chart -->
+                            <div class="chart-container">
+                                <div class="chart-header">
+                                    <div class="chart-title"><i class="fas fa-chart-pie"></i> Tax Distribution</div>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="taxComparisonChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-bar">
+                                <button class="btn btn-secondary" onclick="downloadDetailedReport()">
+                                    <i class="fas fa-file-pdf"></i> Download PDF Report
+                                </button>
+                                <button class="btn btn-success" onclick="shareResults()">
+                                    <i class="fas fa-share-alt"></i> Share Results
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOL 2: INCOME TAX CALCULATOR -->
+            <div class="tool-panel" id="panel-income-tax">
+                <div class="page-header">
+                    <div class="page-header-top">
+                        <div>
+                            <h1 class="page-title">Income Tax Calculator</h1>
+                            <p class="page-subtitle">Calculate your exact tax liability with multi-source income support</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calculator-layout">
+                    <div class="calc-card">
+                        <div class="calc-card-header">
+                            <div class="calc-card-title">
+                                <div class="icon"><i class="fas fa-coins"></i></div>
+                                <div>
+                                    <h3>Income Sources</h3>
+                                    <span class="subtitle">Enter all sources of income</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="tabs">
+                                <button class="tab active" data-regime="new" onclick="switchIncomeTaxRegime('new')">
+                                    New Regime
+                                    <span class="badge">Recommended</span>
+                                </button>
+                                <button class="tab" data-regime="old" onclick="switchIncomeTaxRegime('old')">
+                                    Old Regime
+                                </button>
+                            </div>
+
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-briefcase"></i> Income from Salary
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Basic Salary (Annual)</label>
+                                    <input type="number" class="form-input" id="itcBasic" value="600000" onchange="calculateIncomeTax()">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">HRA Received</label>
+                                        <input type="number" class="form-input" id="itcHRA" value="240000" onchange="calculateIncomeTax()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Special Allowances</label>
+                                        <input type="number" class="form-input" id="itcAllowances" value="360000" onchange="calculateIncomeTax()">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-building"></i> Income from House Property
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Rental Income</label>
+                                        <input type="number" class="form-input" id="itcRental" value="0" onchange="calculateIncomeTax()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Home Loan Interest</label>
+                                        <input type="number" class="form-input" id="itcHomeLoanInt" value="0" onchange="calculateIncomeTax()">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-wallet"></i> Other Income
+                                </div>
+                                <div class="form-row three">
+                                    <div class="form-group">
+                                        <label class="form-label">Interest Income</label>
+                                        <input type="number" class="form-input" id="itcInterest" value="0" onchange="calculateIncomeTax()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Capital Gains</label>
+                                        <input type="number" class="form-input" id="itcCapital" value="0" onchange="calculateIncomeTax()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Other Sources</label>
+                                        <input type="number" class="form-input" id="itcOther" value="0" onchange="calculateIncomeTax()">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-block btn-lg" onclick="calculateIncomeTax()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate Tax
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="calc-card">
+                        <div class="calc-card-header">
+                            <div class="calc-card-title">
+                                <div class="icon"><i class="fas fa-receipt"></i></div>
+                                <div>
+                                    <h3>Tax Summary</h3>
+                                    <span class="subtitle">Complete breakdown</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="result-card">
+                                <div class="result-header">
+                                    <span class="result-title">Total Tax Payable</span>
+                                </div>
+                                <div class="result-amount" id="itcTotalTax">₹78,000</div>
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <div class="result-item-label">Gross Total Income</div>
+                                        <div class="result-item-value" id="itcGrossIncome">₹12,00,000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">Standard Deduction</div>
+                                        <div class="result-item-value" id="itcStdDed">₹75,000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">Net Taxable Income</div>
+                                        <div class="result-item-value" id="itcNetTaxable">₹11,25,000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">Health & Edu. Cess</div>
+                                        <div class="result-item-value" id="itcCess">₹3,000</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="slab-table-card" style="margin-top: 1.5rem;">
+                                <div class="slab-table-header">
+                                    <div class="slab-table-title">
+                                        <i class="fas fa-list-ol"></i>
+                                        Slab-wise Tax Calculation
+                                    </div>
+                                </div>
+                                <table class="data-table" id="itcSlabTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Slab</th>
+                                            <th>Income in Slab</th>
+                                            <th>Rate</th>
+                                            <th>Tax</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="itcSlabBody">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOL 3: HRA CALCULATOR -->
+            <div class="tool-panel" id="panel-hra">
+                <div class="page-header">
+                    <div class="page-header-top">
+                        <div>
+                            <h1 class="page-title">HRA Exemption Calculator</h1>
+                            <p class="page-subtitle">Calculate your House Rent Allowance exemption under Section 10(13A)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calculator-layout">
+                    <div class="calc-card">
+                        <div class="calc-card-header">
+                            <div class="calc-card-title">
+                                <div class="icon"><i class="fas fa-home"></i></div>
+                                <div>
+                                    <h3>HRA Details</h3>
+                                    <span class="subtitle">Enter salary & rent information</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-money-bill-wave"></i> Salary Components
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Basic Salary (Annual)</label>
+                                        <input type="number" class="form-input" id="hraBasic" value="600000" onchange="calculateHRA()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">DA (if part of salary)</label>
+                                        <input type="number" class="form-input" id="hraDA" value="0" onchange="calculateHRA()">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">HRA Received (Annual)</label>
+                                    <input type="number" class="form-input" id="hraReceived" value="240000" onchange="calculateHRA()">
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="fas fa-building"></i> Rent Details
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Rent Paid (Annual)</label>
+                                    <input type="number" class="form-input" id="hraRent" value="180000" onchange="calculateHRA()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">City Type</label>
+                                    <select class="form-select" id="hraCityType" onchange="calculateHRA()">
+                                        <option value="metro">Metro City (Delhi, Mumbai, Chennai, Kolkata)</option>
+                                        <option value="non-metro">Non-Metro City</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-block btn-lg" onclick="calculateHRA()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate HRA Exemption
+                            </button>
+
+                            <div class="pro-tip">
+                                <div class="pro-tip-header">
+                                    <i class="fas fa-lightbulb"></i> HRA Exemption Rules
+                                </div>
+                                <div class="pro-tip-text">
+                                    HRA exemption is the <strong>minimum</strong> of: (1) Actual HRA received, (2) 50% of salary for metro/40% for non-metro, (3) Rent paid minus 10% of salary.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calc-card">
+                        <div class="calc-card-header">
+                            <div class="calc-card-title">
+                                <div class="icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                                <div>
+                                    <h3>HRA Exemption Result</h3>
+                                    <span class="subtitle">Detailed calculation breakdown</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="result-card">
+                                <div class="result-header">
+                                    <span class="result-title">Maximum HRA Exemption</span>
+                                </div>
+                                <div class="result-amount" id="hraExemptionAmount">₹1,20,000</div>
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <div class="result-item-label">Actual HRA Received</div>
+                                        <div class="result-item-value" id="hraActual">₹2,40,000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">50%/40% of Salary</div>
+                                        <div class="result-item-value" id="hraPercent">₹3,00,000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">Rent - 10% of Salary</div>
+                                        <div class="result-item-value" id="hraRentCalc">₹1,20,000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">Taxable HRA</div>
+                                        <div class="result-item-value" id="hraTaxable">₹1,20,000</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert success" style="margin-top: 1.5rem;">
+                                <div class="alert-icon"><i class="fas fa-check"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Tax Savings</div>
+                                    <div class="alert-text" id="hraTaxSavings">
+                                        You can save up to ₹37,440 in taxes (assuming 30% + 4% cess bracket) with this HRA exemption.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOL 4: SECTION 80C PLANNER -->
+            <div class="tool-panel" id="panel-80c">
+                <div class="page-header">
+                    <div class="page-header-top">
+                        <div>
+                            <h1 class="page-title">Section 80C Investment Planner</h1>
+                            <p class="page-subtitle">Maximize your ₹1.5 Lakh tax deduction with smart investment planning</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calculator-layout">
+                    <div class="calc-card">
+                        <div class="calc-card-header">
+                            <div class="calc-card-title">
+                                <div class="icon"><i class="fas fa-piggy-bank"></i></div>
+                                <div>
+                                    <h3>80C Investments</h3>
+                                    <span class="subtitle">Enter your current investments</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="deduction-item">
+                                <div class="deduction-info">
+                                    <div class="deduction-icon"><i class="fas fa-university"></i></div>
+                                    <div>
+                                        <div class="deduction-name">EPF Contribution</div>
+                                        <div class="deduction-limit">Employee's share from salary</div>
+                                    </div>
+                                </div>
+                                <input type="number" class="deduction-input" id="planner80C_EPF" value="72000" onchange="calculate80CPlanner()">
+                            </div>
+
+                            <div class="deduction-item">
+                                <div class="deduction-info">
+                                    <div class="deduction-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                                    <div>
+                                        <div class="deduction-name">PPF</div>
+                                        <div class="deduction-limit">Public Provident Fund • 7.1% p.a. • 15yr lock-in</div>
+                                    </div>
+                                </div>
+                                <input type="number" class="deduction-input" id="planner80C_PPF" value="50000" onchange="calculate80CPlanner()">
+                            </div>
+
+                            <div class="deduction-item">
+                                <div class="deduction-info">
+                                    <div class="deduction-icon"><i class="fas fa-chart-line"></i></div>
+                                    <div>
+                                        <div class="deduction-name">ELSS Mutual Funds</div>
+                                        <div class="deduction-limit">Equity exposure • 3yr lock-in • Market returns</div>
+                                    </div>
+                                </div>
+                                <input type="number" class="deduction-input" id="planner80C_ELSS" value="0" onchange="calculate80CPlanner()">
+                            </div>
+
+                            <div class="deduction-item">
+                                <div class="deduction-info">
+                                    <div class="deduction-icon"><i class="fas fa-shield-alt"></i></div>
+                                    <div>
+                                        <div class="deduction-name">Life Insurance Premium</div>
+                                        <div class="deduction-limit">LIC / Term Insurance plans</div>
+                                    </div>
+                                </div>
+                                <input type="number" class="deduction-input" id="planner80C_LIC" value="0" onchange="calculate80CPlanner()">
+                            </div>
+
+                            <div class="deduction-item">
+                                <div class="deduction-info">
+                                    <div class="deduction-icon"><i class="fas fa-certificate"></i></div>
+                                    <div>
+                                        <div class="deduction-name">NSC / Tax Saver FD</div>
+                                        <div class="deduction-limit">National Savings Certificate • 5yr lock-in</div>
+                                    </div>
+                                </div>
+                                <input type="number" class="deduction-input" id="planner80C_NSC" value="0" onchange="calculate80CPlanner()">
+                            </div>
+
+                            <div class="deduction-item">
+                                <div class="deduction-info">
+                                    <div class="deduction-icon"><i class="fas fa-user-graduate"></i></div>
+                                    <div>
+                                        <div class="deduction-name">Children Tuition Fees</div>
+                                        <div class="deduction-limit">Max 2 children • Full-time education</div>
+                                    </div>
+                                </div>
+                                <input type="number" class="deduction-input" id="planner80C_Tuition" value="0" onchange="calculate80CPlanner()">
+                            </div>
+
+                            <div class="deduction-item">
+                                <div class="deduction-info">
+                                    <div class="deduction-icon"><i class="fas fa-home"></i></div>
+                                    <div>
+                                        <div class="deduction-name">Home Loan Principal</div>
+                                        <div class="deduction-limit">Principal repayment portion</div>
+                                    </div>
+                                </div>
+                                <input type="number" class="deduction-input" id="planner80C_HomeLoan" value="0" onchange="calculate80CPlanner()">
+                            </div>
+
+                            <div class="deduction-item">
+                                <div class="deduction-info">
+                                    <div class="deduction-icon"><i class="fas fa-child"></i></div>
+                                    <div>
+                                        <div class="deduction-name">Sukanya Samriddhi</div>
+                                        <div class="deduction-limit">For girl child • 8.2% p.a.</div>
+                                    </div>
+                                </div>
+                                <input type="number" class="deduction-input" id="planner80C_SSY" value="0" onchange="calculate80CPlanner()">
+                            </div>
+
+                            <button class="btn btn-primary btn-block btn-lg" onclick="calculate80CPlanner()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate 80C Benefits
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="calc-card">
+                        <div class="calc-card-header">
+                            <div class="calc-card-title">
+                                <div class="icon"><i class="fas fa-chart-pie"></i></div>
+                                <div>
+                                    <h3>80C Summary</h3>
+                                    <span class="subtitle">Investment allocation & savings</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="result-card">
+                                <div class="result-header">
+                                    <span class="result-title">Total 80C Investments</span>
+                                </div>
+                                <div class="result-amount" id="planner80CTotal">₹1,22,000</div>
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <div class="result-item-label">80C Limit</div>
+                                        <div class="result-item-value">₹1,50,000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">Eligible Deduction</div>
+                                        <div class="result-item-value" id="planner80CEligible">₹1,22,000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">Remaining Limit</div>
+                                        <div class="result-item-value" id="planner80CRemaining">₹28,000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">Tax Saved (30% slab)</div>
+                                        <div class="result-item-value" id="planner80CTaxSaved">₹38,064</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div style="margin-top: 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-size: 0.85rem; font-weight: 500;">80C Utilization</span>
+                                    <span style="font-size: 0.85rem; font-weight: 600;" id="planner80CPercent">81%</span>
+                                </div>
+                                <div style="height: 10px; background: var(--bg-tertiary); border-radius: 5px; overflow: hidden;">
+                                    <div id="planner80CBar" style="height: 100%; width: 81%; background: linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius: 5px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="alert warning" style="margin-top: 1.5rem;" id="planner80CAlert">
+                                <div class="alert-icon"><i class="fas fa-exclamation"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Investment Opportunity</div>
+                                    <div class="alert-text">
+                                        You can invest ₹28,000 more in ELSS or PPF to maximize your 80C benefits and save additional ₹8,736 in taxes!
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="chart-container">
+                                <div class="chart-header">
+                                    <div class="chart-title"><i class="fas fa-chart-pie"></i> Investment Allocation</div>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="planner80CChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOL 5: GST CALCULATOR -->
+            <div class="tool-panel" id="panel-gst">
+                <div class="page-header">
+                    <div class="page-header-top">
+                        <div>
+                            <h1 class="page-title">GST Calculator</h1>
+                            <p class="page-subtitle">Calculate GST amounts with CGST/SGST/IGST breakdown</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calculator-layout">
+                    <div class="calc-card">
+                        <div class="calc-card-header">
+                            <div class="calc-card-title">
+                                <div class="icon"><i class="fas fa-percent"></i></div>
+                                <div>
+                                    <h3>GST Calculation</h3>
+                                    <span class="subtitle">Enter amount and rate</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="tabs">
+                                <button class="tab active" onclick="setGSTMode('exclusive')">
+                                    <i class="fas fa-plus-circle"></i>
+                                    Add GST (Exclusive)
+                                </button>
+                                <button class="tab" onclick="setGSTMode('inclusive')">
+                                    <i class="fas fa-minus-circle"></i>
+                                    Remove GST (Inclusive)
+                                </button>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Amount (₹)</label>
+                                <input type="number" class="form-input" id="gstAmount" value="10000" onchange="calculateGST()">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">GST Rate</label>
+                                <div class="tabs" style="margin-bottom: 0;">
+                                    <button class="tab" onclick="setGSTRate(5)">5%</button>
+                                    <button class="tab" onclick="setGSTRate(12)">12%</button>
+                                    <button class="tab active" onclick="setGSTRate(18)">18%</button>
+                                    <button class="tab" onclick="setGSTRate(28)">28%</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Transaction Type</label>
+                                <select class="form-select" id="gstType" onchange="calculateGST()">
+                                    <option value="intra">Intra-State (CGST + SGST)</option>
+                                    <option value="inter">Inter-State (IGST)</option>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-primary btn-block btn-lg" onclick="calculateGST()">
+                                <i class="fas fa-calculator"></i>
+                                Calculate GST
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="calc-card">
+                        <div class="calc-card-header">
+                            <div class="calc-card-title">
+                                <div class="icon"><i class="fas fa-receipt"></i></div>
+                                <div>
+                                    <h3>GST Breakdown</h3>
+                                    <span class="subtitle">Detailed calculation</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="result-card">
+                                <div class="result-header">
+                                    <span class="result-title">Total Amount (with GST)</span>
+                                </div>
+                                <div class="result-amount" id="gstTotal">₹11,800</div>
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <div class="result-item-label">Base Amount</div>
+                                        <div class="result-item-value" id="gstBase">₹10,000</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">Total GST</div>
+                                        <div class="result-item-value" id="gstTaxAmount">₹1,800</div>
+                                    </div>
+                                    <div class="result-item" id="cgstRow">
+                                        <div class="result-item-label">CGST (9%)</div>
+                                        <div class="result-item-value" id="cgstAmount">₹900</div>
+                                    </div>
+                                    <div class="result-item" id="sgstRow">
+                                        <div class="result-item-label">SGST (9%)</div>
+                                        <div class="result-item-value" id="sgstAmount">₹900</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="slab-table-card" style="margin-top: 1.5rem;">
+                                <div class="slab-table-header">
+                                    <div class="slab-table-title">
+                                        <i class="fas fa-list"></i>
+                                        GST Rate Categories
+                                    </div>
+                                </div>
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Rate</th>
+                                            <th>Items</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="rate">5%</td>
+                                            <td>Essential items, economy travel, restaurants</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rate">12%</td>
+                                            <td>Processed foods, computers, business travel</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rate">18%</td>
+                                            <td>Most services, electronics, capital goods</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="rate">28%</td>
+                                            <td>Luxury items, automobiles, sin goods</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Tool Panels (Advance Tax, Crypto, TDS) -->
+            <div class="tool-panel" id="panel-advance-tax">
+                <div class="page-header">
+                    <h1 class="page-title">Advance Tax Calculator</h1>
+                    <p class="page-subtitle">Calculate quarterly advance tax installments with due dates</p>
+                </div>
+                <!-- Similar structure as other tools -->
+            </div>
+
+            <div class="tool-panel" id="panel-crypto">
+                <div class="page-header">
+                    <h1 class="page-title">Crypto/VDA Tax Calculator</h1>
+                    <p class="page-subtitle">Calculate 30% flat tax on cryptocurrency gains</p>
+                </div>
+            </div>
+
+            <div class="tool-panel" id="panel-tds">
+                <div class="page-header">
+                    <h1 class="page-title">TDS Calculator</h1>
+                    <p class="page-subtitle">Calculate Tax Deducted at Source for various payment types</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-items">
+            <a class="mobile-nav-item active" data-tool="regime-comparison">
+                <i class="fas fa-balance-scale"></i>
+                <span>Compare</span>
+            </a>
+            <a class="mobile-nav-item" data-tool="income-tax">
+                <i class="fas fa-calculator"></i>
+                <span>Tax</span>
+            </a>
+            <a class="mobile-nav-item" data-tool="hra">
+                <i class="fas fa-home"></i>
+                <span>HRA</span>
+            </a>
+            <a class="mobile-nav-item" data-tool="80c">
+                <i class="fas fa-piggy-bank"></i>
+                <span>80C</span>
+            </a>
+            <a class="mobile-nav-item" data-tool="gst">
+                <i class="fas fa-percent"></i>
+                <span>GST</span>
+            </a>
+        </div>
+    </nav>
+
+    <script src="tax-portal.js"></script>
+</body>
+
+</html>

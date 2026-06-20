@@ -1,0 +1,98 @@
+<!-- Dashboard Container -->
+<div class="dashboard-container">
+
+    <!-- KPI Strip: 6 cards -->
+    <div class="dashboard-kpi-strip">
+        <div class="dashboard-kpi-card" id="dashKpi1">
+            <div class="kpi-icon"><i class="fas fa-rupee-sign"></i></div>
+            <div class="kpi-value" id="dashPrice">-</div>
+            <div class="kpi-label">Current Price</div>
+            <canvas id="dashPriceSpark" class="kpi-sparkline"></canvas>
+        </div>
+        <div class="dashboard-kpi-card" id="dashKpi2">
+            <div class="kpi-icon"><i class="fas fa-balance-scale"></i></div>
+            <div class="kpi-value" id="dashDcfFairValue">-</div>
+            <div class="kpi-label">DCF Fair Value</div>
+            <canvas id="dashFairValueSpark" class="kpi-sparkline"></canvas>
+        </div>
+        <div class="dashboard-kpi-card" id="dashKpi3">
+            <div class="kpi-icon"><i class="fas fa-percentage"></i></div>
+            <div class="kpi-value" id="dashUpsidePercent">-</div>
+            <div class="kpi-label">Upside %</div>
+            <canvas id="dashUpsideSpark" class="kpi-sparkline"></canvas>
+        </div>
+        <div class="dashboard-kpi-card" id="dashKpi4">
+            <div class="kpi-icon"><i class="fas fa-star"></i></div>
+            <div class="kpi-value" id="dashRating">-</div>
+            <div class="kpi-label">Rating</div>
+            <canvas id="dashRatingSpark" class="kpi-sparkline"></canvas>
+        </div>
+        <div class="dashboard-kpi-card" id="dashKpi5">
+            <div class="kpi-icon"><i class="fas fa-building"></i></div>
+            <div class="kpi-value" id="dashEv">-</div>
+            <div class="kpi-label">Enterprise Value</div>
+            <canvas id="dashEvSpark" class="kpi-sparkline"></canvas>
+        </div>
+        <div class="dashboard-kpi-card" id="dashKpi6">
+            <div class="kpi-icon"><i class="fas fa-hand-holding-usd"></i></div>
+            <div class="kpi-value" id="dashEquityValue">-</div>
+            <div class="kpi-label">Equity Value</div>
+            <canvas id="dashEquitySpark" class="kpi-sparkline"></canvas>
+        </div>
+    </div>
+
+    <!-- Main Chart Row: Revenue/EBITDA area chart + FCF bar chart -->
+    <div class="dashboard-chart-row">
+        <div class="dashboard-chart-box">
+            <h4 class="chart-title">Revenue & EBITDA Trajectory</h4>
+            <div class="chart-container"><canvas id="dashRevenueEbitdaChart"></canvas></div>
+        </div>
+        <div class="dashboard-chart-box">
+            <h4 class="chart-title">Free Cash Flow Build-Up</h4>
+            <div class="chart-container"><canvas id="dashFcfChart"></canvas></div>
+        </div>
+    </div>
+
+    <!-- Middle Row: Valuation Gauge + Sensitivity Heatmap -->
+    <div class="dashboard-chart-row">
+        <div class="dashboard-chart-box">
+            <h4 class="chart-title">Valuation Gauge</h4>
+            <div class="dashboard-gauge-container" id="dashGaugeContainer">
+                <!-- SVG gauge will be rendered here by JS -->
+            </div>
+            <div class="gauge-labels">
+                <span>Current: <strong id="dashGaugeCurrent">-</strong></span>
+                <span>Fair: <strong id="dashGaugeFair">-</strong></span>
+            </div>
+        </div>
+        <div class="dashboard-chart-box">
+            <h4 class="chart-title">Sensitivity Matrix (WACC vs TGR)</h4>
+            <div class="dashboard-heatmap" id="dashHeatmap">
+                <!-- Heatmap rendered by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Row: Peer Comparison + Risk Rings + Quick Actions -->
+    <div class="dashboard-chart-row">
+        <div class="dashboard-chart-box">
+            <h4 class="chart-title">Peer Comparison</h4>
+            <div class="chart-container"><canvas id="dashPeerChart"></canvas></div>
+        </div>
+        <div class="dashboard-chart-box">
+            <h4 class="chart-title">Risk Assessment</h4>
+            <div class="dashboard-risk-rings" id="dashRiskRings">
+                <!-- Rings rendered by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Panel -->
+    <div class="dashboard-actions">
+        <button class="btn btn-primary" onclick="runAnalysis()"><i class="fas fa-rocket"></i> Run Analysis</button>
+        <button class="btn btn-secondary" onclick="exportProfessionalPDF()"><i class="fas fa-file-pdf"></i> Export PDF</button>
+        <button class="btn btn-secondary" onclick="exportProfessionalExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
+        <button class="btn btn-secondary" onclick="toggleSettingsModal()"><i class="fas fa-cog"></i> Settings</button>
+    </div>
+
+</div>

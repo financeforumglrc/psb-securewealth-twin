@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Gallery | dsFinancial</title>
+    <link rel="stylesheet" href="design-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --accent: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --text-dark: #1F2937;
+            --text-medium: #4B5563;
+            --text-light: #9CA3AF;
+            --bg-white: #FFFFFF;
+            --bg-light: #F9FAFB;
+            --bg-gray: #F3F4F6;
+            --border: #E5E7EB;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 48px;
+        }
+        .header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 12px; }
+        .header p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+        .back-link:hover { color: white; }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+        .model-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .model-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .company-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 700;
+        }
+        .reliance { background: linear-gradient(135deg, #0077B6, #00B4D8); }
+        .tcs { background: linear-gradient(135deg, #6A0DAD, #9D4EDD); }
+        .infosys { background: linear-gradient(135deg, #D00000, #FF6B6B); }
+        .company-info h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
+        .company-info span { font-size: 0.85rem; color: var(--text-light); }
+        .valuation-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+            padding: 16px;
+            background: var(--bg-light);
+            border-radius: 12px;
+        }
+        .val-item { text-align: center; }
+        .val-item .num { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+        .val-item .lbl { font-size: 0.75rem; color: var(--text-light); margin-top: 4px; }
+        .upside { color: var(--accent); }
+        .downside { color: var(--danger); }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: var(--bg-gray);
+            color: var(--text-medium);
+        }
+        .tag i { font-size: 0.7rem; }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        .portfolio-banner {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 40px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .portfolio-banner a {
+            color: white;
+            text-decoration: underline;
+            opacity: 0.9;
+        }
+        .portfolio-banner a:hover { opacity: 1; }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.75rem; }
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to DS Financial</a>
+
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> dsFinancial Model Gallery</h1>
+            <p>Pre-built financial models for India's largest companies. Open any model, explore the DCF, and ask the AI tutor questions — no signup required.</p>
+        </div>
+
+        <div class="portfolio-banner">
+            <div>
+                <strong>Portfolio project by Ira</strong> — MSc Corporate Finance, University of Galway
+                <br><span style="opacity:0.8;font-size:0.9rem;">Built with AI-powered PDF extraction, real-time DCF modeling, and contextual Tutor Mode.</span>
+            </div>
+            <div style="display:flex;gap:12px;">
+                <a href="https://github.com/ira/dsfinancial" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <a href="#" target="_blank"><i class="fas fa-book"></i> Case Study</a>
+                <a href="mailto:ira@example.com"><i class="fas fa-envelope"></i> Contact</a>
+            </div>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- Cards injected by JS -->
+        </div>
+    </div>
+
+    <script>
+        function escapeHtml(text) {
+            if (text == null) return '';
+            return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        const API_BASE = window.location.hostname.includes('localhost') 
+            ? 'http://localhost:5000/api/v1' 
+            : 'https://dsfinancial-api.railway.app/api/v1';
+
+        // Fallback seed data if API is unreachable
+        const seedModels = [
+            {
+                slug: 'reliance-industries',
+                company_name: 'Reliance Industries Ltd',
+                ticker: 'RELIANCE',
+                exchange: 'NSE',
+                intrinsic_value: 1847,
+                market_price: 1250,
+                upside: 47.8,
+                wacc: 10.5,
+                color: 'reliance',
+                icon: 'RIL'
+            },
+            {
+                slug: 'tcs',
+                company_name: 'Tata Consultancy Services',
+                ticker: 'TCS',
+                exchange: 'NSE',
+                intrinsic_value: 4520,
+                market_price: 3980,
+                upside: 13.6,
+                wacc: 9.8,
+                color: 'tcs',
+                icon: 'TCS'
+            },
+            {
+                slug: 'infosys',
+                company_name: 'Infosys Ltd',
+                ticker: 'INFY',
+                exchange: 'NSE',
+                intrinsic_value: 1980,
+                market_price: 1720,
+                upside: 15.1,
+                wacc: 10.2,
+                color: 'infosys',
+                icon: 'INFY'
+            }
+        ];
+
+        async function loadGallery() {
+            const grid = document.getElementById('galleryGrid');
+            let models = seedModels;
+
+            try {
+                const res = await fetch(`${API_BASE}/gallery`, { headers: { 'X-Device-Id': localStorage.getItem('dsf_device_id') || 'gallery-visitor' } });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && data.data.length > 0) {
+                        models = data.data.map(m => ({
+                            slug: m.slug,
+                            company_name: m.company_name,
+                            ticker: m.ticker,
+                            exchange: m.exchange,
+                            intrinsic_value: 0,
+                            market_price: 0,
+                            upside: 0,
+                            wacc: 0,
+                            color: m.slug.includes('reliance') ? 'reliance' : m.slug.includes('tcs') ? 'tcs' : 'infosys',
+                            icon: m.ticker || 'Co'
+                        }));
+                    }
+                }
+            } catch (e) {
+                console.log('Gallery API unreachable, using seed data');
+            }
+
+            grid.innerHTML = models.map(m => {
+                const upsideClass = m.upside >= 0 ? 'upside' : 'downside';
+                const upsideSign = m.upside >= 0 ? '+' : '';
+                return `
+                    <a href="financial-modelling.html?gallery=${escapeHtml(m.slug)}" class="model-card">
+                        <div class="card-header">
+                            <div class="company-icon ${escapeHtml(m.color)}">${escapeHtml(m.icon)}</div>
+                            <div class="company-info">
+                                <h3>${escapeHtml(m.company_name)}</h3>
+                                <span>${escapeHtml(m.ticker)} · ${escapeHtml(m.exchange)} · DCF Model</span>
+                            </div>
+                        </div>
+                        <div class="valuation-strip">
+                            <div class="val-item">
+                                <div class="num">₹${escapeHtml(String(m.intrinsic_value || 0))}</div>
+                                <div class="lbl">Intrinsic Value</div>
+                            </div>
+                            <div class="val-item">
+                                <div class="num">₹${escapeHtml(String(m.market_price || 0))}</div>
+                                <div class="lbl">Market Price</div>
+                            </div>
+                            <div class="val-item">
+                                <div class="num ${upsideClass}">${upsideSign}${escapeHtml(String(m.upside || 0))}%</div>
+                                <div class="lbl">Implied Upside</div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="tag"><i class="fas fa-robot"></i> AI Tutor Enabled</span>
+                            <span class="cta-btn">Open Model <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        // Generate device ID if not present
+        if (!localStorage.getItem('dsf_device_id')) {
+            localStorage.setItem('dsf_device_id', 'dev-' + Math.random().toString(36).substring(2, 15));
+        }
+
+        loadGallery();
+    </script>
+</body>
+</html>

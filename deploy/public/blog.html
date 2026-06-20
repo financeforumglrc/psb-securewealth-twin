@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Blog | DS Financial Solutions</title>
+    <meta name="description" content="Expert financial articles on tax planning, GST filing, investment strategies, and personal finance tips for India. Stay updated with DS Financial.">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="global-features.css">
+    <link rel="stylesheet" href="enhanced-features.css">
+
+    <style>
+        .blog-header {
+            background: linear-gradient(135deg, #1A237E, #283593);
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .blog-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: -20px 0 3rem 0;
+            padding: 1rem;
+        }
+
+        .filter-btn {
+            background: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .blog-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-img {
+            height: 200px;
+            background: #e0e7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 3rem;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .tag {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .read-time {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-left: 10px;
+        }
+
+        .blog-content h3 {
+            margin: 10px 0;
+        }
+
+        .blog-content p {
+            color: #6b7280;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .btn-read {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* Article Modal */
+        .article-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: none;
+            overflow-y: auto;
+        }
+
+        .article-content {
+            background: white;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 3rem;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .close-article {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+
+        .article-body h2 {
+            color: var(--primary);
+            margin-top: 2rem;
+        }
+
+        .article-body p {
+            margin-bottom: 1rem;
+        }
+
+        .article-body ul {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .article-body li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">DS Financial</span>
+            </a>
+            <div class="nav-right">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tax-portal.html" class="nav-link">Tax Portal</a>
+                <a href="#contact" class="btn-primary">Contact</a>
+            </div>
+        </div>
+    </nav>
+    <div class="header-spacer"></div>
+
+    <div class="blog-header">
+        <h1>Financial Insights</h1>
+        <p>Expert articles on Tax, GST, and Investments</p>
+    </div>
+
+    <div class="blog-filters">
+        <button class="filter-btn active" onclick="filter('all')">All</button>
+        <button class="filter-btn" onclick="filter('tax')">Income Tax</button>
+        <button class="filter-btn" onclick="filter('gst')">GST</button>
+    </div>
+
+    <div class="blog-grid">
+        <!-- Article 1 -->
+        <div class="blog-card" onclick="openArticle('regime')">
+            <div class="blog-img"><i class="fas fa-balance-scale"></i></div>
+            <div class="blog-content">
+                <div><span class="tag">Income Tax</span> <span class="read-time">5 min read</span></div>
+                <h3>Old vs New Tax Regime: The Breakdown</h3>
+                <p>Confusion about which tax regime to choose? We break down the math for salaries above 10 Lakhs.</p>
+                <a href="#" class="btn-read">Read More →</a>
+            </div>
+        </div>
+
+        <!-- Article 2 -->
+        <div class="blog-card" onclick="openArticle('gst-mistakes')">
+            <div class="blog-img"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="blog-content">
+                <div><span class="tag">GST</span> <span class="read-time">4 min read</span></div>
+                <h3>5 Common GST Mistakes Small Businesses Make</h3>
+                <p>Avoid penalties and scrutiny by fixing these common GSTR filing errors today.</p>
+                <a href="#" class="btn-read">Read More →</a>
+            </div>
+        </div>
+
+        <!-- Article 3 -->
+        <div class="blog-card" onclick="openArticle('salary')">
+            <div class="blog-img"><i class="fas fa-rupee-sign"></i></div>
+            <div class="blog-content">
+                <div><span class="tag">Tax Saving</span> <span class="read-time">6 min read</span></div>
+                <h3>Save Tax on Salary Above ₹15 Lakhs</h3>
+                <p>Smart investment hacks and allowance optimizations to reduce your tax liability to zero.</p>
+                <a href="#" class="btn-read">Read More →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Reader Modal -->
+    <div class="article-modal" id="articleModal">
+        <div class="article-content">
+            <span class="close-article"
+                onclick="document.getElementById('articleModal').style.display='none'">&times;</span>
+            <div class="article-body" id="articleBody"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="global-features.js"></script>
+    <script>
+        const articles = {
+            'regime': `
+                <h1>Old vs New Tax Regime: Which is better?</h1>
+                <p>The New Tax Regime (Section 115BAC) has become the default option from FY 2023-24. But is it right for you? It depends entirely on your deductions.</p>
+                
+                <h2>The Breakeven Point</h2>
+                <p>If your total deductions (HRA, 80C, 80D, Home Loan Interest) exceed <strong>₹3.75 Lakhs</strong>, the Old Regime is generally better.</p>
+                
+                <h2>Key Differences</h2>
+                <ul>
+                    <li><strong>New Regime:</strong> Lower tax rates but NO deductions (except Std Deduction ₹50k).</li>
+                    <li><strong>Old Regime:</strong> Higher rates but allows all exemptions (80C, HRA, LTA).</li>
+                </ul>
+                
+                <p><strong>Verdict:</strong> For young professionals with low investments, New Regime is simpler and better. For those with home loans and families, Old Regime still saves more.</p>
+            `,
+            'gst-mistakes': `
+                <h1>5 Common GST Mistakes</h1>
+                <p>GST non-compliance can attract heavy penalties. Here are the top mistakes we see:</p>
+                
+                <h2>1. Not Reconciling GSTR-2A vs 3B</h2>
+                <p>Claiming ITC without checking if your vendor has uploaded the invoice leads to notices. Use our <a href="gst-tools.html#reconciliation">Reconciliation Tool</a>.</p>
+                
+                <h2>2. Incorrect HSN Codes</h2>
+                <p>Using a general HSN code instead of specific ones can lead to wrong tax rates. Always verify using our HSN Finder.</p>
+                
+                <h2>3. Filing Nil Returns even with Sales</h2>
+                <p>Never file a Nil return just to avoid late fees if you had transactions. Interest penalties are severe.</p>
+            `,
+            'salary': `
+                <h1>Tax Planning for High Earners</h1>
+                <p>Earning above ₹15 Lakhs puts you in the 30% bucket. Here is how to reduce that:</p>
+                
+                <h2>1. NPS (National Pension System)</h2>
+                <p>Invest ₹50,000 in NPS Tier 1 under Section 80CCD(1B) over and above the ₹1.5L limit of 80C.</p>
+                
+                <h2>2. Health Insurance</h2>
+                <p>Buy insurance for parents. Section 80D allows up to ₹50,000 deduction for senior citizen parents.</p>
+                
+                <h2>3. Home Loan Interest</h2>
+                <p>Section 24(b) allows up to ₹2 Lakh deduction on interest paid on home loans for self-occupied property.</p>
+            `
+        };
+
+        function openArticle(id) {
+            document.getElementById('articleBody').innerHTML = articles[id];
+            document.getElementById('articleModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        document.querySelector('.close-article').onclick = () => {
+            document.getElementById('articleModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        };
+    </script>
+</body>
+
+</html>

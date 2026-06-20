@@ -1,0 +1,188 @@
+
+        // ── WACC Calculator ──
+        function generateWACC() {
+            if (!modelData) return;
+            const p = getCurrentParams();
+            document.getElementById('waccTax').value = p.taxRate;
+            const dePct = Math.min(80, Math.round(p.netDebt / Math.max(1, p.netDebt + modelData.eq) * 100));
+            document.getElementById('waccDe').value = dePct;
+            updateWACC();
+        }
+        function updateWACC() {
+            const rf = parseFloat(document.getElementById('waccRf').value);
+            const erp = parseFloat(document.getElementById('waccErp').value);
+            const beta = parseFloat(document.getElementById('waccBeta').value);
+            const cod = parseFloat(document.getElementById('waccCod').value);
+            const tax = parseFloat(document.getElementById('waccTax').value);
+            const de = parseFloat(document.getElementById('waccDe').value);
+            const coe = rf + beta * erp;
+            const codAt = cod * (1 - tax / 100);
+            const wd = de / 100;
+            const we = 1 - wd;
+            const wacc = we * coe + wd * codAt;
+            document.getElementById('waccRfVal').textContent = rf.toFixed(1);
+            document.getElementById('waccErpVal').textContent = erp.toFixed(1);
+            document.getElementById('waccBetaVal').textContent = beta.toFixed(2);
+            document.getElementById('waccCodVal').textContent = cod.toFixed(1);
+            document.getElementById('waccTaxVal').textContent = tax.toFixed(2);
+            document.getElementById('waccDeVal').textContent = de;
+            document.getElementById('waccCoe').textContent = coe.toFixed(2) + '%';
+            document.getElementById('waccCodAt').textContent = codAt.toFixed(2) + '%';
+            document.getElementById('waccWe').textContent = (we * 100).toFixed(0) + '%';
+            document.getElementById('waccWd').textContent = (wd * 100).toFixed(0) + '%';
+            document.getElementById('waccResult').textContent = wacc.toFixed(2) + '%';
+            renderWACCSensitivityChart(rf, erp, cod, tax);
+        }
+        function applyWACCtoDCF() {
+            const wacc = parseFloat(document.getElementById('waccResult').textContent);
+            document.getElementById('wacc').value = wacc.toFixed(2);
+            showToast('WACC of ' + wacc.toFixed(2) + '% applied to DCF');
+        }
+        function renderWACCSensitivityChart(rf, erp, cod, tax) {
+            const ctx = document.getElementById('waccSensitivityChart');
+            if (!ctx) return;
+            const betas = [0.5, 0.8, 1.0, 1.2, 1.5, 2.0];
+            const deRatios = [0, 15, 30, 45, 60];
+            const colors = ['#2563EB', '#3B82F6', '#60A5FA', '#F59E0B', '#EF4444'];
+            const datasets = deRatios.map((de, i) => {
+                const wd = de / 100, we = 1 - wd, codAt = cod * (1 - tax / 100);
+                return { label: de + '% Debt', data: betas.map(b => we * (rf + b * erp) + wd * codAt), borderColor: colors[i], backgroundColor: colors[i], tension: 0.3, pointRadius: 3, fill: false };
+            });
+            safeCreateChart('waccSensitivityChart', ctx, { type: 'line', data: { labels: betas.map(b => 'β=' + b), datasets }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { title: { display: true, text: 'WACC %' } }, x: { title: { display: true, text: 'Beta' } } } } });
+        }
+
+        // ── Comparable Companies ──
+        function generateComps() {
+            if (!modelData) return;
+            const p = getCurrentParams();
+            const selfPE = modelData.eq / modelData.ni[4];
+            const selfEVE = modelData.ev / modelData.ebitda[4];
+            const selfPB = modelData.eq / (modelData.equity[4] || 100);
+            const selfRevGr = modelData.cagr * 100;
+            const peers = [
+                { name: 'Peer A (Large Cap)', eve: selfEVE * 1.35, pe: selfPE * 1.45, pb: selfPB * 1.2, roe: modelData.roe[4] * 1.15, revGr: selfRevGr * 0.85, evRev: (modelData.ev / modelData.rev[4]) * 1.1 },
+                { name: 'Peer B (Mid Cap)', eve: selfEVE * 0.9, pe: selfPE * 0.85, pb: selfPB * 0.75, roe: modelData.roe[4] * 0.88, revGr: selfRevGr * 1.15, evRev: (modelData.ev / modelData.rev[4]) * 0.85 },
+                { name: 'Peer C (Growth)', eve: selfEVE * 1.6, pe: selfPE * 1.8, pb: selfPB * 1.5, roe: modelData.roe[4] * 1.05, revGr: selfRevGr * 1.35, evRev: (modelData.ev / modelData.rev[4]) * 1.25 },
+                { name: 'Peer D (Value)', eve: selfEVE * 0.7, pe: selfPE * 0.65, pb: selfPB * 0.55, roe: modelData.roe[4] * 0.75, revGr: selfRevGr * 0.65, evRev: (modelData.ev / modelData.rev[4]) * 0.7 },
+                { name: 'Peer E (Regional)', eve: selfEVE * 1.05, pe: selfPE * 0.95, pb: selfPB * 0.9, roe: modelData.roe[4] * 0.95, revGr: selfRevGr * 0.95, evRev: (modelData.ev / modelData.rev[4]) * 0.95 },
+            ];
+            const all = [{ name: modelData.company + ' (Self)', eve: selfEVE, pe: selfPE, pb: selfPB, roe: modelData.roe[4], revGr: selfRevGr, evRev: modelData.ev / modelData.rev[4] }].concat(peers);
+            const tbody = document.getElementById('compsTableBody');
+            if (tbody) tbody.innerHTML = all.map((c, i) => `<tr style="${i===0?'background:rgba(37,99,235,0.08);font-weight:600;':''}"><td>${c.name}</td><td>${c.evRev.toFixed(1)}x</td><td>${c.eve.toFixed(1)}x</td><td>${c.pe.toFixed(1)}x</td><td>${c.pb.toFixed(1)}x</td><td>${c.roe.toFixed(1)}%</td><td>${c.revGr.toFixed(1)}%</td></tr>`).join('');
+            const medEVE = peers.map(p => p.eve).sort((a,b)=>a-b)[2];
+            const lowEV = modelData.ebitda[4] * Math.min(...peers.map(p=>p.eve));
+            const highEV = modelData.ebitda[4] * Math.max(...peers.map(p=>p.eve));
+            document.getElementById('compsMedianEvebitda').textContent = medEVE.toFixed(1) + 'x';
+            document.getElementById('compsEvRange').textContent = '₹' + lowEV.toFixed(0) + ' – ₹' + highEV.toFixed(0);
+            const prem = ((selfEVE / medEVE - 1) * 100);
+            document.getElementById('compsPremium').textContent = (prem > 0 ? '+' : '') + prem.toFixed(1) + '%';
+            document.getElementById('compsPremium').style.color = prem > 20 ? 'var(--danger)' : prem > 0 ? 'var(--warning)' : 'var(--accent)';
+            const barCtx = document.getElementById('compsBarChart');
+            if (barCtx) safeCreateChart('compsBarChart', barCtx, { type: 'bar', data: { labels: all.map(c=>c.name.split(' ')[0]), datasets: [{ label: 'EV/EBITDA', data: all.map(c=>c.eve), backgroundColor: all.map((_,i)=>i===0?'#2563EB':'#9CA3AF'), borderRadius: 4 }, { label: 'P/E', data: all.map(c=>c.pe), backgroundColor: all.map((_,i)=>i===0?'#10B981':'#D1D5DB'), borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } } });
+            const scCtx = document.getElementById('compsScatterChart');
+            if (scCtx) safeCreateChart('compsScatterChart', scCtx, { type: 'scatter', data: { datasets: [{ label: 'Peers', data: peers.map(p=>({x:p.revGr,y:p.eve})), backgroundColor: '#9CA3AF', pointRadius: 6 }, { label: 'Self', data: [{x:selfRevGr,y:selfEVE}], backgroundColor: '#2563EB', pointRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { x: { title: { display: true, text: 'Revenue Growth %' } }, y: { title: { display: true, text: 'EV/EBITDA' } } } } });
+        }
+
+        // ── LBO Model ──
+        function generateLBO() {
+            if (!modelData) return;
+            document.getElementById('lboEntryEV').value = modelData.ev.toFixed(0);
+            updateLBO();
+        }
+        function updateLBO() {
+            const ev = parseFloat(document.getElementById('lboEntryEV').value) || modelData.ev;
+            const de = parseFloat(document.getElementById('lboDe').value);
+            const exitMult = parseFloat(document.getElementById('lboExitMultiple').value);
+            const years = parseInt(document.getElementById('lboHoldYears').value);
+            const tlRate = parseFloat(document.getElementById('lboTlRate').value);
+            const hyRate = parseFloat(document.getElementById('lboHyRate').value);
+            const amortPct = parseFloat(document.getElementById('lboAmort').value);
+            document.getElementById('lboDeVal').textContent = de;
+            document.getElementById('lboExitVal').textContent = exitMult;
+            document.getElementById('lboHoldVal').textContent = years;
+            document.getElementById('lboTlVal').textContent = tlRate.toFixed(2);
+            document.getElementById('lboHyVal').textContent = hyRate.toFixed(2);
+            document.getElementById('lboAmortVal').textContent = amortPct;
+            const debt = ev * (de / 100);
+            const equity = ev - debt;
+            const tlShare = 0.65, hyShare = 0.35;
+            let tlDebt = debt * tlShare, hyDebt = debt * hyShare;
+            let schedule = [];
+            for (let y = 1; y <= years; y++) {
+                const ebitda = modelData.ebitda[Math.min(y - 1, 4)];
+                const interest = tlDebt * tlRate / 100 + hyDebt * hyRate / 100;
+                const fcf = ebitda * 0.45 - interest;
+                const tlRepay = Math.min(tlDebt, Math.max(tlDebt * amortPct / 100, fcf * 0.6));
+                const hyRepay = 0;
+                tlDebt -= tlRepay;
+                schedule.push({ year: y, open: tlDebt + hyDebt + tlRepay, tlRepay, hyRepay, interest, close: tlDebt + hyDebt });
+            }
+            const exitEV = modelData.ebitda[Math.min(years - 1, 4)] * exitMult;
+            const netDebtExit = schedule[years - 1].close;
+            const equityExit = exitEV - netDebtExit;
+            const moic = equityExit / equity;
+            const irr = Math.pow(moic, 1 / years) - 1;
+            document.getElementById('lboMOIC').textContent = moic.toFixed(1) + 'x';
+            document.getElementById('lboIRR').textContent = (irr * 100).toFixed(1) + '%';
+            document.getElementById('lboEquityInvested').textContent = '₹' + equity.toFixed(0) + ' Cr';
+            const tbody = document.getElementById('lboDebtBody');
+            if (tbody) tbody.innerHTML = schedule.map(s => `<tr><td>Year ${s.year}</td><td>₹${s.open.toFixed(0)}</td><td>₹${s.tlRepay.toFixed(0)}</td><td>₹${s.hyRepay.toFixed(0)}</td><td>₹${s.interest.toFixed(0)}</td><td>₹${s.close.toFixed(0)}</td></tr>`).join('');
+            const retCtx = document.getElementById('lboReturnsChart');
+            if (retCtx) safeCreateChart('lboReturnsChart', retCtx, { type: 'bar', data: { labels: ['Entry', ...schedule.map(s=>'Y'+s.year), 'Exit'], datasets: [{ label: 'Equity Value', data: [equity, ...schedule.map(()=>null), equityExit], backgroundColor: '#2563EB', borderRadius: 4 }, { label: 'Net Debt', data: [debt, ...schedule.map(s=>s.close), netDebtExit], backgroundColor: '#EF4444', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { stacked: true, title: { display: true, text: 'Rs Cr' } }, x: { stacked: true } } } });
+        }
+
+        // ── M&A Model ──
+        function generateMA() {
+            if (!modelData) return;
+            document.getElementById('maTargetEq').value = modelData.eq.toFixed(0);
+            updateMA();
+        }
+        function updateMA() {
+            const targetEq = parseFloat(document.getElementById('maTargetEq').value) || modelData.eq;
+            const premium = parseFloat(document.getElementById('maPremium').value);
+            const cashPct = parseFloat(document.getElementById('maCashPct').value);
+            const synergyPct = parseFloat(document.getElementById('maSynergy').value);
+            const acqPE = parseFloat(document.getElementById('maAcqPE').value);
+            const debtRate = parseFloat(document.getElementById('maDebtRate').value);
+            const tax = parseFloat(document.getElementById('maTaxRate').value);
+            document.getElementById('maPremiumVal').textContent = premium;
+            document.getElementById('maCashVal').textContent = cashPct;
+            document.getElementById('maSynergyVal').textContent = synergyPct;
+            document.getElementById('maAcqPEVal').textContent = acqPE;
+            document.getElementById('maDebtVal').textContent = debtRate.toFixed(2);
+            document.getElementById('maTaxVal').textContent = tax.toFixed(2);
+            const offerValue = targetEq * (1 + premium / 100);
+            const cashPart = offerValue * (cashPct / 100);
+            const stockPart = offerValue * (1 - cashPct / 100);
+            const acqRev = modelData.rev[4] * 3;
+            const acqNI = modelData.ni[4] * 3;
+            const acqShares = p.shares * 3;
+            const acqEPS = acqNI / acqShares;
+            const newDebt = cashPart;
+            const newShares = stockPart / (acqEPS * acqPE);
+            const synergies = modelData.rev[4] * (synergyPct / 100);
+            const intExp = newDebt * debtRate / 100;
+            const pfNI = acqNI + modelData.ni[4] + synergies * (1 - tax / 100) - intExp;
+            const pfShares = acqShares + newShares;
+            const pfEPS = pfNI / pfShares;
+            const accretion = (pfEPS / acqEPS - 1) * 100;
+            document.getElementById('maAcqEPS').textContent = '₹' + acqEPS.toFixed(1);
+            document.getElementById('maPfEPS').textContent = '₹' + pfEPS.toFixed(1);
+            document.getElementById('maAccretion').textContent = (accretion > 0 ? '+' : '') + accretion.toFixed(1) + '%';
+            document.getElementById('maAccretion').style.color = accretion > 0 ? '#10B981' : accretion < 0 ? '#EF4444' : '#F59E0B';
+            const tbody = document.getElementById('maProFormaBody');
+            if (tbody) tbody.innerHTML = `
+                <tr><td>Revenue (Rs Cr)</td><td>${acqRev.toFixed(0)}</td><td>${modelData.rev[4].toFixed(0)}</td><td>${(acqRev + modelData.rev[4] + synergies).toFixed(0)}</td><td>—</td></tr>
+                <tr><td>Net Income (Rs Cr)</td><td>${acqNI.toFixed(0)}</td><td>${modelData.ni[4].toFixed(0)}</td><td>${pfNI.toFixed(0)}</td><td style="color:${pfNI>acqNI?'var(--accent)':'var(--danger)'}">${((pfNI/acqNI-1)*100).toFixed(1)}%</td></tr>
+                <tr><td>Shares (Cr)</td><td>${acqShares.toFixed(1)}</td><td>${p.shares.toFixed(1)}</td><td>${pfShares.toFixed(1)}</td><td>—</td></tr>
+                <tr><td>EPS (Rs)</td><td>${acqEPS.toFixed(2)}</td><td>${(modelData.ni[4]/p.shares).toFixed(2)}</td><td style="font-weight:600;">${pfEPS.toFixed(2)}</td><td style="color:${accretion>0?'var(--accent)':'var(--danger)'};font-weight:600;">${(accretion>0?'+':'')+accretion.toFixed(1)}%</td></tr>
+            `;
+            const chartCtx = document.getElementById('maAccretionChart');
+            if (chartCtx) {
+                const years = ['Y1', 'Y2', 'Y3', 'Y4', 'Y5'];
+                const acqLine = years.map((_, i) => acqEPS * Math.pow(1.08, i));
+                const synergyRamp = years.map((_, i) => Math.min(1, (i + 1) / 3));
+                const pfLine = years.map((_, i) => (acqNI * Math.pow(1.08, i) + modelData.ni[4] * Math.pow(1.06, i) + synergies * synergyRamp[i] * (1 - tax / 100) - intExp) / pfShares);
+                safeCreateChart('maAccretionChart', chartCtx, { type: 'line', data: { labels: years, datasets: [{ label: 'Acquirer Standalone', data: acqLine, borderColor: '#9CA3AF', tension: 0.3 }, { label: 'Pro Forma', data: pfLine, borderColor: '#2563EB', tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { title: { display: true, text: 'EPS (Rs)' } } } } });
+            }
+        }

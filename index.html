@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="DS Financial - India's Most Comprehensive Financial Tools Suite. 100+ Free Calculators for Tax, GST, Investments, Business & More.">
+    <meta name="keywords"
+        content="Tax Calculator, GST Calculator, Investment Tools, Financial Calculator, ITR Filing, Business Tools, India">
+    <meta name="author" content="DS Financial">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="DS Financial | 100+ Free Financial Tools">
+    <meta property="og:description" content="India's Most Comprehensive Financial Tools Suite">
+    <meta property="og:type" content="website">
+
+    <title>DS Financial | 100+ Free Financial Tools & Calculators</title>
+
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%231A237E' rx='15' width='100' height='100'/><text x='50' y='65' font-size='50' font-weight='bold' fill='%2300D9FF' text-anchor='middle'>DS</text></svg>">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="design-system.css">
+
+    <style>
+        :root {
+            --primary: #1A237E;
+            --primary-light: #3949AB;
+            --accent: #00D9FF;
+            --accent-glow: rgba(0, 217, 255, 0.3);
+            --secondary: #FFB300;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --bg-dark: #0A0E1A;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, #1A237E 0%, #0D47A1 50%, #1A237E 100%);
+            --gradient-accent: linear-gradient(135deg, #00D9FF, #8B5CF6);
+            --gradient-gold: linear-gradient(135deg, #FFB300, #FF6F00);
+            --gradient-success: linear-gradient(135deg, #22C55E, #16A34A);
+            --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            --shadow-glow: 0 0 40px rgba(0, 217, 255, 0.2);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --radius: 16px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(26, 35, 126, 0.4) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 217, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                var(--bg-dark);
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 14, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--gradient-accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--bg-dark);
+            font-weight: 800;
+        }
+
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            padding: 0.6rem 1.25rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-card-hover);
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .nav-cta {
+            background: var(--gradient-accent);
+            color: var(--bg-dark) !important;
+            font-weight: 700;
+            padding: 0.6rem 1.5rem;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 2rem 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            padding: 0.5rem 1.25rem;
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 217, 255, 0.4); }
+            50% { box-shadow: 0 0 20px 5px rgba(0, 217, 255, 0.2); }
+        }
+
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-search {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-full);
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        /* Category Navigation */
+        .category-nav {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            scrollbar-width: none;
+        }
+
+        .category-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-full);
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border-color: var(--accent);
+        }
+
+        .category-btn.active {
+            background: var(--gradient-accent);
+            color: var(--bg-dark);
+            border-color: transparent;
+        }
+
+        .category-btn i {
+            font-size: 1rem;
+        }
+
+        .category-count {
+            background: rgba(0,0,0,0.2);
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Featured Section */
+        .featured-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .view-all {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+        }
+
+        .view-all:hover {
+            gap: 0.75rem;
+        }
+
+        /* Featured Cards */
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .featured-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .featured-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--card-gradient, var(--gradient-accent));
+        }
+
+        .featured-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .featured-card.tax-optimizer {
+            --card-gradient: linear-gradient(135deg, #00D9FF, #8B5CF6);
+        }
+
+        .featured-card.gst-suite {
+            --card-gradient: linear-gradient(135deg, #22C55E, #16A34A);
+        }
+
+        .featured-card.investment {
+            --card-gradient: linear-gradient(135deg, #FFB300, #FF6F00);
+        }
+
+        .featured-card.business {
+            --card-gradient: linear-gradient(135deg, #EC4899, #8B5CF6);
+        }
+
+        .featured-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--card-gradient, var(--gradient-accent));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 217, 255, 0.3);
+        }
+
+        .featured-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .featured-stats {
+            display: flex;
+            gap: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .featured-stat {
+            text-align: center;
+        }
+
+        .featured-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .featured-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--gradient-gold);
+            color: var(--bg-dark);
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Tools Grid */
+        .tools-section {
+            margin-bottom: 3rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            background: var(--tool-color, rgba(0, 217, 255, 0.1));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--tool-icon-color, var(--accent));
+        }
+
+        .tool-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .tool-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .tool-badge {
+            margin-left: auto;
+            padding: 0.2rem 0.5rem;
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .tool-badge.pro {
+            background: rgba(255, 179, 0, 0.2);
+            color: var(--secondary);
+        }
+
+        .tool-badge.new {
+            background: rgba(236, 72, 153, 0.2);
+            color: #EC4899;
+        }
+
+        /* Tool Categories Colors */
+        .tool-card[data-category="tax"] .tool-icon {
+            --tool-color: rgba(99, 102, 241, 0.15);
+            --tool-icon-color: #6366F1;
+        }
+
+        .tool-card[data-category="gst"] .tool-icon {
+            --tool-color: rgba(34, 197, 94, 0.15);
+            --tool-icon-color: #22C55E;
+        }
+
+        .tool-card[data-category="investment"] .tool-icon {
+            --tool-color: rgba(255, 179, 0, 0.15);
+            --tool-icon-color: #FFB300;
+        }
+
+        .tool-card[data-category="business"] .tool-icon {
+            --tool-color: rgba(236, 72, 153, 0.15);
+            --tool-icon-color: #EC4899;
+        }
+
+        .tool-card[data-category="utility"] .tool-icon {
+            --tool-color: rgba(139, 92, 246, 0.15);
+            --tool-icon-color: #8B5CF6;
+        }
+
+        /* Quick Access Bar */
+        .quick-access {
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            overflow-x: auto;
+        }
+
+        .quick-access-title {
+            font-weight: 700;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-access-title i {
+            color: var(--secondary);
+        }
+
+        .quick-links {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: nowrap;
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .quick-link:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border-color: var(--accent);
+        }
+
+        /* Portal Links */
+        .portals-section {
+            margin-bottom: 3rem;
+        }
+
+        .portals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .portal-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: var(--portal-gradient, var(--gradient-accent));
+            opacity: 0.1;
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+            transition: all 0.4s ease;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .portal-card:hover::after {
+            transform: translate(30%, -30%) scale(1.5);
+        }
+
+        .portal-card.tax-portal {
+            --portal-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+        }
+
+        .portal-card.gst-portal {
+            --portal-gradient: linear-gradient(135deg, #22C55E, #16A34A);
+        }
+
+        .portal-card.gst-black-mirror {
+            --portal-gradient: linear-gradient(135deg, #0F172A, #1E293B);
+        }
+
+        .portal-card.investment-portal {
+            --portal-gradient: linear-gradient(135deg, #FFB300, #FF6F00);
+        }
+
+        .portal-card.pdf-portal {
+            --portal-gradient: linear-gradient(135deg, #EF4444, #DC2626);
+        }
+
+        .portal-card.resume-portal {
+            --portal-gradient: linear-gradient(135deg, #8B5CF6, #A855F7);
+        }
+
+        .portal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .portal-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--portal-gradient, var(--gradient-accent));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .portal-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .portal-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .portal-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .portal-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .portal-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.6rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .portal-feature i {
+            color: var(--accent);
+            font-size: 0.7rem;
+        }
+
+        .portal-tools-count {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: var(--bg-dark);
+            padding: 0.3rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-brand {
+            max-width: 300px;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer-links h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            max-width: 1600px;
+            margin: 2rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border-color: var(--accent);
+        }
+
+        /* Mobile Hamburger */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        .mobile-menu-btn:hover {
+            background: var(--bg-card-hover);
+        }
+
+        /* Mobile Nav Overlay */
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1001;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .mobile-nav-overlay.active {
+            display: flex;
+        }
+        .mobile-nav-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.75rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .mobile-nav-overlay a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+            width: 80%;
+            max-width: 320px;
+            text-align: center;
+        }
+        .mobile-nav-overlay a:hover {
+            color: var(--text-primary);
+            background: var(--bg-card-hover);
+        }
+        .mobile-nav-overlay a.nav-cta {
+            background: var(--gradient-accent);
+            color: var(--bg-dark);
+            margin-top: 1rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            padding: 3rem;
+            background: var(--gradient-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            text-align: center;
+        }
+        .contact-section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .contact-section h2 i { color: var(--accent); }
+        .contact-section > p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+        .contact-card {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+        }
+        .contact-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        .contact-card i {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+        .contact-card h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .contact-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .contact-card a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.5rem 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding: 120px 1rem 60px;
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .main-content {
+                padding: 0 1rem 2rem;
+            }
+
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-access {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .contact-section {
+                padding: 2rem 1.25rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+
+<body>
+    <div class="bg-animation"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">DS</div>
+                <span class="logo-text">Financial</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="tax-portal.html" class="nav-link">Tax Tools</a>
+                <a href="gst-tools.html" class="nav-link">GST Tools</a>
+                <a href="gst-black-mirror.html" class="nav-link">GST Black Mirror</a>
+                <a href="investment-tools.html" class="nav-link">Investments</a>
+                <a href="financial-modelling.html" class="nav-link">Financial Modelling</a>
+                <a href="gallery.html" class="nav-link">Gallery</a>
+                <a href="smart-tax-optimizer.html" class="btn btn-accent">
+                    <i class="fas fa-bolt"></i> Tax Optimizer
+                </a>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay">
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close navigation menu">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="index.html">Home</a>
+        <a href="tax-portal.html">Tax Tools</a>
+        <a href="gst-tools.html">GST Tools</a>
+        <a href="gst-black-mirror.html">GST Black Mirror</a>
+        <a href="investment-tools.html">Investments</a>
+        <a href="financial-modelling.html">Financial Modelling</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pdf-tools.html">PDF Tools</a>
+        <a href="resume-builder.html">Resume Builder</a>
+        <a href="smart-tax-optimizer.html" class="btn btn-accent">
+            <i class="fas fa-bolt"></i> Tax Optimizer
+        </a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">
+            <i class="fas fa-rocket"></i>
+            <span>India's #1 Financial Tools Platform</span>
+        </div>
+
+        <h1>
+            All Your <span>Financial Tools</span><br>
+            In One Place
+        </h1>
+
+        <p class="hero-subtitle">
+            100+ free calculators for tax planning, GST compliance, investments, business valuation, and more. 
+            Professional-grade tools used by CAs, businesses, and individuals across India.
+        </p>
+
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="stat-number">100+</span>
+                <span class="stat-label">Free Tools</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">6</span>
+                <span class="stat-label">Major Portals</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">50K+</span>
+                <span class="stat-label">Monthly Users</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Free Forever</span>
+            </div>
+        </div>
+
+        <div class="hero-search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search for any calculator... (e.g., GST, HRA, SIP, EMI)" id="globalSearch">
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Quick Access Bar -->
+        <div class="quick-access animate-in">
+            <span class="quick-access-title"><i class="fas fa-bolt"></i> Quick Access</span>
+            <div class="quick-links">
+                <a href="smart-tax-optimizer.html" class="quick-link"><i class="fas fa-magic"></i> AI Tax Optimizer</a>
+                <a href="tax-portal.html#tax-regime" class="quick-link"><i class="fas fa-balance-scale"></i> Tax Regime Compare</a>
+                <a href="gst-black-mirror.html" class="quick-link"><i class="fas fa-cube"></i> GST Black Mirror</a>
+                <a href="tax-portal.html#emi-calc" class="quick-link"><i class="fas fa-calculator"></i> EMI Calculator</a>
+                <a href="tax-portal.html#sip-calc" class="quick-link"><i class="fas fa-chart-line"></i> SIP Calculator</a>
+                <a href="invoice-generator.html" class="quick-link"><i class="fas fa-file-invoice"></i> Invoice Generator</a>
+                <a href="financial-modelling.html" class="quick-link"><i class="fas fa-chart-line"></i> Financial Modelling</a>
+                <a href="pdf-tools.html" class="quick-link"><i class="fas fa-file-pdf"></i> PDF Tools</a>
+            </div>
+        </div>
+
+        <!-- Featured Tools -->
+        <section class="featured-section animate-in delay-1">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-star"></i> Featured Suites</h2>
+            </div>
+
+            <div class="featured-grid">
+                <a href="smart-tax-optimizer.html" class="featured-card tax-optimizer">
+                    <span class="featured-badge"><i class="fas fa-crown"></i> #1 Rated</span>
+                    <div class="featured-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Smart Tax Optimizer</h3>
+                    <p>AI-powered tax planning that analyzes your finances and recommends the best strategies to minimize tax liability legally.</p>
+                    <div class="featured-stats">
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">₹50K+</span>
+                            <span class="featured-stat-label">Avg. Savings</span>
+                        </div>
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">15+</span>
+                            <span class="featured-stat-label">AI Features</span>
+                        </div>
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">5 Min</span>
+                            <span class="featured-stat-label">Setup Time</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="gst-black-mirror.html" class="featured-card gst-suite">
+                    <span class="featured-badge"><i class="fas fa-fire"></i> Popular</span>
+                    <div class="featured-icon" style="background: linear-gradient(135deg, #22C55E, #16A34A);">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3>GST Black Mirror™</h3>
+                    <p>India's most comprehensive GST compliance suite with 117+ tools. Everything from ITC optimization to e-Way bill generation.</p>
+                    <div class="featured-stats">
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">117+</span>
+                            <span class="featured-stat-label">GST Tools</span>
+                        </div>
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">35K+</span>
+                            <span class="featured-stat-label">Lines of Code</span>
+                        </div>
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">Elite</span>
+                            <span class="featured-stat-label">Suite</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html" class="featured-card investment">
+                    <span class="featured-badge"><i class="fas fa-gem"></i> PRO</span>
+                    <div class="featured-icon" style="background: linear-gradient(135deg, #6366F1, #8B5CF6);">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Tax Calculator PRO</h3>
+                    <p>Complete tax computation suite with regime comparison, HRA calculator, 80C optimizer, TDS tracker, and salary analyzer.</p>
+                    <div class="featured-stats">
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">44+</span>
+                            <span class="featured-stat-label">Calculators</span>
+                        </div>
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">FY 25</span>
+                            <span class="featured-stat-label">Updated</span>
+                        </div>
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">Charts</span>
+                            <span class="featured-stat-label">Included</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="investment-tools.html" class="featured-card business">
+                    <div class="featured-icon" style="background: linear-gradient(135deg, #FFB300, #FF6F00);">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Investment & Wealth Tools</h3>
+                    <p>SIP, lumpsum, CAGR, XIRR, retirement planning, goal planners, and comprehensive financial calculators for wealth building.</p>
+                    <div class="featured-stats">
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">25+</span>
+                            <span class="featured-stat-label">Tools</span>
+                        </div>
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">Charts</span>
+                            <span class="featured-stat-label">Visual</span>
+                        </div>
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">Export</span>
+                            <span class="featured-stat-label">PDF/Excel</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="financial-modelling.html" class="featured-card modelling">
+                    <span class="featured-badge"><i class="fas fa-graduation-cap"></i> EDU</span>
+                    <div class="featured-icon" style="background: linear-gradient(135deg, #2563EB, #7C3AED);">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>dsFinancial Modelling</h3>
+                    <p>AI-powered financial modeling for finance students & analysts. DCF, Comps, Three-Statement, LBO, M&A, WACC, Sensitivity — with Tutor Mode.</p>
+                    <div class="featured-stats">
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">8</span>
+                            <span class="featured-stat-label">Modules</span>
+                        </div>
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">NSE</span>
+                            <span class="featured-stat-label">India First</span>
+                        </div>
+                        <div class="featured-stat">
+                            <span class="featured-stat-value">Tutor</span>
+                            <span class="featured-stat-label">Mode</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- All Portals -->
+        <section class="portals-section animate-in delay-2">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-th-large"></i> All Portals</h2>
+            </div>
+
+            <div class="portals-grid">
+                <a href="tax-portal.html" class="portal-card tax-portal">
+                    <span class="portal-tools-count">44+ Tools</span>
+                    <div class="portal-header">
+                        <div class="portal-icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <div>
+                            <h3 class="portal-title">Tax Calculator Portal</h3>
+                            <span class="portal-subtitle">Income Tax & Financial Tools</span>
+                        </div>
+                    </div>
+                    <p class="portal-description">
+                        Complete income tax suite with regime comparison, HRA exemption, 80C optimizer, TDS calculator, salary analyzer, and more.
+                    </p>
+                    <div class="portal-features">
+                        <span class="portal-feature"><i class="fas fa-check"></i> FY 2024-25 Updated</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> Both Regimes</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> AI Recommendations</span>
+                    </div>
+                </a>
+
+                <a href="gst-tools.html" class="portal-card gst-portal">
+                    <span class="portal-tools-count">15+ Tools</span>
+                    <div class="portal-header">
+                        <div class="portal-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div>
+                            <h3 class="portal-title">GST Tools</h3>
+                            <span class="portal-subtitle">Basic GST Calculators</span>
+                        </div>
+                    </div>
+                    <p class="portal-description">
+                        Essential GST calculators for quick calculations - add/remove GST, HSN lookup, ITC calculator, and late fee calculator.
+                    </p>
+                    <div class="portal-features">
+                        <span class="portal-feature"><i class="fas fa-check"></i> Quick Calculate</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> All Rates</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> HSN/SAC</span>
+                    </div>
+                </a>
+
+                <a href="gst-black-mirror.html" class="portal-card gst-black-mirror">
+                    <span class="portal-tools-count">117+ Tools</span>
+                    <div class="portal-header">
+                        <div class="portal-icon" style="background: linear-gradient(135deg, #0F172A, #334155);">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                        <div>
+                            <h3 class="portal-title">GST Black Mirror™</h3>
+                            <span class="portal-subtitle">Elite Enterprise Suite</span>
+                        </div>
+                    </div>
+                    <p class="portal-description">
+                        India's most powerful GST compliance platform. 117+ tools including AI fraud detection, ITC optimizer, reconciliation, and more.
+                    </p>
+                    <div class="portal-features">
+                        <span class="portal-feature"><i class="fas fa-check"></i> AI-Powered</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> 117+ Features</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> Enterprise Grade</span>
+                    </div>
+                </a>
+
+                <a href="investment-tools.html" class="portal-card investment-portal">
+                    <span class="portal-tools-count">25+ Tools</span>
+                    <div class="portal-header">
+                        <div class="portal-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <h3 class="portal-title">Investment Tools</h3>
+                            <span class="portal-subtitle">Wealth & Planning</span>
+                        </div>
+                    </div>
+                    <p class="portal-description">
+                        SIP calculator, lumpsum, CAGR, XIRR, EMI calculator, retirement planner, education planner, and goal-based investing tools.
+                    </p>
+                    <div class="portal-features">
+                        <span class="portal-feature"><i class="fas fa-check"></i> SIP/Lumpsum</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> Goal Planning</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> Retirement</span>
+                    </div>
+                </a>
+
+                <a href="financial-modelling.html" class="portal-card modelling-portal">
+                    <span class="portal-tools-count">8 Modules</span>
+                    <div class="portal-header">
+                        <div class="portal-icon" style="background: linear-gradient(135deg, #2563EB, #7C3AED);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <h3 class="portal-title">dsFinancial Modelling</h3>
+                            <span class="portal-subtitle">DCF · Comps · LBO · M&A · WACC</span>
+                        </div>
+                    </div>
+                    <p class="portal-description">
+                        Professional-grade financial modeling suite for students & analysts. Build DCF, Comparable Analysis, Three-Statement Models, LBO, M&A, and Sensitivity — with AI Tutor Mode explaining every cell.
+                    </p>
+                    <div class="portal-features">
+                        <span class="portal-feature"><i class="fas fa-check"></i> Ind-AS / NSE Ready</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> Tutor Mode</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> Excel Export</span>
+                    </div>
+                </a>
+
+                <a href="pdf-tools.html" class="portal-card pdf-portal">
+                    <span class="portal-tools-count">10+ Tools</span>
+                    <div class="portal-header">
+                        <div class="portal-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div>
+                            <h3 class="portal-title">PDF Tools</h3>
+                            <span class="portal-subtitle">Document Utilities</span>
+                        </div>
+                    </div>
+                    <p class="portal-description">
+                        Merge, split, compress, convert PDFs. Extract text, add watermarks, protect with password, and convert images to PDF.
+                    </p>
+                    <div class="portal-features">
+                        <span class="portal-feature"><i class="fas fa-check"></i> Merge/Split</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> Compress</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> Convert</span>
+                    </div>
+                </a>
+
+                <a href="resume-builder.html" class="portal-card resume-portal">
+                    <span class="portal-tools-count">5+ Templates</span>
+                    <div class="portal-header">
+                        <div class="portal-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <div>
+                            <h3 class="portal-title">Resume Builder</h3>
+                            <span class="portal-subtitle">Professional CV Creator</span>
+                        </div>
+                    </div>
+                    <p class="portal-description">
+                        Create professional resumes with modern templates. ATS-friendly formats, real-time preview, and instant PDF download.
+                    </p>
+                    <div class="portal-features">
+                        <span class="portal-feature"><i class="fas fa-check"></i> Modern Templates</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> ATS-Friendly</span>
+                        <span class="portal-feature"><i class="fas fa-check"></i> PDF Export</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Category Filter -->
+        <section class="tools-section animate-in delay-3">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-grid"></i> All Tools by Category</h2>
+            </div>
+
+            <div class="category-nav">
+                <button class="category-btn active" data-category="all">
+                    <i class="fas fa-th"></i> All Tools <span class="category-count">100+</span>
+                </button>
+                <button class="category-btn" data-category="tax">
+                    <i class="fas fa-file-invoice-dollar"></i> Income Tax <span class="category-count">15</span>
+                </button>
+                <button class="category-btn" data-category="gst">
+                    <i class="fas fa-receipt"></i> GST <span class="category-count">25</span>
+                </button>
+                <button class="category-btn" data-category="investment">
+                    <i class="fas fa-chart-line"></i> Investment <span class="category-count">20</span>
+                </button>
+                <button class="category-btn" data-category="business">
+                    <i class="fas fa-briefcase"></i> Business <span class="category-count">15</span>
+                </button>
+                <button class="category-btn" data-category="loans">
+                    <i class="fas fa-hand-holding-usd"></i> Loans & EMI <span class="category-count">10</span>
+                </button>
+                <button class="category-btn" data-category="utility">
+                    <i class="fas fa-tools"></i> Utilities <span class="category-count">15</span>
+                </button>
+            </div>
+
+            <div class="tools-grid" id="toolsGrid">
+                <!-- Income Tax Tools -->
+                <a href="tax-portal.html#tax-regime" class="tool-card" data-category="tax">
+                    <div class="tool-icon"><i class="fas fa-balance-scale"></i></div>
+                    <div class="tool-info">
+                        <h4>Tax Regime Comparison</h4>
+                        <p>Compare Old vs New Tax Regime</p>
+                    </div>
+                    <span class="tool-badge pro">PRO</span>
+                </a>
+
+                <a href="tax-portal.html#income-tax-calc" class="tool-card" data-category="tax">
+                    <div class="tool-icon"><i class="fas fa-calculator"></i></div>
+                    <div class="tool-info">
+                        <h4>Income Tax Calculator</h4>
+                        <p>Calculate exact tax liability</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#hra-calc" class="tool-card" data-category="tax">
+                    <div class="tool-icon"><i class="fas fa-home"></i></div>
+                    <div class="tool-info">
+                        <h4>HRA Exemption Calculator</h4>
+                        <p>Section 10(13A) exemption</p>
+                    </div>
+                    <span class="tool-badge pro">PRO</span>
+                </a>
+
+                <a href="tax-portal.html#section-80c" class="tool-card" data-category="tax">
+                    <div class="tool-icon"><i class="fas fa-piggy-bank"></i></div>
+                    <div class="tool-info">
+                        <h4>Section 80C Optimizer</h4>
+                        <p>Maximize tax-saving investments</p>
+                    </div>
+                    <span class="tool-badge pro">PRO</span>
+                </a>
+
+                <a href="tax-portal.html#advance-tax" class="tool-card" data-category="tax">
+                    <div class="tool-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="tool-info">
+                        <h4>Advance Tax Tracker</h4>
+                        <p>Quarterly installment calculator</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#tds-calc" class="tool-card" data-category="tax">
+                    <div class="tool-icon"><i class="fas fa-cut"></i></div>
+                    <div class="tool-info">
+                        <h4>TDS Calculator</h4>
+                        <p>All sections - 192, 194A, 194C, etc.</p>
+                    </div>
+                    <span class="tool-badge pro">PRO</span>
+                </a>
+
+                <a href="tax-portal.html#salary-structure" class="tool-card" data-category="tax">
+                    <div class="tool-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <div class="tool-info">
+                        <h4>Salary Structure Analyzer</h4>
+                        <p>CTC breakdown & take-home</p>
+                    </div>
+                    <span class="tool-badge new">NEW</span>
+                </a>
+
+                <a href="tax-portal.html#capital-gains" class="tool-card" data-category="tax">
+                    <div class="tool-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="tool-info">
+                        <h4>Capital Gains Calculator</h4>
+                        <p>STCG & LTCG computation</p>
+                    </div>
+                </a>
+
+                <!-- GST Tools -->
+                <a href="gst-black-mirror.html" class="tool-card" data-category="gst">
+                    <div class="tool-icon"><i class="fas fa-cube"></i></div>
+                    <div class="tool-info">
+                        <h4>GST Black Mirror™</h4>
+                        <p>117+ GST compliance tools</p>
+                    </div>
+                    <span class="tool-badge pro">ELITE</span>
+                </a>
+
+                <a href="gst-tools.html#gst-calculator" class="tool-card" data-category="gst">
+                    <div class="tool-icon"><i class="fas fa-percentage"></i></div>
+                    <div class="tool-info">
+                        <h4>GST Calculator</h4>
+                        <p>Add/Remove GST instantly</p>
+                    </div>
+                </a>
+
+                <a href="gst-tools.html#hsn-finder" class="tool-card" data-category="gst">
+                    <div class="tool-icon"><i class="fas fa-search"></i></div>
+                    <div class="tool-info">
+                        <h4>HSN/SAC Finder</h4>
+                        <p>Find GST rates by code</p>
+                    </div>
+                </a>
+
+                <a href="gst-tools.html#itc-calculator" class="tool-card" data-category="gst">
+                    <div class="tool-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                    <div class="tool-info">
+                        <h4>ITC Calculator</h4>
+                        <p>Input Tax Credit optimizer</p>
+                    </div>
+                </a>
+
+                <a href="gst-tools.html#gstr-dates" class="tool-card" data-category="gst">
+                    <div class="tool-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="tool-info">
+                        <h4>GSTR Due Dates</h4>
+                        <p>Filing deadline calendar</p>
+                    </div>
+                </a>
+
+                <a href="gst-tools.html#late-fee" class="tool-card" data-category="gst">
+                    <div class="tool-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="tool-info">
+                        <h4>Late Fee Calculator</h4>
+                        <p>Interest & penalty calculator</p>
+                    </div>
+                </a>
+
+                <a href="invoice-generator.html" class="tool-card" data-category="gst">
+                    <div class="tool-icon"><i class="fas fa-file-invoice"></i></div>
+                    <div class="tool-info">
+                        <h4>GST Invoice Generator</h4>
+                        <p>Create tax invoices</p>
+                    </div>
+                </a>
+
+                <!-- Investment Tools -->
+                <a href="tax-portal.html#sip-calc" class="tool-card" data-category="investment">
+                    <div class="tool-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="tool-info">
+                        <h4>SIP Calculator</h4>
+                        <p>Systematic investment planning</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#lumpsum-calc" class="tool-card" data-category="investment">
+                    <div class="tool-icon"><i class="fas fa-money-bill-wave"></i></div>
+                    <div class="tool-info">
+                        <h4>Lumpsum Calculator</h4>
+                        <p>One-time investment returns</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#cagr-calc" class="tool-card" data-category="investment">
+                    <div class="tool-icon"><i class="fas fa-percentage"></i></div>
+                    <div class="tool-info">
+                        <h4>CAGR Calculator</h4>
+                        <p>Compound annual growth rate</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#xirr-calc" class="tool-card" data-category="investment">
+                    <div class="tool-icon"><i class="fas fa-chart-area"></i></div>
+                    <div class="tool-info">
+                        <h4>XIRR Calculator</h4>
+                        <p>Extended internal return rate</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#ppf-calc" class="tool-card" data-category="investment">
+                    <div class="tool-icon"><i class="fas fa-university"></i></div>
+                    <div class="tool-info">
+                        <h4>PPF Calculator</h4>
+                        <p>Public Provident Fund projections</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#fd-calc" class="tool-card" data-category="investment">
+                    <div class="tool-icon"><i class="fas fa-piggy-bank"></i></div>
+                    <div class="tool-info">
+                        <h4>FD Calculator</h4>
+                        <p>Fixed deposit maturity</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#retirement-calc" class="tool-card" data-category="investment">
+                    <div class="tool-icon"><i class="fas fa-umbrella-beach"></i></div>
+                    <div class="tool-info">
+                        <h4>Retirement Planner</h4>
+                        <p>Plan your retirement corpus</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#fire-calc" class="tool-card" data-category="investment">
+                    <div class="tool-icon"><i class="fas fa-fire"></i></div>
+                    <div class="tool-info">
+                        <h4>FIRE Calculator</h4>
+                        <p>Financial independence planner</p>
+                    </div>
+                    <span class="tool-badge new">NEW</span>
+                </a>
+
+                <!-- Loan & EMI Tools -->
+                <a href="tax-portal.html#emi-calc" class="tool-card" data-category="loans">
+                    <div class="tool-icon"><i class="fas fa-calculator"></i></div>
+                    <div class="tool-info">
+                        <h4>EMI Calculator</h4>
+                        <p>Loan EMI with amortization</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#home-loan" class="tool-card" data-category="loans">
+                    <div class="tool-icon"><i class="fas fa-home"></i></div>
+                    <div class="tool-info">
+                        <h4>Home Loan Calculator</h4>
+                        <p>Housing loan EMI & eligibility</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#car-loan" class="tool-card" data-category="loans">
+                    <div class="tool-icon"><i class="fas fa-car"></i></div>
+                    <div class="tool-info">
+                        <h4>Car Loan Calculator</h4>
+                        <p>Auto loan EMI calculator</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#loan-comparison" class="tool-card" data-category="loans">
+                    <div class="tool-icon"><i class="fas fa-exchange-alt"></i></div>
+                    <div class="tool-info">
+                        <h4>Loan Comparison</h4>
+                        <p>Compare multiple loan offers</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#rent-vs-buy" class="tool-card" data-category="loans">
+                    <div class="tool-icon"><i class="fas fa-balance-scale-right"></i></div>
+                    <div class="tool-info">
+                        <h4>Rent vs Buy</h4>
+                        <p>Should you rent or buy?</p>
+                    </div>
+                </a>
+
+                <!-- Business Tools -->
+                <a href="financial-modelling.html" class="tool-card" data-category="business">
+                    <div class="tool-icon"><i class="fas fa-robot"></i></div>
+                    <div class="tool-info">
+                        <h4>AI Financial Modelling</h4>
+                        <p>AI-powered valuation & forecasting</p>
+                    </div>
+                    <span class="tool-badge new">NEW</span>
+                </a>
+
+                <a href="tax-portal.html#dcf-calc" class="tool-card" data-category="business">
+                    <div class="tool-icon"><i class="fas fa-chart-pie"></i></div>
+                    <div class="tool-info">
+                        <h4>DCF Valuation</h4>
+                        <p>Discounted cash flow analysis</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#npv-calc" class="tool-card" data-category="business">
+                    <div class="tool-icon"><i class="fas fa-coins"></i></div>
+                    <div class="tool-info">
+                        <h4>NPV/IRR Calculator</h4>
+                        <p>Project viability analysis</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#breakeven-calc" class="tool-card" data-category="business">
+                    <div class="tool-icon"><i class="fas fa-chart-bar"></i></div>
+                    <div class="tool-info">
+                        <h4>Break-even Analysis</h4>
+                        <p>Find your break-even point</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#working-capital" class="tool-card" data-category="business">
+                    <div class="tool-icon"><i class="fas fa-money-check-alt"></i></div>
+                    <div class="tool-info">
+                        <h4>Working Capital</h4>
+                        <p>Calculate working capital needs</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#depreciation-calc" class="tool-card" data-category="business">
+                    <div class="tool-icon"><i class="fas fa-chart-area"></i></div>
+                    <div class="tool-info">
+                        <h4>Depreciation Calculator</h4>
+                        <p>SLM, WDV methods</p>
+                    </div>
+                </a>
+
+                <!-- Utility Tools -->
+                <a href="pdf-tools.html" class="tool-card" data-category="utility">
+                    <div class="tool-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="tool-info">
+                        <h4>PDF Tools</h4>
+                        <p>Merge, split, compress PDFs</p>
+                    </div>
+                </a>
+
+                <a href="resume-builder.html" class="tool-card" data-category="utility">
+                    <div class="tool-icon"><i class="fas fa-id-card"></i></div>
+                    <div class="tool-info">
+                        <h4>Resume Builder</h4>
+                        <p>Create professional CVs</p>
+                    </div>
+                </a>
+
+                <a href="invoice-generator.html" class="tool-card" data-category="utility">
+                    <div class="tool-icon"><i class="fas fa-file-invoice"></i></div>
+                    <div class="tool-info">
+                        <h4>Invoice Generator</h4>
+                        <p>Create & download invoices</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#inflation-calc" class="tool-card" data-category="utility">
+                    <div class="tool-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="tool-info">
+                        <h4>Inflation Calculator</h4>
+                        <p>Purchasing power analysis</p>
+                    </div>
+                </a>
+
+                <a href="tax-portal.html#net-worth" class="tool-card" data-category="utility">
+                    <div class="tool-icon"><i class="fas fa-wallet"></i></div>
+                    <div class="tool-info">
+                        <h4>Net Worth Tracker</h4>
+                        <p>Track your total wealth</p>
+                    </div>
+                    <span class="tool-badge new">NEW</span>
+                </a>
+
+                <a href="tax-portal.html#budget-planner" class="tool-card" data-category="utility">
+                    <div class="tool-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="tool-info">
+                        <h4>Budget Planner</h4>
+                        <p>Monthly budget management</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section animate-in">
+            <h2><i class="fas fa-envelope"></i> Get In Touch</h2>
+            <p>Need help with tax planning, GST compliance, or financial tools? Reach out to us.</p>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <i class="fas fa-envelope"></i>
+                    <h4>Email</h4>
+                    <p><a href="mailto:sdeepu70gg@gmail.com">sdeepu70gg@gmail.com</a></p>
+                </div>
+                <div class="contact-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>Location</h4>
+                    <p>Sector 18, Noida<br>UP - 201301, India</p>
+                </div>
+                <div class="contact-card">
+                    <i class="fas fa-clock"></i>
+                    <h4>Support Hours</h4>
+                    <p>Mon - Sat, 10 AM - 7 PM IST</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">DS</div>
+                    <span class="logo-text">Financial</span>
+                </a>
+                <p>India's most comprehensive free financial tools platform. 100+ calculators for tax planning, GST compliance, investments, and business valuation.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Tax Tools</h4>
+                <ul>
+                    <li><a href="smart-tax-optimizer.html">Smart Tax Optimizer</a></li>
+                    <li><a href="tax-portal.html">Tax Calculator Portal</a></li>
+                    <li><a href="tax-portal.html#tax-regime">Regime Comparison</a></li>
+                    <li><a href="tax-portal.html#hra-calc">HRA Calculator</a></li>
+                    <li><a href="tax-portal.html#section-80c">80C Optimizer</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>GST Tools</h4>
+                <ul>
+                    <li><a href="gst-black-mirror.html">GST Black Mirror™</a></li>
+                    <li><a href="gst-tools.html">GST Calculator</a></li>
+                    <li><a href="invoice-generator.html">Invoice Generator</a></li>
+                    <li><a href="gst-tools.html#hsn-finder">HSN/SAC Finder</a></li>
+                    <li><a href="gst-tools.html#itc-calculator">ITC Calculator</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Investment Tools</h4>
+                <ul>
+                    <li><a href="investment-tools.html">Investment Portal</a></li>
+                    <li><a href="tax-portal.html#sip-calc">SIP Calculator</a></li>
+                    <li><a href="tax-portal.html#emi-calc">EMI Calculator</a></li>
+                    <li><a href="tax-portal.html#retirement-calc">Retirement Planner</a></li>
+                    <li><a href="tax-portal.html#ppf-calc">PPF Calculator</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Utilities</h4>
+                <ul>
+                    <li><a href="pdf-tools.html">PDF Tools</a></li>
+                    <li><a href="resume-builder.html">Resume Builder</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 DS Financial. All tools are 100% free to use.</p>
+            <div class="social-links">
+                <a href="https://twitter.com/DSFinancial" title="Twitter" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                <a href="https://linkedin.com/company/ds-financial" title="LinkedIn" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://youtube.com/@DSFinancial" title="YouTube" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+                <a href="https://github.com/excel-lentminds" title="GitHub" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global Search
+        const searchInput = document.getElementById('globalSearch');
+        const toolsGrid = document.getElementById('toolsGrid');
+        const toolCards = document.querySelectorAll('.tool-card');
+
+        searchInput?.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            toolCards.forEach(card => {
+                const title = card.querySelector('h4')?.textContent.toLowerCase() || '';
+                const desc = card.querySelector('p')?.textContent.toLowerCase() || '';
+                const visible = title.includes(query) || desc.includes(query);
+                card.style.display = visible ? 'flex' : 'none';
+            });
+        });
+
+        // Category Filter
+        const categoryBtns = document.querySelectorAll('.category-btn');
+
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const category = btn.dataset.category;
+                
+                toolCards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(10, 14, 26, 0.95)';
+            } else {
+                navbar.style.background = 'rgba(10, 14, 26, 0.8)';
+            }
+        });
+
+        // Animate on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.featured-section, .portals-section, .tools-section, .contact-section').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Mobile Navigation
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+        const mobileNavClose = document.getElementById('mobileNavClose');
+
+        mobileMenuBtn?.addEventListener('click', () => {
+            mobileNavOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        mobileNavClose?.addEventListener('click', () => {
+            mobileNavOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // Close mobile nav when clicking a link
+        mobileNavOverlay?.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileNavOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileNavOverlay?.classList.contains('active')) {
+                mobileNavOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Close on backdrop click
+        mobileNavOverlay?.addEventListener('click', (e) => {
+            if (e.target === mobileNavOverlay) {
+                mobileNavOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

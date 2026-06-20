@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free online PDF tools - Merge, Split, Compress, Convert PDFs. Better than SmallPDF & ILovePDF. 100% browser-based, no uploads.">
+<title>PDF Tools | DS Financial - All-in-One PDF Suite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="pdf-ultra.css">
+<!-- PDF Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="pdf-nav">
+  <a href="index.html" class="logo">
+    <div class="logo-icon"><i class="fas fa-file-pdf"></i></div>
+    DS Financial
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="tax-portal.html">Tax Tools</a></li>
+    <li><a href="gst-tools.html">GST</a></li>
+    <li><a href="investment-tools.html">Investments</a></li>
+    <li><a href="resume-builder.html">Resume</a></li>
+  </ul>
+  <a href="index.html#contact" class="nav-cta"><i class="fas fa-phone"></i> Contact</a>
+</nav>
+
+<!-- HERO -->
+<section class="pdf-hero">
+  <div class="hero-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge"><i class="fas fa-shield-alt"></i> 100% Private • Files Never Leave Your Browser</div>
+    <h1 class="hero-title">The <span>PDF Toolkit</span><br>That Beats Them All</h1>
+    <p class="hero-sub">Merge, split, compress, convert Word/Excel, sign, watermark & more — all free, all instant, all private. No ads, no limits.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-number">40+</span><span class="stat-label">Tools</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-number">0</span><span class="stat-label">Uploads</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-number">100%</span><span class="stat-label">Free</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><span class="stat-number">AI</span><span class="stat-label">Powered</span></div>
+    </div>
+    <div class="search-wrap">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="toolSearch" placeholder="Search tools… e.g. merge, word, compress, sign">
+        <kbd class="search-kbd">Ctrl+K</kbd>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE STRIP -->
+<div class="feature-strip">
+  <div class="feat-item"><i class="fas fa-lock"></i> No sign-up required</div>
+  <div class="feat-item"><i class="fas fa-bolt"></i> Instant processing</div>
+  <div class="feat-item"><i class="fas fa-globe"></i> Works offline</div>
+  <div class="feat-item"><i class="fas fa-infinity"></i> No file size limits</div>
+  <div class="feat-item"><i class="fas fa-shield-alt"></i> Zero data collection</div>
+</div>
+
+<!-- POPULAR ROW -->
+<div class="popular-row">
+  <div class="pop-card" onclick="openTool('merge')"><i class="fas fa-object-group"></i> Merge PDF</div>
+  <div class="pop-card" onclick="openTool('compress')"><i class="fas fa-compress-alt"></i> Compress</div>
+  <div class="pop-card" onclick="openTool('word-to-pdf')"><i class="fas fa-file-word"></i> Word to PDF</div>
+  <div class="pop-card" onclick="openTool('pdf-to-jpg')"><i class="fas fa-file-image"></i> PDF to JPG</div>
+  <div class="pop-card" onclick="openTool('esign')"><i class="fas fa-signature"></i> E-Sign</div>
+  <div class="pop-card" onclick="openTool('split')"><i class="fas fa-cut"></i> Split PDF</div>
+</div>
+
+<!-- CATEGORY PILLS -->
+<div class="cat-pills">
+  <button class="cat-pill active" onclick="filterCat('all')"><i class="fas fa-th"></i> All Tools</button>
+  <button class="cat-pill" onclick="filterCat('organize')"><i class="fas fa-layer-group"></i> Organize</button>
+  <button class="cat-pill" onclick="filterCat('convert')"><i class="fas fa-exchange-alt"></i> Convert</button>
+  <button class="cat-pill" onclick="filterCat('edit')"><i class="fas fa-edit"></i> Edit</button>
+  <button class="cat-pill" onclick="filterCat('security')"><i class="fas fa-shield-alt"></i> Security</button>
+  <button class="cat-pill" onclick="filterCat('office')"><i class="fas fa-briefcase"></i> Office</button>
+  <button class="cat-pill" onclick="filterCat('finance')"><i class="fas fa-rupee-sign"></i> Finance & Tax</button>
+  <button class="cat-pill" onclick="filterCat('ai')"><i class="fas fa-robot"></i> AI Tools</button>
+</div>
+
+<!-- TOOLS GRID -->
+<main class="tools-main" id="toolsMain">
+
+  <!-- ORGANIZE -->
+  <div class="tool-group" data-cat="organize">
+    <h2 class="group-title"><i class="fas fa-layer-group"></i> Organize <span class="cnt">4 tools</span></h2>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="openTool('merge')">
+        <div class="tool-icon icon-red"><i class="fas fa-object-group"></i></div>
+        <h3>Merge PDF</h3><p>Combine multiple PDFs into one file with drag-drop reordering</p>
+        <span class="tool-badge badge-hot">HOT</span>
+      </div>
+      <div class="tool-card" onclick="openTool('split')">
+        <div class="tool-icon icon-orange"><i class="fas fa-cut"></i></div>
+        <h3>Split PDF</h3><p>Extract pages or split by range (e.g. 1-3, 5, 7-9)</p>
+      </div>
+      <div class="tool-card" onclick="openTool('rotate')">
+        <div class="tool-icon icon-blue"><i class="fas fa-sync-alt"></i></div>
+        <h3>Rotate PDF</h3><p>Rotate individual or all pages 90°, 180°, 270°</p>
+      </div>
+      <div class="tool-card" onclick="openTool('reorder')">
+        <div class="tool-icon icon-violet"><i class="fas fa-sort"></i></div>
+        <h3>Reorder Pages</h3><p>Drag & drop page thumbnails to rearrange</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPRESS -->
+  <div class="tool-group" data-cat="organize">
+    <h2 class="group-title"><i class="fas fa-compress-arrows-alt"></i> Optimize <span class="cnt">1 tool</span></h2>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="openTool('compress')">
+        <div class="tool-icon icon-green"><i class="fas fa-compress"></i></div>
+        <h3>Compress PDF</h3><p>Reduce file size while preserving quality. See before/after.</p>
+        <span class="tool-badge badge-hot">HOT</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONVERT -->
+  <div class="tool-group" data-cat="convert">
+    <h2 class="group-title"><i class="fas fa-exchange-alt"></i> Convert <span class="cnt">6 tools</span></h2>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="openTool('pdf-to-jpg')">
+        <div class="tool-icon icon-orange"><i class="fas fa-file-image"></i></div>
+        <h3>PDF to JPG</h3><p>Convert every page to JPG images, download as ZIP</p>
+        <span class="tool-badge badge-hot">HOT</span>
+      </div>
+      <div class="tool-card" onclick="openTool('jpg-to-pdf')">
+        <div class="tool-icon icon-red"><i class="fas fa-file-pdf"></i></div>
+        <h3>JPG/PNG to PDF</h3><p>Combine multiple images into a single PDF</p>
+      </div>
+      <div class="tool-card" onclick="openTool('html-to-pdf')">
+        <div class="tool-icon icon-blue"><i class="fas fa-code"></i></div>
+        <h3>HTML to PDF</h3><p>Paste HTML code and convert to PDF instantly</p>
+      </div>
+      <div class="tool-card" onclick="openTool('pdf-to-text')">
+        <div class="tool-icon icon-violet"><i class="fas fa-align-left"></i></div>
+        <h3>PDF to Text</h3><p>Extract all text from PDF, download as .txt file</p>
+      </div>
+      <div class="tool-card" onclick="openTool('markdown-to-pdf')">
+        <div class="tool-icon icon-indigo"><i class="fab fa-markdown"></i></div>
+        <h3>Markdown to PDF</h3><p>Write Markdown, get a beautiful styled PDF</p>
+        <span class="tool-badge badge-new">NEW</span>
+      </div>
+      <div class="tool-card" onclick="openTool('csv-to-pdf')">
+        <div class="tool-icon icon-green"><i class="fas fa-table"></i></div>
+        <h3>CSV to PDF</h3><p>Convert spreadsheet data to styled PDF table</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OFFICE -->
+  <div class="tool-group" data-cat="office">
+    <h2 class="group-title"><i class="fas fa-briefcase"></i> Office Conversion <span class="cnt">3 tools</span></h2>
+    <div class="tools-grid">
+      <div class="tool-card hot-card" onclick="openTool('word-to-pdf')">
+        <div class="tool-icon icon-blue"><i class="fas fa-file-word"></i></div>
+        <h3>Word to PDF</h3><p>Convert DOCX/DOC files to PDF — formatting preserved</p>
+        <span class="tool-badge badge-hot">HOT</span>
+      </div>
+      <div class="tool-card hot-card" onclick="openTool('excel-to-pdf')">
+        <div class="tool-icon icon-green"><i class="fas fa-file-excel"></i></div>
+        <h3>Excel to PDF</h3><p>Convert XLSX spreadsheets to clean PDF tables</p>
+        <span class="tool-badge badge-hot">HOT</span>
+      </div>
+      <div class="tool-card" onclick="openTool('ppt-to-pdf')">
+        <div class="tool-icon icon-orange"><i class="fas fa-file-powerpoint"></i></div>
+        <h3>PPT to PDF</h3><p>Convert PowerPoint slides to PDF pages</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINANCE & TAX -->
+  <div class="tool-group" data-cat="finance">
+    <h2 class="group-title"><i class="fas fa-rupee-sign"></i> Finance & Tax <span class="cnt">3 tools</span> <span style="font-size:0.7rem;background:var(--green);color:white;padding:2px 10px;border-radius:12px;margin-left:4px;">PRO</span></h2>
+    <div class="tools-grid">
+      <div class="tool-card hot-card" onclick="openTool('bank-to-excel')">
+        <div class="tool-icon icon-green"><i class="fas fa-file-invoice-dollar"></i></div>
+        <h3>Bank Statement to Excel</h3><p>Extract transactions from PDF bank statements to CSV/Excel</p>
+        <span class="tool-badge badge-hot">HOT</span>
+      </div>
+      <div class="tool-card" onclick="openTool('auto-redact')">
+        <div class="tool-icon icon-red"><i class="fas fa-user-secret"></i></div>
+        <h3>Auto-Redact Financial Data</h3><p>Automatically detect and black out PAN, Aadhaar, and Account numbers</p>
+      </div>
+      <div class="tool-card" onclick="openTool('invoice-extractor')">
+        <div class="tool-icon icon-blue"><i class="fas fa-receipt"></i></div>
+        <h3>Invoice Extractor</h3><p>Extract GSTIN, Date, Amount, and Invoice No. to table format</p>
+        <span class="tool-badge badge-ai">AI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT -->
+  <div class="tool-group" data-cat="edit">
+    <h2 class="group-title"><i class="fas fa-edit"></i> Edit <span class="cnt">6 tools</span></h2>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="openTool('watermark')">
+        <div class="tool-icon icon-violet"><i class="fas fa-tint"></i></div>
+        <h3>Add Watermark</h3><p>Text watermark with custom opacity, angle, color</p>
+      </div>
+      <div class="tool-card" onclick="openTool('page-numbers')">
+        <div class="tool-icon icon-blue"><i class="fas fa-list-ol"></i></div>
+        <h3>Page Numbers</h3><p>Add page numbers to any position on all pages</p>
+      </div>
+      <div class="tool-card" onclick="openTool('delete-pages')">
+        <div class="tool-icon icon-red"><i class="fas fa-trash-alt"></i></div>
+        <h3>Delete Pages</h3><p>Select and remove specific pages from PDF</p>
+      </div>
+      <div class="tool-card" onclick="openTool('header-footer')">
+        <div class="tool-icon icon-orange"><i class="fas fa-heading"></i></div>
+        <h3>Header & Footer</h3><p>Add custom header and footer text to all pages</p>
+      </div>
+      <div class="tool-card" onclick="openTool('metadata')">
+        <div class="tool-icon icon-indigo"><i class="fas fa-info-circle"></i></div>
+        <h3>Edit Metadata</h3><p>Change title, author, subject, keywords</p>
+      </div>
+      <div class="tool-card" onclick="openTool('pdf-info')">
+        <div class="tool-icon icon-green"><i class="fas fa-file-alt"></i></div>
+        <h3>PDF Info</h3><p>View page count, file size, metadata & properties</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURITY -->
+  <div class="tool-group" data-cat="security">
+    <h2 class="group-title"><i class="fas fa-shield-alt"></i> Security <span class="cnt">4 tools</span></h2>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="openTool('esign')">
+        <div class="tool-icon icon-violet"><i class="fas fa-signature"></i></div>
+        <h3>E-Sign PDF</h3><p>Draw, type, or upload your signature and place it</p>
+        <span class="tool-badge badge-new">NEW</span>
+      </div>
+      <div class="tool-card" onclick="openTool('protect')">
+        <div class="tool-icon icon-red"><i class="fas fa-lock"></i></div>
+        <h3>Protect PDF</h3><p>Add password protection to your PDF files</p>
+      </div>
+      <div class="tool-card" onclick="openTool('unlock')">
+        <div class="tool-icon icon-orange"><i class="fas fa-unlock"></i></div>
+        <h3>Unlock PDF</h3><p>Remove password from PDF (if you know the password)</p>
+      </div>
+      <div class="tool-card" onclick="openTool('stamp')">
+        <div class="tool-icon icon-pink"><i class="fas fa-stamp"></i></div>
+        <h3>Add Stamp</h3><p>Add APPROVED, CONFIDENTIAL, DRAFT stamps</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI TOOLS -->
+  <div class="tool-group" data-cat="ai">
+    <h2 class="group-title"><i class="fas fa-robot"></i> AI Tools <span class="cnt">3 tools</span> <span style="font-size:0.7rem;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:white;padding:2px 10px;border-radius:12px;margin-left:4px;">AI</span></h2>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="openTool('ocr')">
+        <div class="tool-icon icon-pink"><i class="fas fa-eye"></i></div>
+        <h3>OCR PDF</h3><p>Extract text from scanned/image PDFs using AI</p>
+        <span class="tool-badge badge-ai">AI</span>
+      </div>
+      <div class="tool-card" onclick="openTool('ai-summarize')">
+        <div class="tool-icon icon-violet"><i class="fas fa-brain"></i></div>
+        <h3>AI Summarize</h3><p>Get a smart summary of your PDF content</p>
+        <span class="tool-badge badge-ai">AI</span>
+      </div>
+      <div class="tool-card" onclick="openTool('ai-qa')">
+        <div class="tool-icon icon-indigo"><i class="fas fa-comments"></i></div>
+        <h3>Chat with PDF</h3><p>Ask questions about your PDF document</p>
+        <span class="tool-badge badge-ai">AI</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="mainModal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-head-icon" id="mIcon"><i class="fas fa-file-pdf"></i></div>
+      <div class="modal-head-text">
+        <h2 id="mTitle">Tool</h2>
+        <p id="mDesc">Description</p>
+      </div>
+      <button class="modal-close" onclick="closeTool()">&#x2715;</button>
+    </div>
+    <div class="modal-body" id="mBody"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- FOOTER -->
+<footer class="pdf-footer">
+  <p><strong>DS Financial PDF Suite</strong> &mdash; All processing happens locally in your browser.<br>
+  Your files are never uploaded to any server. 100% private &amp; secure.</p>
+  <p style="margin-top:8px;">&copy; 2025 DS Financial Solutions. All rights reserved.</p>
+</footer>
+
+<script src="pdf-ultra.js"></script>
+</body>
+</html>

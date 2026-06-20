@@ -1,0 +1,15 @@
+                            <div id="model-gridTab" class="hidden">
+                                <div class="model-grid-toolbar">
+                                    <div class="model-grid-namebox" id="gridNameBox">A1</div>
+                                    <div class="model-grid-formulabar">
+                                        <span class="fx-label">fx</span>
+                                        <input type="text" id="gridFormulaBar" readonly placeholder="Select a cell to see its value...">
+                                    </div>
+                                </div>
+                                <div class="model-grid-container" id="modelGridContainer"></div>
+                                <div class="model-grid-sheet-tabs">
+                                    <button class="model-grid-sheet-tab active" data-sheet="model" onclick="switchGridSheet('model', this)">Model</button>
+                                    <button class="model-grid-sheet-tab" data-sheet="assumptions" onclick="switchGridSheet('assumptions', this)">Assumptions</button>
+                                    <button class="model-grid-sheet-tab" data-sheet="sensitivities" onclick="switchGridSheet('sensitivities', this)">Sensitivities</button>
+                                </div>
+                            </div>

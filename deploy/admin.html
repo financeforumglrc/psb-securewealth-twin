@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | DS Financial</title>
+    <meta name="robots" content="noindex, nofollow">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #1A237E;
+            --bg: #f3f4f6;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, sans-serif;
+            background: var(--bg);
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: white;
+            height: 100vh;
+            padding: 2rem;
+            position: fixed;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            display: block;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 1rem;
+            color: #6b7280;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: 0.3s;
+        }
+
+        .menu-item.active,
+        .menu-item:hover {
+            background: #e0e7ff;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Main */
+        .main {
+            margin-left: 250px;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-val {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* Tables */
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th {
+            text-align: left;
+            color: #6b7280;
+            font-weight: 600;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .status-new {
+            background: #dcfce7;
+            color: #166534;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Login Overlay */
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #1A237E;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            width: 350px;
+            text-align: center;
+        }
+
+        .login-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Login Screen -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <p style="color:#666; margin-bottom:1.5rem;">Enter PIN to access dashboard</p>
+            <input type="password" id="adminPin" placeholder="Enter PIN (1234)"
+                style="width:90%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:1.1rem; text-align:center;">
+            <button class="login-btn" onclick="checkLogin()">Access Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <span class="logo">DS Admin</span>
+        <a href="#" class="menu-item active"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="#" class="menu-item"><i class="fas fa-users"></i> Leads</a>
+        <a href="#" class="menu-item"><i class="fas fa-chart-bar"></i> Analytics</a>
+        <a href="#" class="menu-item"><i class="fas fa-cog"></i> Settings</a>
+
+        <div style="margin-top: auto; padding-top: 2rem;">
+            <a href="index.html" class="menu-item"><i class="fas fa-external-link-alt"></i> View Site</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+        <h2 style="margin-bottom: 2rem;">Dashboard Overview</h2>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Leads</div>
+                <div class="stat-val" id="totalLeads">0</div>
+                <small style="color: #10b981;">↑ 12% vs last week</small>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Tax Calculations</div>
+                <div class="stat-val">1,245</div>
+                <small style="color: #10b981;">↑ 8% vs last week</small>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">PDFs Processed</div>
+                <div class="stat-val">843</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Site Visitors</div>
+                <div class="stat-val">15.2k</div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+            <!-- Leads Table -->
+            <div class="table-card">
+                <h3>Recent Leads (Google Sheets Sync)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Service</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leadsTable">
+                        <!-- Injected JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Chart -->
+            <div class="table-card">
+                <h3>Traffic Sources</h3>
+                <canvas id="trafficChart" style="margin-top: 2rem;"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simple Auth
+        function checkLogin() {
+            const pin = document.getElementById('adminPin').value;
+            if (pin === '1234') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                loadData();
+            } else {
+                alert('Invalid PIN');
+            }
+        }
+
+        // Mock + LocalStorage Data
+        function loadData() {
+            // Get leads from local storage (saved by contact-backend.js)
+            const localLeads = JSON.parse(localStorage.getItem('dsLeads') || '[]');
+
+            // Mock older leads
+            const mockLeads = [
+                { name: 'Rahul Sharma', service: 'ITR Filing', date: '2024-01-25', status: 'New' },
+                { name: 'Priya Verma', service: 'GST Reg', date: '2024-01-24', status: 'New' },
+                { name: 'Amit Singh', service: 'Audit', date: '2024-01-23', status: 'Contacted' }
+            ];
+
+            const allLeads = [...localLeads, ...mockLeads];
+            document.getElementById('totalLeads').innerText = allLeads.length;
+
+            const tbody = document.getElementById('leadsTable');
+            tbody.innerHTML = allLeads.slice(0, 5).map(l => `
+                <tr>
+                    <td><strong>${l.name}</strong><br><small style="color:#999">${l.email || ''}</small></td>
+                    <td>${l.service || 'General'}</td>
+                    <td>${l.date || new Date().toLocaleDateString()}</td>
+                    <td><span class="status-new">${l.status}</span></td>
+                </tr>
+            `).join('');
+
+            // Init Chart
+            new Chart(document.getElementById('trafficChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Google Search', 'Direct', 'Social', 'Referral'],
+                    datasets: [{
+                        data: [55, 25, 15, 5],
+                        backgroundColor: ['#1A237E', '#283593', '#3949AB', '#5C6BC0']
+                    }]
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

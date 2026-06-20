@@ -1,0 +1,734 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   DS FINANCIAL - ENHANCED PATENTABLE INNOVATIONS V3.0 STYLES
+   Best-in-Market Tax Optimization UI
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ENHANCED DNA CONTAINER */
+.tax-dna-container.enhanced {
+    padding: 2rem;
+}
+
+/* HEADER ENHANCEMENTS */
+.dna-header-enhanced {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.dna-badges {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.dna-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.dna-badge.premium {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(0, 217, 255, 0.3));
+    border: 1px solid rgba(124, 58, 237, 0.5);
+    color: #A78BFA;
+}
+
+.dna-badge.markers {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(6, 182, 212, 0.3));
+    border: 1px solid rgba(16, 185, 129, 0.5);
+    color: #34D399;
+}
+
+.dna-badge.version {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(236, 72, 153, 0.3));
+    border: 1px solid rgba(245, 158, 11, 0.5);
+    color: #FBBF24;
+}
+
+.dna-title-enhanced {
+    font-size: 2.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #00D9FF 0%, #7C3AED 50%, #EC4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0.5rem 0;
+}
+
+.dna-subtitle-enhanced {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dna-fingerprint-enhanced {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: 12px;
+}
+
+.fingerprint-label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+}
+
+.fingerprint-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #00D9FF;
+    letter-spacing: 0.1em;
+}
+
+.copy-btn {
+    background: rgba(124, 58, 237, 0.2);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    color: #A78BFA;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    background: rgba(124, 58, 237, 0.4);
+    transform: scale(1.05);
+}
+
+/* HEALTH SCORE CARD */
+.health-score-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(15, 23, 42, 0.9) 100%);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: 20px;
+    margin-bottom: 2rem;
+}
+
+.score-circle-large {
+    position: relative;
+    width: 180px;
+    height: 180px;
+}
+
+.score-circle-large svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.score-value-large {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: white;
+}
+
+.score-info-large {
+    text-align: left;
+}
+
+.score-label-large {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.score-status {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.score-status.excellent {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10B981;
+}
+
+.score-status.good {
+    background: rgba(245, 158, 11, 0.2);
+    color: #F59E0B;
+}
+
+.score-status.needs-attention {
+    background: rgba(239, 68, 68, 0.2);
+    color: #EF4444;
+}
+
+.score-potential {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.score-potential strong {
+    color: #10B981;
+    font-size: 1.25rem;
+}
+
+/* RISK ALERTS */
+.risk-alerts-container {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 16px;
+}
+
+.risk-alerts-container h3 {
+    color: #EF4444;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.risk-alerts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.risk-alert-card {
+    background: rgba(15, 23, 42, 0.9);
+    border-radius: 12px;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.risk-alert-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+
+.risk-alert-card.critical::before {
+    background: linear-gradient(90deg, #EF4444, #DC2626);
+}
+
+.risk-alert-card.high::before {
+    background: linear-gradient(90deg, #F59E0B, #D97706);
+}
+
+.risk-alert-card.medium::before {
+    background: linear-gradient(90deg, #3B82F6, #2563EB);
+}
+
+.risk-severity {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.risk-alert-card.critical .risk-severity {
+    background: rgba(239, 68, 68, 0.3);
+    color: #EF4444;
+}
+
+.risk-alert-card.high .risk-severity {
+    background: rgba(245, 158, 11, 0.3);
+    color: #F59E0B;
+}
+
+.risk-alert-card.medium .risk-severity {
+    background: rgba(59, 130, 246, 0.3);
+    color: #3B82F6;
+}
+
+.risk-type {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+
+.risk-message {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.75rem;
+}
+
+.risk-impact {
+    font-size: 0.9rem;
+    color: #EF4444;
+    margin-bottom: 0.5rem;
+}
+
+.risk-action {
+    font-size: 0.85rem;
+    color: #10B981;
+}
+
+/* STRANDS SECTION */
+.dna-strands-section {
+    margin: 2.5rem 0;
+}
+
+.dna-strands-section h3 {
+    color: white;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.strands-grid-enhanced {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.strand-card-enhanced {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.strand-card-enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--strand-color);
+}
+
+.strand-card-enhanced:hover {
+    transform: translateY(-5px);
+    border-color: var(--strand-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.strand-header-enhanced {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.strand-code-enhanced {
+    padding: 0.4rem 0.75rem;
+    background: var(--strand-color);
+    color: white;
+    font-weight: 700;
+    font-size: 0.75rem;
+    border-radius: 6px;
+}
+
+.strand-name-enhanced {
+    font-weight: 600;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.strand-segments-enhanced {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.segment-enhanced {
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.segment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+}
+
+.segment-marker {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: var(--strand-color);
+}
+
+.segment-value-num {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: white;
+}
+
+.segment-bar-enhanced {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.3rem;
+}
+
+.segment-fill-enhanced {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s ease;
+}
+
+.segment-name-enhanced {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.strand-gene-enhanced {
+    margin-top: 1rem;
+    padding: 0.6rem;
+    background: rgba(var(--strand-color), 0.1);
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--strand-color);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* DEDUCTIONS SECTION */
+.deductions-section {
+    margin: 2.5rem 0;
+    padding: 2rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+}
+
+.deductions-section h3 {
+    color: white;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.deductions-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+}
+
+.deduction-category {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.deduction-category:hover {
+    border-color: var(--cat-color);
+    transform: translateY(-3px);
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: var(--cat-color);
+    font-weight: 600;
+}
+
+.category-header i {
+    font-size: 1.25rem;
+}
+
+.category-sections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.section-tag {
+    padding: 0.3rem 0.6rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s ease;
+}
+
+.section-tag:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* RECOMMENDATIONS SECTION */
+.recommendations-section {
+    margin: 2.5rem 0;
+}
+
+.recommendations-section h3 {
+    color: #F59E0B;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.recommendation-card {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.recommendation-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+
+.recommendation-card.priority-high::before {
+    background: linear-gradient(90deg, #EF4444, #DC2626);
+}
+
+.recommendation-card.priority-critical::before {
+    background: linear-gradient(90deg, #7C3AED, #6D28D9);
+}
+
+.recommendation-card.priority-medium::before {
+    background: linear-gradient(90deg, #F59E0B, #D97706);
+}
+
+.recommendation-card.priority-low::before {
+    background: linear-gradient(90deg, #3B82F6, #2563EB);
+}
+
+.rec-priority {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.priority-high .rec-priority {
+    background: rgba(239, 68, 68, 0.3);
+    color: #EF4444;
+}
+
+.priority-critical .rec-priority {
+    background: rgba(124, 58, 237, 0.3);
+    color: #A78BFA;
+}
+
+.priority-medium .rec-priority {
+    background: rgba(245, 158, 11, 0.3);
+    color: #F59E0B;
+}
+
+.priority-low .rec-priority {
+    background: rgba(59, 130, 246, 0.3);
+    color: #3B82F6;
+}
+
+.rec-section {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+
+.rec-action {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.75rem;
+}
+
+.rec-savings {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(16, 185, 129, 0.2);
+    border-radius: 20px;
+    color: #10B981;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.rec-reason {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.rec-timeline {
+    font-size: 0.8rem;
+    color: #00D9FF;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* PROJECTION SECTION */
+.projection-section {
+    margin: 2.5rem 0;
+    padding: 2rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(0, 217, 255, 0.2);
+    border-radius: 20px;
+}
+
+.projection-section h3 {
+    color: #00D9FF;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.projection-chart-container {
+    height: 300px;
+    margin-bottom: 2rem;
+}
+
+.projection-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+}
+
+.projection-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.projection-card:hover {
+    transform: translateY(-5px);
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.proj-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1rem;
+    background: rgba(0, 217, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00D9FF;
+    font-size: 1.25rem;
+}
+
+.proj-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.proj-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .health-score-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .score-info-large {
+        text-align: center;
+    }
+    
+    .dna-title-enhanced {
+        font-size: 1.75rem;
+    }
+    
+    .strands-grid-enhanced,
+    .recommendations-grid,
+    .risk-alerts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ANIMATIONS */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.strand-card-enhanced,
+.recommendation-card,
+.risk-alert-card,
+.deduction-category {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.strand-card-enhanced:nth-child(1) { animation-delay: 0.05s; }
+.strand-card-enhanced:nth-child(2) { animation-delay: 0.1s; }
+.strand-card-enhanced:nth-child(3) { animation-delay: 0.15s; }
+.strand-card-enhanced:nth-child(4) { animation-delay: 0.2s; }
+.strand-card-enhanced:nth-child(5) { animation-delay: 0.25s; }
+.strand-card-enhanced:nth-child(6) { animation-delay: 0.3s; }
+.strand-card-enhanced:nth-child(7) { animation-delay: 0.35s; }
+.strand-card-enhanced:nth-child(8) { animation-delay: 0.4s; }
+.strand-card-enhanced:nth-child(9) { animation-delay: 0.45s; }
+.strand-card-enhanced:nth-child(10) { animation-delay: 0.5s; }

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS Financial API Demo - Connected to Backend</title>
+    <link rel="stylesheet" href="design-system.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0A0E1A 0%, #1A1A2E 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            margin: 30px 0;
+            background: linear-gradient(135deg, #00D9FF, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5rem;
+        }
+        .status-bar {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #EF4444;
+            animation: pulse 2s infinite;
+        }
+        .dot.connected { background: #22C55E; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            color: #00D9FF;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: rgba(255,255,255,0.7); }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00D9FF;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00D9FF, #8B5CF6);
+            color: #fff;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3); }
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        .output {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Monaco', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            border-radius: 8px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #00D9FF, #8B5CF6);
+            color: #fff;
+        }
+        .hidden { display: none; }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22C55E;
+        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-university"></i> DS Financial API Demo</h1>
+
+        <div class="status-bar">
+            <div class="status-indicator">
+                <div class="dot" id="connectionDot"></div>
+                <span id="connectionStatus">Connecting to backend...</span>
+            </div>
+            <div id="userInfo" class="hidden">
+                <span class="badge" id="userBadge">Free Tier</span>
+                <span style="margin-left: 10px;" id="userEmail"></span>
+                <button class="btn btn-secondary" style="margin-left: 15px; padding: 6px 12px;" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div id="authSection">
+            <div class="card">
+                <h2><i class="fas fa-user-plus"></i> Register / Login</h2>
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('login')">Login</button>
+                    <button class="tab" onclick="showTab('register')">Register</button>
+                </div>
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password">
+                    </div>
+                    <button class="btn btn-primary" onclick="login()">Login</button>
+                </div>
+                <div id="registerForm" class="hidden">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="regEmail" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="regPassword" placeholder="Min 8 characters">
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="regName" placeholder="Your Name">
+                    </div>
+                    <button class="btn btn-primary" onclick="register()">Register</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="apiSection" class="hidden">
+            <div class="grid">
+                <div class="card">
+                    <h2><i class="fas fa-calculator"></i> Tax Calculator</h2>
+                    <div class="form-group">
+                        <label>Annual Income (₹)</label>
+                        <input type="number" id="income" value="1000000">
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="age" value="35">
+                    </div>
+                    <button class="btn btn-primary" onclick="calculateTax()">Calculate Tax</button>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-file-invoice"></i> GST Validator</h2>
+                    <div class="form-group">
+                        <label>GSTIN</label>
+                        <input type="text" id="gstin" value="27AAPFU0931F1ZV" placeholder="15-digit GSTIN">
+                    </div>
+                    <button class="btn btn-primary" onclick="validateGST()">Validate GSTIN</button>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-chart-pie"></i> Dashboard</h2>
+                    <button class="btn btn-primary" onclick="getDashboard()">Get Analytics</button>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-lightbulb"></i> Patents</h2>
+                    <button class="btn btn-primary" onclick="getPatents()">View Patents</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-terminal"></i> API Response</h2>
+                <div class="output" id="output">No response yet. Make an API call above.</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api-client.js"></script>
+    <script>
+        let api;
+
+        async function init() {
+            api = new DSFinancialAPI({
+                baseURL: 'http://localhost:5000/api/v1'
+            });
+
+            // Check health
+            try {
+                const health = await api.healthCheck();
+                document.getElementById('connectionDot').classList.add('connected');
+                document.getElementById('connectionStatus').textContent = `Connected - v${health.version}`;
+            } catch (e) {
+                document.getElementById('connectionStatus').textContent = 'Backend offline - running in demo mode';
+            }
+
+            // Check existing session
+            if (api.isAuthenticated()) {
+                showLoggedIn();
+            }
+        }
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+            document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+        }
+
+        async function register() {
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const name = document.getElementById('regName').value;
+
+            try {
+                const result = await api.register(email, password, name);
+                showOutput(result);
+                if (result.success) showLoggedIn();
+            } catch (e) {
+                showOutput({ error: e.message });
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const result = await api.login(email, password);
+                showOutput(result);
+                if (result.success) showLoggedIn();
+            } catch (e) {
+                showOutput({ error: e.message });
+            }
+        }
+
+        function logout() {
+            api.logout();
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('apiSection').classList.add('hidden');
+            document.getElementById('userInfo').classList.add('hidden');
+            showOutput({ message: 'Logged out successfully' });
+        }
+
+        function showLoggedIn() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('apiSection').classList.remove('hidden');
+            document.getElementById('userInfo').classList.remove('hidden');
+            const token = localStorage.getItem('ds_auth_token');
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            document.getElementById('userEmail').textContent = payload.email;
+            document.getElementById('userBadge').textContent = payload.tier || 'Free';
+        }
+
+        async function calculateTax() {
+            const income = parseFloat(document.getElementById('income').value);
+            const age = parseInt(document.getElementById('age').value);
+
+            try {
+                const result = await api.calculateIncomeTax({ income, age });
+                showOutput(result);
+            } catch (e) {
+                showOutput({ error: e.message });
+            }
+        }
+
+        async function validateGST() {
+            const gstin = document.getElementById('gstin').value;
+
+            try {
+                const result = await api.validateGSTIN(gstin);
+                showOutput(result);
+            } catch (e) {
+                showOutput({ error: e.message });
+            }
+        }
+
+        async function getDashboard() {
+            try {
+                const result = await api.getDashboard();
+                showOutput(result);
+            } catch (e) {
+                showOutput({ error: e.message });
+            }
+        }
+
+        async function getPatents() {
+            try {
+                const result = await api.getPatents();
+                showOutput(result);
+            } catch (e) {
+                showOutput({ error: e.message });
+            }
+        }
+
+        function showOutput(data) {
+            document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+        }
+
+        init();
+    </script>
+</body>
+</html>

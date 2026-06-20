@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Free online PDF tools - Merge, Split, Compress, Convert PDFs instantly. No signup, 100% secure browser-based processing.">
+    <meta name="keywords"
+        content="PDF tools, merge PDF, split PDF, compress PDF, convert PDF, PDF to JPG, JPG to PDF, free PDF tools">
+    <title>PDF Tools | DS Financial - Free Online PDF Editor</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23dc2626' rx='15' width='100' height='100'/><text x='50' y='65' font-size='40' font-weight='bold' fill='white' text-anchor='middle'>PDF</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- PDF Tools Styles -->
+    <link rel="stylesheet" href="futuristic-fintech.css">
+    <link rel="stylesheet" href="pdf-tools.css">
+    <link rel="stylesheet" href="global-features.css">
+    <link rel="stylesheet" href="enhanced-features.css">
+
+    <!-- PDF Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-chart-pie"></i></div>
+                <span class="logo-text">DS Financial</span>
+            </a>
+
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+
+                <!-- Services Mega Menu -->
+                <li class="nav-item has-mega-menu">
+                    <a href="index.html#services" class="nav-link">Services <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-inner">
+                            <div class="mega-col">
+                                <h4><i class="fas fa-calculator"></i> Tax & Compliance</h4>
+                                <a href="tax-portal.html" class="mega-link">
+                                    <i class="fas fa-file-invoice"></i>
+                                    <div>
+                                        <strong>Income Tax Filing</strong>
+                                        <span>ITR for Individuals & Business</span>
+                                    </div>
+                                </a>
+                                <a href="gst-tools.html" class="mega-link">
+                                    <i class="fas fa-receipt"></i>
+                                    <div>
+                                        <strong>GST Services</strong>
+                                        <span>Registration, Returns & Compliance</span>
+                                    </div>
+                                </a>
+                                <a href="index.html#services" class="mega-link">
+                                    <i class="fas fa-balance-scale"></i>
+                                    <div>
+                                        <strong>TDS/TCS Compliance</strong>
+                                        <span>Filing & Advisory</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="mega-col">
+                                <h4><i class="fas fa-briefcase"></i> Business Services</h4>
+                                <a href="index.html#services" class="mega-link">
+                                    <i class="fas fa-book"></i>
+                                    <div>
+                                        <strong>Accounting & Bookkeeping</strong>
+                                        <span>Complete Financial Records</span>
+                                    </div>
+                                </a>
+                                <a href="index.html#services" class="mega-link">
+                                    <i class="fas fa-search-dollar"></i>
+                                    <div>
+                                        <strong>Audit & Assurance</strong>
+                                        <span>Internal & External Audits</span>
+                                    </div>
+                                </a>
+                                <a href="index.html#services" class="mega-link">
+                                    <i class="fas fa-building"></i>
+                                    <div>
+                                        <strong>Business Registration</strong>
+                                        <span>Company, LLP & MSME</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="mega-col">
+                                <h4><i class="fas fa-chart-line"></i> Advisory</h4>
+                                <a href="index.html#services" class="mega-link">
+                                    <i class="fas fa-user-tie"></i>
+                                    <div>
+                                        <strong>Virtual CFO</strong>
+                                        <span>Strategic Financial Planning</span>
+                                    </div>
+                                </a>
+                                <a href="index.html#services" class="mega-link">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                    <div>
+                                        <strong>Project Finance</strong>
+                                        <span>Loans & Documentation</span>
+                                    </div>
+                                </a>
+                                <a href="index.html#services" class="mega-link">
+                                    <i class="fas fa-wallet"></i>
+                                    <div>
+                                        <strong>Payroll Services</strong>
+                                        <span>HR & Compliance</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Tax Tools Dropdown -->
+                <li class="nav-item has-mega-menu">
+                    <a href="tax-portal.html" class="nav-link">Tax Tools <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-inner">
+                            <div class="mega-col">
+                                <h4><i class="fas fa-calculator"></i> Income Tax</h4>
+                                <a href="tax-portal.html#income-tax" class="mega-link">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                    <div>
+                                        <strong>Income Tax Calculator</strong>
+                                        <span>Old vs New Regime</span>
+                                    </div>
+                                </a>
+                                <a href="tax-portal.html#hra" class="mega-link">
+                                    <i class="fas fa-home"></i>
+                                    <div>
+                                        <strong>HRA Calculator</strong>
+                                        <span>House Rent Allowance</span>
+                                    </div>
+                                </a>
+                                <a href="tax-portal.html#80c" class="mega-link">
+                                    <i class="fas fa-piggy-bank"></i>
+                                    <div>
+                                        <strong>80C Deductions</strong>
+                                        <span>Tax Saving Investments</span>
+                                    </div>
+                                </a>
+                                <a href="tax-portal.html#advance-tax" class="mega-link">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <div>
+                                        <strong>Advance Tax</strong>
+                                        <span>Quarterly Payment Calculator</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="mega-col">
+                                <h4><i class="fas fa-chart-line"></i> Capital Gains</h4>
+                                <a href="tax-portal.html#capital-gains" class="mega-link">
+                                    <i class="fas fa-chart-pie"></i>
+                                    <div>
+                                        <strong>Capital Gains Tax</strong>
+                                        <span>Stock & Property Tax</span>
+                                    </div>
+                                </a>
+                                <a href="tax-portal.html#gratuity" class="mega-link">
+                                    <i class="fas fa-gift"></i>
+                                    <div>
+                                        <strong>Gratuity Calculator</strong>
+                                        <span>End-of-Service Benefits</span>
+                                    </div>
+                                </a>
+                                <a href="tax-portal.html#tds" class="mega-link">
+                                    <i class="fas fa-cut"></i>
+                                    <div>
+                                        <strong>TDS Calculator</strong>
+                                        <span>Tax Deducted at Source</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="mega-col">
+                                <h4><i class="fas fa-book"></i> Tax Planning</h4>
+                                <a href="tax-portal.html#salary" class="mega-link">
+                                    <i class="fas fa-wallet"></i>
+                                    <div>
+                                        <strong>Salary Calculator</strong>
+                                        <span>In-hand Salary</span>
+                                    </div>
+                                </a>
+                                <a href="tax-portal.html#nps" class="mega-link">
+                                    <i class="fas fa-umbrella"></i>
+                                    <div>
+                                        <strong>NPS Calculator</strong>
+                                        <span>National Pension Scheme</span>
+                                    </div>
+                                </a>
+                                <a href="tax-portal.html#tax-saving" class="mega-link">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                    <div>
+                                        <strong>Tax Saving Tips</strong>
+                                        <span>Expert Guidance</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- GST Tools Dropdown -->
+                <li class="nav-item has-mega-menu">
+                    <a href="gst-tools.html" class="nav-link">GST Tools <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-inner">
+                            <div class="mega-col">
+                                <h4><i class="fas fa-calculator"></i> GST Calculators</h4>
+                                <a href="gst-tools.html#gst-calculator" class="mega-link">
+                                    <i class="fas fa-percent"></i>
+                                    <div>
+                                        <strong>GST Calculator</strong>
+                                        <span>Calculate GST Amount</span>
+                                    </div>
+                                </a>
+                                <a href="gst-tools.html#reverse-gst" class="mega-link">
+                                    <i class="fas fa-undo"></i>
+                                    <div>
+                                        <strong>Reverse GST Calculator</strong>
+                                        <span>Exclusive to Inclusive</span>
+                                    </div>
+                                </a>
+                                <a href="gst-tools.html#composition" class="mega-link">
+                                    <i class="fas fa-building"></i>
+                                    <div>
+                                        <strong>Composition Scheme</strong>
+                                        <span>Calculate Tax Liability</span>
+                                    </div>
+                                </a>
+                                <a href="gst-tools.html#hsn-sac" class="mega-link">
+                                    <i class="fas fa-barcode"></i>
+                                    <div>
+                                        <strong>HSN/SAC Code</strong>
+                                        <span>Find Tax Rates</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="mega-col">
+                                <h4><i class="fas fa-check-circle"></i> Verification</h4>
+                                <a href="gst-tools.html#gstin-verify" class="mega-link">
+                                    <i class="fas fa-id-card"></i>
+                                    <div>
+                                        <strong>GSTIN Verification</strong>
+                                        <span>Verify GST Number</span>
+                                    </div>
+                                </a>
+                                <a href="gst-tools.html#pan-gstin" class="mega-link">
+                                    <i class="fas fa-search"></i>
+                                    <div>
+                                        <strong>Search by PAN</strong>
+                                        <span>Find GSTIN using PAN</span>
+                                    </div>
+                                </a>
+                                <a href="gst-tools.html#gst-status" class="mega-link">
+                                    <i class="fas fa-info-circle"></i>
+                                    <div>
+                                        <strong>GST Status Check</strong>
+                                        <span>Active/Inactive Status</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="mega-col">
+                                <h4><i class="fas fa-file-invoice"></i> GST Documents</h4>
+                                <a href="gst-tools.html#invoice" class="mega-link">
+                                    <i class="fas fa-file-alt"></i>
+                                    <div>
+                                        <strong>GST Invoice Generator</strong>
+                                        <span>Create GST Invoices</span>
+                                    </div>
+                                </a>
+                                <a href="gst-tools.html#e-way-bill" class="mega-link">
+                                    <i class="fas fa-truck"></i>
+                                    <div>
+                                        <strong>E-Way Bill</strong>
+                                        <span>Generate Transport Bill</span>
+                                    </div>
+                                </a>
+                                <a href="gst-tools.html#gstr-filing" class="mega-link">
+                                    <i class="fas fa-upload"></i>
+                                    <div>
+                                        <strong>GSTR Filing Guide</strong>
+                                        <span>Step-by-step Help</span>
+                                    </div>
+                                </a>
+                                <a href="gst-tools.html#itc-calculator" class="mega-link">
+                                    <i class="fas fa-coins"></i>
+                                    <div>
+                                        <strong>ITC Calculator</strong>
+                                        <span>Input Tax Credit</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- PDF Tools Dropdown -->
+                <li class="nav-item has-mega-menu">
+                    <a href="pdf-tools.html" class="nav-link active">PDF Tools <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-inner">
+                            <div class="mega-col">
+                                <h4><i class="fas fa-file-pdf"></i> Organize PDFs</h4>
+                                <a href="pdf-tools.html#merge" class="mega-link">
+                                    <i class="fas fa-layer-group"></i>
+                                    <div>
+                                        <strong>Merge PDF</strong>
+                                        <span>Combine Multiple PDFs</span>
+                                    </div>
+                                </a>
+                                <a href="pdf-tools.html#split" class="mega-link">
+                                    <i class="fas fa-cut"></i>
+                                    <div>
+                                        <strong>Split PDF</strong>
+                                        <span>Extract Pages</span>
+                                    </div>
+                                </a>
+                                <a href="pdf-tools.html#compress" class="mega-link">
+                                    <i class="fas fa-compress"></i>
+                                    <div>
+                                        <strong>Compress PDF</strong>
+                                        <span>Reduce File Size</span>
+                                    </div>
+                                </a>
+                                <a href="pdf-tools.html#rotate" class="mega-link">
+                                    <i class="fas fa-sync"></i>
+                                    <div>
+                                        <strong>Rotate PDF</strong>
+                                        <span>Fix Page Orientation</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="mega-col">
+                                <h4><i class="fas fa-exchange-alt"></i> Convert Files</h4>
+                                <a href="pdf-tools.html#pdf-to-jpg" class="mega-link">
+                                    <i class="fas fa-file-image"></i>
+                                    <div>
+                                        <strong>PDF to JPG</strong>
+                                        <span>Convert to Images</span>
+                                    </div>
+                                </a>
+                                <a href="pdf-tools.html#jpg-to-pdf" class="mega-link">
+                                    <i class="fas fa-images"></i>
+                                    <div>
+                                        <strong>JPG to PDF</strong>
+                                        <span>Images to PDF</span>
+                                    </div>
+                                </a>
+                                <a href="pdf-tools.html#word-to-pdf" class="mega-link">
+                                    <i class="fas fa-file-word"></i>
+                                    <div>
+                                        <strong>Word to PDF</strong>
+                                        <span>Convert DOCX Files</span>
+                                    </div>
+                                </a>
+                                <a href="pdf-tools.html#excel-to-pdf" class="mega-link">
+                                    <i class="fas fa-file-excel"></i>
+                                    <div>
+                                        <strong>Excel to PDF</strong>
+                                        <span>Convert Spreadsheets</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="mega-col">
+                                <h4><i class="fas fa-shield-alt"></i> Edit & Secure</h4>
+                                <a href="pdf-tools.html#protect" class="mega-link">
+                                    <i class="fas fa-lock"></i>
+                                    <div>
+                                        <strong>Protect PDF</strong>
+                                        <span>Add Password Protection</span>
+                                    </div>
+                                </a>
+                                <a href="pdf-tools.html#unlock" class="mega-link">
+                                    <i class="fas fa-unlock"></i>
+                                    <div>
+                                        <strong>Unlock PDF</strong>
+                                        <span>Remove Password</span>
+                                    </div>
+                                </a>
+                                <a href="pdf-tools.html#watermark" class="mega-link">
+                                    <i class="fas fa-stamp"></i>
+                                    <div>
+                                        <strong>Add Watermark</strong>
+                                        <span>Protect Documents</span>
+                                    </div>
+                                </a>
+                                <a href="pdf-tools.html#signature" class="mega-link">
+                                    <i class="fas fa-signature"></i>
+                                    <div>
+                                        <strong>Sign PDF</strong>
+                                        <span>Digital Signature</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Resume Builder Dropdown -->
+                <li class="nav-item has-mega-menu">
+                    <a href="resume-builder.html" class="nav-link">Resume <i class="fas fa-chevron-down"></i></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-inner">
+                            <div class="mega-col">
+                                <h4><i class="fas fa-id-card"></i> Resume Builder</h4>
+                                <a href="resume-builder.html#templates" class="mega-link">
+                                    <i class="fas fa-file-alt"></i>
+                                    <div>
+                                        <strong>Professional Templates</strong>
+                                        <span>6 ATS-Friendly Designs</span>
+                                    </div>
+                                </a>
+                                <a href="resume-builder.html#builder" class="mega-link">
+                                    <i class="fas fa-magic"></i>
+                                    <div>
+                                        <strong>Resume Generator</strong>
+                                        <span>Create in Minutes</span>
+                                    </div>
+                                </a>
+                                <a href="resume-builder.html#samples" class="mega-link">
+                                    <i class="fas fa-eye"></i>
+                                    <div>
+                                        <strong>Resume Samples</strong>
+                                        <span>Industry Examples</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="mega-col">
+                                <h4><i class="fas fa-file-invoice"></i> Cover Letter</h4>
+                                <a href="resume-builder.html#cover-letter" class="mega-link">
+                                    <i class="fas fa-envelope"></i>
+                                    <div>
+                                        <strong>Cover Letter Builder</strong>
+                                        <span>Professional Letters</span>
+                                    </div>
+                                </a>
+                                <a href="resume-builder.html#tips" class="mega-link">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <div>
+                                        <strong>Writing Tips</strong>
+                                        <span>Expert Guidance</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="mega-col">
+                                <h4><i class="fas fa-briefcase"></i> Career Tools</h4>
+                                <a href="resume-builder.html#ats-checker" class="mega-link">
+                                    <i class="fas fa-robot"></i>
+                                    <div>
+                                        <strong>ATS Checker</strong>
+                                        <span>Score Your Resume</span>
+                                    </div>
+                                </a>
+                                <a href="resume-builder.html#linkedin" class="mega-link">
+                                    <i class="fab fa-linkedin"></i>
+                                    <div>
+                                        <strong>LinkedIn Optimizer</strong>
+                                        <span>Profile Enhancement</span>
+                                    </div>
+                                </a>
+                                <a href="resume-builder.html#interview" class="mega-link">
+                                    <i class="fas fa-handshake"></i>
+                                    <div>
+                                        <strong>Interview Prep</strong>
+                                        <span>Questions & Answers</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a href="investment-tools.html" class="nav-link">Investments</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="blog.html" class="nav-link">Insights</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="index.html#about" class="nav-link">About</a>
+                </li>
+            </ul>
+
+            <div class="nav-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="index.html#contact" class="btn btn-primary nav-cta">
+                    <i class="fas fa-phone"></i> Contact
+                </a>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section - Enhanced -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-badge"><i class="fas fa-bolt"></i> 78 Tools • 100% Free • Works Offline</span>
+                <h1>All-in-One <span class="gradient-text">PDF Tools</span></h1>
+                <p class="hero-subtitle">Merge, convert, compress, and edit PDFs instantly. Everything runs in your
+                    browser — your files never leave your device.</p>
+
+                <!-- Stats -->
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">78+</span>
+                        <span class="stat-label">Tools</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-number">7</span>
+                        <span class="stat-label">AI Features</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Private</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Bar - Enhanced -->
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="toolSearch" placeholder="Search tools... (e.g. merge, compress, AI)"
+                        oninput="filterTools()">
+                    <span class="search-shortcut">Ctrl+K</span>
+                </div>
+                <!-- Category Pills -->
+                <div class="category-pills">
+                    <button class="pill active" onclick="filterByCategory('all')">All</button>
+                    <button class="pill" onclick="filterByCategory('convert')"><i class="fas fa-exchange-alt"></i>
+                        Convert</button>
+                    <button class="pill" onclick="filterByCategory('organize')"><i class="fas fa-layer-group"></i>
+                        Organize</button>
+                    <button class="pill" onclick="filterByCategory('edit')"><i class="fas fa-edit"></i> Edit</button>
+                    <button class="pill" onclick="filterByCategory('security')"><i class="fas fa-shield-alt"></i>
+                        Security</button>
+                    <button class="pill" onclick="filterByCategory('ai-tools')"><i class="fas fa-robot"></i> AI</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Tools Row -->
+    <section class="popular-section">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-fire"></i> Most Popular</h2>
+            <div class="popular-grid">
+                <div class="popular-card" onclick="openTool('merge')">
+                    <div class="popular-icon"><i class="fas fa-object-group"></i></div>
+                    <span>Merge PDF</span>
+                </div>
+                <div class="popular-card" onclick="openTool('compress')">
+                    <div class="popular-icon"><i class="fas fa-compress-alt"></i></div>
+                    <span>Compress</span>
+                </div>
+                <div class="popular-card" onclick="openTool('pdf-to-jpg')">
+                    <div class="popular-icon"><i class="fas fa-file-image"></i></div>
+                    <span>PDF to JPG</span>
+                </div>
+                <div class="popular-card" onclick="openTool('split')">
+                    <div class="popular-icon"><i class="fas fa-cut"></i></div>
+                    <span>Split PDF</span>
+                </div>
+                <div class="popular-card" onclick="openTool('ai-summarize')">
+                    <div class="popular-icon ai-glow"><i class="fas fa-brain"></i></div>
+                    <span>AI Summarize</span>
+                </div>
+                <div class="popular-card" onclick="openTool('html-to-pdf')">
+                    <div class="popular-icon"><i class="fas fa-code"></i></div>
+                    <span>HTML to PDF</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Favorites Section (dynamic) -->
+    <section class="popular-section" id="favoritesSection"
+        style="display: none; background: linear-gradient(135deg, #fef3c7 0%, #fefce8 100%);">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-star" style="color: #f59e0b;"></i> Your Favorites</h2>
+            <div class="popular-grid" id="favoritesGrid">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="tools-section">
+        <div class="container">
+            <!-- Convert Tools -->
+            <div class="tool-category" id="convert">
+                <h2><i class="fas fa-exchange-alt"></i> Convert</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="pdf-to-jpg" onclick="openTool('pdf-to-jpg')">
+                        <div class="tool-icon convert"><i class="fas fa-file-image"></i></div>
+                        <h3>PDF to JPG</h3>
+                        <p>Convert PDF pages to JPG images</p>
+                    </div>
+                    <div class="tool-card" data-tool="jpg-to-pdf" onclick="openTool('jpg-to-pdf')">
+                        <div class="tool-icon convert"><i class="fas fa-file-pdf"></i></div>
+                        <h3>JPG to PDF</h3>
+                        <p>Convert images to PDF document</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Organize Tools -->
+            <div class="tool-category" id="organize">
+                <h2><i class="fas fa-layer-group"></i> Organize</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="merge" onclick="openTool('merge')">
+                        <div class="tool-icon organize"><i class="fas fa-object-group"></i></div>
+                        <h3>Merge PDF</h3>
+                        <p>Combine multiple PDFs into one</p>
+                    </div>
+                    <div class="tool-card" data-tool="split" onclick="openTool('split')">
+                        <div class="tool-icon organize"><i class="fas fa-cut"></i></div>
+                        <h3>Split PDF</h3>
+                        <p>Extract pages from PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="rotate" onclick="openTool('rotate')">
+                        <div class="tool-icon organize"><i class="fas fa-sync-alt"></i></div>
+                        <h3>Rotate PDF</h3>
+                        <p>Rotate PDF pages</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Optimize Tools -->
+            <div class="tool-category" id="optimize">
+                <h2><i class="fas fa-compress-arrows-alt"></i> Optimize</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="compress" onclick="openTool('compress')">
+                        <div class="tool-icon optimize"><i class="fas fa-compress"></i></div>
+                        <h3>Compress PDF</h3>
+                        <p>Reduce PDF file size</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Tools (Phase 2) -->
+            <div class="tool-category" id="edit">
+                <h2><i class="fas fa-edit"></i> Edit</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="watermark" onclick="openTool('watermark')">
+                        <div class="tool-icon edit"><i class="fas fa-tint"></i></div>
+                        <h3>Add Watermark</h3>
+                        <p>Add text watermark to pages</p>
+                    </div>
+                    <div class="tool-card" data-tool="page-numbers" onclick="openTool('page-numbers')">
+                        <div class="tool-icon edit"><i class="fas fa-list-ol"></i></div>
+                        <h3>Page Numbers</h3>
+                        <p>Add page numbers to PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="delete-pages" onclick="openTool('delete-pages')">
+                        <div class="tool-icon edit"><i class="fas fa-trash-alt"></i></div>
+                        <h3>Delete Pages</h3>
+                        <p>Remove specific pages</p>
+                    </div>
+                    <div class="tool-card" data-tool="extract-pages" onclick="openTool('extract-pages')">
+                        <div class="tool-icon edit"><i class="fas fa-file-export"></i></div>
+                        <h3>Extract Pages</h3>
+                        <p>Extract pages to new PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="reorder-pages" onclick="openTool('reorder-pages')">
+                        <div class="tool-icon edit"><i class="fas fa-sort"></i></div>
+                        <h3>Reorder Pages</h3>
+                        <p>Drag to rearrange pages</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Tools (Phase 3) -->
+            <div class="tool-category" id="security">
+                <h2><i class="fas fa-shield-alt"></i> Security</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="protect" onclick="openTool('protect')">
+                        <div class="tool-icon security"><i class="fas fa-lock"></i></div>
+                        <h3>Protect PDF</h3>
+                        <p>Add password protection</p>
+                    </div>
+                    <div class="tool-card" data-tool="unlock" onclick="openTool('unlock')">
+                        <div class="tool-icon security"><i class="fas fa-unlock"></i></div>
+                        <h3>Unlock PDF</h3>
+                        <p>Remove password protection</p>
+                    </div>
+                    <div class="tool-card" data-tool="esign" onclick="openTool('esign')">
+                        <div class="tool-icon security"><i class="fas fa-signature"></i></div>
+                        <h3>E-Sign PDF</h3>
+                        <p>Add your signature</p>
+                    </div>
+                    <div class="tool-card" data-tool="stamp" onclick="openTool('stamp')">
+                        <div class="tool-icon security"><i class="fas fa-stamp"></i></div>
+                        <h3>Add Stamp</h3>
+                        <p>Add predefined stamps</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Tools (Phase 4) -->
+            <div class="tool-category" id="advanced">
+                <h2><i class="fas fa-magic"></i> Advanced</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="html-to-pdf" onclick="openTool('html-to-pdf')">
+                        <div class="tool-icon advanced"><i class="fas fa-code"></i></div>
+                        <h3>HTML to PDF</h3>
+                        <p>Convert HTML/URL to PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="pdf-to-text" onclick="openTool('pdf-to-text')">
+                        <div class="tool-icon advanced"><i class="fas fa-align-left"></i></div>
+                        <h3>PDF to Text</h3>
+                        <p>Extract text from PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="ocr" onclick="openTool('ocr')">
+                        <div class="tool-icon advanced"><i class="fas fa-eye"></i></div>
+                        <h3>OCR PDF</h3>
+                        <p>Extract text from scanned PDFs</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pro Tools (Phase 5) -->
+            <div class="tool-category" id="pro">
+                <h2><i class="fas fa-crown"></i> Pro Features</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="compare" onclick="openTool('compare')">
+                        <div class="tool-icon pro"><i class="fas fa-columns"></i></div>
+                        <h3>Compare PDFs</h3>
+                        <p>Visual diff between PDFs</p>
+                    </div>
+                    <div class="tool-card" data-tool="editor" onclick="openTool('editor')">
+                        <div class="tool-icon pro"><i class="fas fa-pen-fancy"></i></div>
+                        <h3>PDF Editor</h3>
+                        <p>Add text, shapes, annotations</p>
+                    </div>
+                    <div class="tool-card" data-tool="batch" onclick="openTool('batch')">
+                        <div class="tool-icon pro"><i class="fas fa-layer-group"></i></div>
+                        <h3>Batch Process</h3>
+                        <p>Process multiple files</p>
+                    </div>
+                    <div class="tool-card" data-tool="templates" onclick="openTool('templates')">
+                        <div class="tool-icon pro"><i class="fas fa-file-invoice"></i></div>
+                        <h3>PDF Templates</h3>
+                        <p>Generate invoices, receipts</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Utilities Tools (Phase 6 Enhancements) -->
+            <div class="tool-category" id="utilities">
+                <h2><i class="fas fa-tools"></i> Utilities</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="metadata" onclick="openTool('metadata')">
+                        <div class="tool-icon utilities"><i class="fas fa-info-circle"></i></div>
+                        <h3>Edit Metadata</h3>
+                        <p>Edit title, author, keywords</p>
+                    </div>
+                    <div class="tool-card" data-tool="pdf-info" onclick="openTool('pdf-info')">
+                        <div class="tool-icon utilities"><i class="fas fa-file-alt"></i></div>
+                        <h3>PDF Info</h3>
+                        <p>View document details</p>
+                    </div>
+                    <div class="tool-card" data-tool="reverse" onclick="openTool('reverse')">
+                        <div class="tool-icon utilities"><i class="fas fa-exchange-alt"></i></div>
+                        <h3>Reverse Pages</h3>
+                        <p>Flip page order</p>
+                    </div>
+                    <div class="tool-card" data-tool="flatten" onclick="openTool('flatten')">
+                        <div class="tool-icon utilities"><i class="fas fa-layer-group"></i></div>
+                        <h3>Flatten PDF</h3>
+                        <p>Flatten forms & annotations</p>
+                    </div>
+                    <div class="tool-card" data-tool="grayscale" onclick="openTool('grayscale')">
+                        <div class="tool-icon utilities"><i class="fas fa-adjust"></i></div>
+                        <h3>Grayscale</h3>
+                        <p>Convert to black & white</p>
+                    </div>
+                    <div class="tool-card" data-tool="header-footer" onclick="openTool('header-footer')">
+                        <div class="tool-icon utilities"><i class="fas fa-heading"></i></div>
+                        <h3>Header/Footer</h3>
+                        <p>Add custom headers/footers</p>
+                    </div>
+                    <div class="tool-card" data-tool="duplicate" onclick="openTool('duplicate')">
+                        <div class="tool-icon utilities"><i class="fas fa-copy"></i></div>
+                        <h3>Duplicate Pages</h3>
+                        <p>Copy specific pages</p>
+                    </div>
+                </div>
+
+                <!-- Page Tools (Phase 7) -->
+                <div class="tool-category" id="page-tools">
+                    <h2><i class="fas fa-expand-arrows-alt"></i> Page Tools</h2>
+                    <div class="tools-grid">
+                        <div class="tool-card" data-tool="page-size" onclick="openTool('page-size')">
+                            <div class="tool-icon page"><i class="fas fa-ruler-combined"></i></div>
+                            <h3>Page Size</h3>
+                            <p>Convert A4, Letter, Legal</p>
+                        </div>
+                        <div class="tool-card" data-tool="crop" onclick="openTool('crop')">
+                            <div class="tool-icon page"><i class="fas fa-crop-alt"></i></div>
+                            <h3>Crop Pages</h3>
+                            <p>Trim page margins</p>
+                        </div>
+                        <div class="tool-card" data-tool="scale" onclick="openTool('scale')">
+                            <div class="tool-icon page"><i class="fas fa-search-plus"></i></div>
+                            <h3>Scale Pages</h3>
+                            <p>Resize by percentage</p>
+                        </div>
+                        <div class="tool-card" data-tool="interleave" onclick="openTool('interleave')">
+                            <div class="tool-icon page"><i class="fas fa-random"></i></div>
+                            <h3>Interleave</h3>
+                            <p>Merge alternating pages</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Extras (Phase 7) -->
+                <div class="tool-category" id="extras">
+                    <h2><i class="fas fa-star"></i> Extras</h2>
+                    <div class="tools-grid">
+                        <div class="tool-card" data-tool="qr-code" onclick="openTool('qr-code')">
+                            <div class="tool-icon extras"><i class="fas fa-qrcode"></i></div>
+                            <h3>Add QR Code</h3>
+                            <p>Embed QR codes</p>
+                        </div>
+                        <div class="tool-card" data-tool="background" onclick="openTool('background')">
+                            <div class="tool-icon extras"><i class="fas fa-fill-drip"></i></div>
+                            <h3>Add Background</h3>
+                            <p>Set background color</p>
+                        </div>
+                        <div class="tool-card" data-tool="redact" onclick="openTool('redact')">
+                            <div class="tool-icon extras"><i class="fas fa-eraser"></i></div>
+                            <h3>Redact Text</h3>
+                            <p>Blackout sensitive info</p>
+                        </div>
+                        <div class="tool-card" data-tool="bookmarks" onclick="openTool('bookmarks')">
+                            <div class="tool-icon extras"><i class="fas fa-bookmark"></i></div>
+                            <h3>Add Bookmarks</h3>
+                            <p>Create navigation TOC</p>
+                        </div>
+                        <div class="tool-card" data-tool="form-data" onclick="openTool('form-data')">
+                            <div class="tool-icon extras"><i class="fas fa-table"></i></div>
+                            <h3>Extract Form</h3>
+                            <p>Get form data as JSON</p>
+                        </div>
+                        <div class="tool-card" data-tool="pdf-to-html" onclick="openTool('pdf-to-html')">
+                            <div class="tool-icon extras"><i class="fas fa-file-code"></i></div>
+                            <h3>PDF to HTML</h3>
+                            <p>Convert to HTML</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Tools (Phase 8) -->
+            <div class="tool-category" id="analysis">
+                <h2><i class="fas fa-chart-bar"></i> Analysis</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="word-count" onclick="openTool('word-count')">
+                        <div class="tool-icon analysis"><i class="fas fa-font"></i></div>
+                        <h3>Word Count</h3>
+                        <p>Count words & characters</p>
+                    </div>
+                    <div class="tool-card" data-tool="image-extract" onclick="openTool('image-extract')">
+                        <div class="tool-icon analysis"><i class="fas fa-images"></i></div>
+                        <h3>Extract Images</h3>
+                        <p>Get all images from PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="link-extract" onclick="openTool('link-extract')">
+                        <div class="tool-icon analysis"><i class="fas fa-link"></i></div>
+                        <h3>Extract Links</h3>
+                        <p>Get all URLs from PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="contrast" onclick="openTool('contrast')">
+                        <div class="tool-icon analysis"><i class="fas fa-adjust"></i></div>
+                        <h3>Adjust Contrast</h3>
+                        <p>Improve scan quality</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-Doc Tools (Phase 8) -->
+            <div class="tool-category" id="multi-doc">
+                <h2><i class="fas fa-copy"></i> Multi-Document</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="n-up" onclick="openTool('n-up')">
+                        <div class="tool-icon multidoc"><i class="fas fa-th-large"></i></div>
+                        <h3>N-Up Printing</h3>
+                        <p>2/4/9 pages per sheet</p>
+                    </div>
+                    <div class="tool-card" data-tool="split-every" onclick="openTool('split-every')">
+                        <div class="tool-icon multidoc"><i class="fas fa-cut"></i></div>
+                        <h3>Split Every N</h3>
+                        <p>Split into chunks</p>
+                    </div>
+                    <div class="tool-card" data-tool="overlay" onclick="openTool('overlay')">
+                        <div class="tool-icon multidoc"><i class="fas fa-clone"></i></div>
+                        <h3>Overlay PDFs</h3>
+                        <p>Combine page content</p>
+                    </div>
+                    <div class="tool-card" data-tool="border" onclick="openTool('border')">
+                        <div class="tool-icon multidoc"><i class="fas fa-border-style"></i></div>
+                        <h3>Add Border</h3>
+                        <p>Decorative page borders</p>
+                    </div>
+                    <div class="tool-card" data-tool="csv-to-pdf" onclick="openTool('csv-to-pdf')">
+                        <div class="tool-icon multidoc"><i class="fas fa-table"></i></div>
+                        <h3>CSV to PDF</h3>
+                        <p>Convert data to table</p>
+                    </div>
+                    <div class="tool-card" data-tool="collage" onclick="openTool('collage')">
+                        <div class="tool-icon multidoc"><i class="fas fa-image"></i></div>
+                        <h3>Photo Collage</h3>
+                        <p>Create image collage</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Specialized Tools (Phase 9) -->
+            <div class="tool-category" id="specialized">
+                <h2><i class="fas fa-tools"></i> Specialized</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="repair" onclick="openTool('repair')">
+                        <div class="tool-icon specialized"><i class="fas fa-hammer"></i></div>
+                        <h3>Repair PDF</h3>
+                        <p>Rebuild document structure</p>
+                    </div>
+                    <div class="tool-card" data-tool="remove-blank" onclick="openTool('remove-blank')">
+                        <div class="tool-icon specialized"><i class="fas fa-file-excel"></i></div>
+                        <h3>Remove Blanks</h3>
+                        <p>Delete empty pages</p>
+                    </div>
+                    <div class="tool-card" data-tool="deskew" onclick="openTool('deskew')">
+                        <div class="tool-icon specialized"><i class="fas fa-sync-alt"></i></div>
+                        <h3>Fine Rotate</h3>
+                        <p>Deskew scanned pages</p>
+                    </div>
+                    <div class="tool-card" data-tool="bates" onclick="openTool('bates')">
+                        <div class="tool-icon specialized"><i class="fas fa-stamp"></i></div>
+                        <h3>Bates Numbering</h3>
+                        <p>Legal document indexing</p>
+                    </div>
+                    <div class="tool-card" data-tool="markdown-pdf" onclick="openTool('markdown-pdf')">
+                        <div class="tool-icon specialized"><i class="fab fa-markdown"></i></div>
+                        <h3>Markdown to PDF</h3>
+                        <p>Convert MD text to PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="json-pdf" onclick="openTool('json-pdf')">
+                        <div class="tool-icon specialized"><i class="fas fa-code"></i></div>
+                        <h3>JSON to PDF</h3>
+                        <p>Convert JSON data to PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="watermark-tile" onclick="openTool('watermark-tile')">
+                        <div class="tool-icon specialized"><i class="fas fa-grip-horizontal"></i></div>
+                        <h3>Tiled Watermark</h3>
+                        <p>Repeated pattern watermark</p>
+                    </div>
+                    <div class="tool-card" data-tool="extract-fonts" onclick="openTool('extract-fonts')">
+                        <div class="tool-icon specialized"><i class="fas fa-font"></i></div>
+                        <h3>Extract Fonts</h3>
+                        <p>List fonts used in PDF</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Office & Visual Tools (Phase 10) -->
+            <div class="tool-category" id="office-visual">
+                <h2><i class="fas fa-briefcase"></i> Office & Visual</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="visual-organizer" onclick="openTool('visual-organizer')">
+                        <div class="tool-icon office"><i class="fas fa-th"></i></div>
+                        <h3>Visual Organizer</h3>
+                        <p>Drag & drop page sorting</p>
+                    </div>
+                    <div class="tool-card" data-tool="word-pdf" onclick="openTool('word-pdf')">
+                        <div class="tool-icon office"><i class="fas fa-file-word"></i></div>
+                        <h3>Word to PDF</h3>
+                        <p>Convert DOCX to PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="excel-pdf" onclick="openTool('excel-pdf')">
+                        <div class="tool-icon office"><i class="fas fa-file-excel"></i></div>
+                        <h3>Excel to PDF</h3>
+                        <p>Convert XLSX to PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="ppt-pdf" onclick="openTool('ppt-pdf')">
+                        <div class="tool-icon office"><i class="fas fa-file-powerpoint"></i></div>
+                        <h3>PPT to PDF</h3>
+                        <p>Convert PPTX to PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="smart-redact" onclick="openTool('smart-redact')">
+                        <div class="tool-icon office"><i class="fas fa-user-secret"></i></div>
+                        <h3>Smart Redact</h3>
+                        <p>Auto-find sensitive data</p>
+                    </div>
+                    <div class="tool-card" data-tool="sign-verifier" onclick="openTool('sign-verifier')">
+                        <div class="tool-icon office"><i class="fas fa-file-signature"></i></div>
+                        <h3>Sign Verifier</h3>
+                        <p>Inspect digital signatures</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Power User & Accessibility (Phase 11) -->
+            <div class="tool-category" id="power-user">
+                <h2><i class="fas fa-bolt"></i> Power User</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="a11y-check" onclick="openTool('a11y-check')">
+                        <div class="tool-icon power"><i class="fas fa-universal-access"></i></div>
+                        <h3>A11y Checker</h3>
+                        <p>Accessibility scan</p>
+                    </div>
+                    <div class="tool-card" data-tool="pdf-diff" onclick="openTool('pdf-diff')">
+                        <div class="tool-icon power"><i class="fas fa-not-equal"></i></div>
+                        <h3>PDF Diff</h3>
+                        <p>Compare two PDFs</p>
+                    </div>
+                    <div class="tool-card" data-tool="ink-remover" onclick="openTool('ink-remover')">
+                        <div class="tool-icon power"><i class="fas fa-eraser"></i></div>
+                        <h3>Ink Remover</h3>
+                        <p>Strip annotations</p>
+                    </div>
+                    <div class="tool-card" data-tool="flatten-annot" onclick="openTool('flatten-annot')">
+                        <div class="tool-icon power"><i class="fas fa-compress-alt"></i></div>
+                        <h3>Flatten Annotations</h3>
+                        <p>Burn markup into PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="linearize" onclick="openTool('linearize')">
+                        <div class="tool-icon power"><i class="fas fa-bolt"></i></div>
+                        <h3>Linearize</h3>
+                        <p>Web optimize PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="extract-attach" onclick="openTool('extract-attach')">
+                        <div class="tool-icon power"><i class="fas fa-paperclip"></i></div>
+                        <h3>Extract Attachments</h3>
+                        <p>Get embedded files</p>
+                    </div>
+                    <div class="tool-card" data-tool="tts" onclick="openTool('tts')">
+                        <div class="tool-icon power"><i class="fas fa-volume-up"></i></div>
+                        <h3>Text-to-Speech</h3>
+                        <p>Read PDF aloud</p>
+                    </div>
+                    <div class="tool-card" data-tool="url-qr" onclick="openTool('url-qr')">
+                        <div class="tool-icon power"><i class="fas fa-qrcode"></i></div>
+                        <h3>URL to QR</h3>
+                        <p>Generate QR from link</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Tools -->
+            <div class="tool-category" id="ai-tools">
+                <h2><i class="fas fa-robot"></i> AI Tools <span
+                        style="font-size: 0.7rem; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; padding: 2px 8px; border-radius: 12px; margin-left: 8px;">NEW</span>
+                </h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-tool="ai-summarize" onclick="openTool('ai-summarize')">
+                        <div class="tool-icon ai"><i class="fas fa-brain"></i></div>
+                        <h3>AI Summarizer</h3>
+                        <p>Summarize PDF content</p>
+                    </div>
+                    <div class="tool-card" data-tool="ai-qa" onclick="openTool('ai-qa')">
+                        <div class="tool-icon ai"><i class="fas fa-comments"></i></div>
+                        <h3>AI Q&A</h3>
+                        <p>Ask questions about PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="ai-generate" onclick="openTool('ai-generate')">
+                        <div class="tool-icon ai"><i class="fas fa-magic"></i></div>
+                        <h3>AI Generator</h3>
+                        <p>Generate content for PDF</p>
+                    </div>
+                    <div class="tool-card" data-tool="ai-translate" onclick="openTool('ai-translate')">
+                        <div class="tool-icon ai"><i class="fas fa-language"></i></div>
+                        <h3>AI Translator</h3>
+                        <p>Translate PDF content</p>
+                    </div>
+                    <div class="tool-card" data-tool="ai-keypoints" onclick="openTool('ai-keypoints')">
+                        <div class="tool-icon ai"><i class="fas fa-list-ul"></i></div>
+                        <h3>AI Key Points</h3>
+                        <p>Extract key facts & entities</p>
+                    </div>
+                    <div class="tool-card" data-tool="ai-rewrite" onclick="openTool('ai-rewrite')">
+                        <div class="tool-icon ai"><i class="fas fa-pen-nib"></i></div>
+                        <h3>AI Rewriter</h3>
+                        <p>Rewrite in different tones</p>
+                    </div>
+                    <div class="tool-card" data-tool="ai-grammar" onclick="openTool('ai-grammar')">
+                        <div class="tool-icon ai"><i class="fas fa-spell-check"></i></div>
+                        <h3>AI Grammar Fix</h3>
+                        <p>Fix grammar & writing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tool Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeTool()">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeTool()">&times;</button>
+            <div class="modal-header" id="modalHeader">
+                <div class="modal-icon"><i class="fas fa-file-pdf"></i></div>
+                <h2 id="modalTitle">Tool Title</h2>
+                <p id="modalDescription">Tool description</p>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Tool content loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 DS Financial Solutions. All files are processed locally in your browser.</p>
+        </div>
+    </footer>
+
+    <!-- Libraries for Phase 10 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- PDF Tools Script -->
+    <script src="pdf-tools.js"></script>
+    <script src="global-features.js"></script>
+    <script src="enhanced-features.js"></script>
+</body>
+
+</html>

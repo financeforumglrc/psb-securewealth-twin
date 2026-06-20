@@ -1,0 +1,67 @@
+                            <div id="scannerTab" class="hidden">
+                                <div class="output-section">
+                                    <h4 class="section-title"><i class="fas fa-satellite-dish"></i> Live Stock Scanner</h4>
+                                    <p class="section-desc">Search NSE/BSE stocks and import financial data directly into your model</p>
+                                    
+                                    <!-- Search Bar -->
+                                    <div class="scanner-search-bar">
+                                        <div class="scanner-search-input-wrap">
+                                            <i class="fas fa-search"></i>
+                                            <input type="text" id="scannerSearchInput" class="scanner-search-input" placeholder="Search stock (e.g., RELIANCE, TCS, INFY, HDFC Bank...)" onkeydown="if(event.key==='Enter')searchStocks()">
+                                            <button class="btn btn-primary" onclick="searchStocks()"><i class="fas fa-radar"></i> Scan</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Scanner Filters -->
+                                    <div class="scanner-filters">
+                                        <div class="scanner-filter-group">
+                                            <label>Exchange</label>
+                                            <select id="scannerExchange" class="form-input">
+                                                <option value="NSE">NSE (India)</option>
+                                                <option value="BSE">BSE (India)</option>
+                                                <option value="ALL">All</option>
+                                            </select>
+                                        </div>
+                                        <div class="scanner-filter-group">
+                                            <label>Sector</label>
+                                            <select id="scannerSector" class="form-input">
+                                                <option value="">All Sectors</option>
+                                                <option value="Technology">Technology</option>
+                                                <option value="Banking">Banking</option>
+                                                <option value="Energy">Energy</option>
+                                                <option value="Pharma">Pharma</option>
+                                                <option value="Auto">Auto</option>
+                                                <option value="FMCG">FMCG</option>
+                                                <option value="Infrastructure">Infrastructure</option>
+                                            </select>
+                                        </div>
+                                        <div class="scanner-filter-group">
+                                            <label>Min Market Cap (Cr)</label>
+                                            <input type="number" id="scannerMinMcap" class="form-input" placeholder="0" value="1000">
+                                        </div>
+                                        <div class="scanner-filter-group">
+                                            <label>Max P/E</label>
+                                            <input type="number" id="scannerMaxPe" class="form-input" placeholder="Any" value="50">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Results Area -->
+                                    <div id="scannerResultsArea">
+                                        <div class="scanner-empty-state">
+                                            <i class="fas fa-satellite-dish"></i>
+                                            <h3>Search for Stocks</h3>
+                                            <p>Type a company name or symbol above to fetch live data from NSE/BSE. You can also browse our pre-loaded universe of 500+ Indian stocks.</p>
+                                            <div class="scanner-quick-picks">
+                                                <button class="scanner-chip" onclick="quickScan('Reliance Industries')">Reliance</button>
+                                                <button class="scanner-chip" onclick="quickScan('TCS')">TCS</button>
+                                                <button class="scanner-chip" onclick="quickScan('HDFC Bank')">HDFC Bank</button>
+                                                <button class="scanner-chip" onclick="quickScan('Infosys')">Infosys</button>
+                                                <button class="scanner-chip" onclick="quickScan('ICICI Bank')">ICICI Bank</button>
+                                                <button class="scanner-chip" onclick="quickScan('Bharti Airtel')">Bharti Airtel</button>
+                                                <button class="scanner-chip" onclick="quickScan('ITC')">ITC</button>
+                                                <button class="scanner-chip" onclick="quickScan('Larsen & Toubro')">L&T</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>

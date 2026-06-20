@@ -1,0 +1,379 @@
+PSBs Hackathon Series-2026
+
+Field
+1. Department Name
+2. Domain Category
+
+Description Project Management Office(PMO)
+Cyber Security and Fraud "SecureWealth Twin" ­ Intelligent Wealth Growth with Built-in Fraud Protection
+
+Banks today face a dual responsibility:
+
+ help customers grow their wealth intelligently and  protect that wealth from fraud, misuse, and risky actions.
+
+Customers increasingly rely on digital channels for savings, investments, and financial planning. While AI-powered wealth advisory can guide users toward better financial outcomes, the same digital convenience also exposes them to risks such as social-engineering fraud, coerced transactions, OTP misuse, and impulsive high-value actions.
+
+The Bank aims to create "SecureWealth Twin", an AI-powered digital wealth
+
+intelligence system that acts as a virtual financial twin of a customer or
+
+business, while embedding a mandatory, lightweight cyber-security and fraud
+
+3. Problem
+
+protection layer around all critical wealth-related actions.
+
+Description (with
+
+context &
+
+This application should be able to-
+
+considerations)
+
+1. Learn from spending, saving, and investment habits 2. Understand changes in income, goals, and risk appetite 3. Study market and economic trends (stocks, funds, interest rates,
+inflation, international events and global markets) to give strategic recommendations (e.g., sell gold, shift to FD based on global indicators) 4. Integrate with Account Aggregator to access financial information from other banks and gather a full financial picture. 5. Allow customers to add property, gold, vehicles, and other assets to compute full net worth. 6. Give helpful and timely suggestions like -
+
+ How to create a portfolio
+
+ How much to save every month
+
+ When to invest or rebalance a portfolio
+
+ How to reduce financial risks
+
+ How to reach goals faster (education, home, retirement, etc.)
+
+ Smart tax-saving options
+
+4. Guidelines
+
+7. Protect wealth actions through built-in risk checks before execution, without complicating the user experience.
+The system must ensure that wealth is not only created but also safeguarded, especially during high-value or sensitive financial actions.
+What the Students Are Required to Do
+Students are required to design and demonstrate a single, unified system that combines:
+1. Digital Wealth Intelligence
+For Individual Customers (Retail Wealth Management):
+ Help users build healthy saving habits  Provide goal-based investment guidance (education, home,
+retirement, etc.)  Suggest SIPs, deposits, and simple tax-saving options  Identify overspending and financial risks  Simulate future wealth outcomes
+For Corporate / Business Customers (Optional):
+ Analyze cash flows and liquidity  Suggest options for surplus fund management  Highlight financial risk indicators  Support long-term growth planning
+2. Mandatory Wealth Protection Layer (Cyber-Security & Fraud)
+All critical wealth actions (e.g., starting/modifying SIPs, large investments, portfolio rebalancing, surplus fund movement) must pass through a mandatory cyber-protection layer that:
+ Evaluates basic risk signals such as: o Trusted vs. New device (simulated) o OTP usage patterns o Transaction amount vs. historical behavior o Speed, retries, or urgency of actions
+ Generates a Wealth Protection Risk Score (Low / Medium / High)  Takes proportionate action:
+o Allow action o Display warning or cooling-off message o Temporarily block or delay the action
+
+5. Expected Outcome
+
+Suggested platforms for Solution Development, but not limited to these options ­
+1. Mobile App (Flutter / React Native / Ionic React + Java Spring Boot) 2. Web Application (React / Angular + Java Spring Boot / Node.js) 3. API-First Microservice (Spring Boot / Python FastAPI) 4. Cloud-Native Deployment (AWS / Azure / GCP -- or local simulation
+using Docker etc.)
+The prototype must be built with technologies that allow smooth integration with Bank's existing platforms and API's.
+The expected outcome is a working prototype or concept demo of the `SecureWealth Twin' that can:
+1. Understand User/Business Financial Behavior · Analyze spending, saving, and income patterns · Identify habits, trends, and risk levels
+2. Provide Personalized Wealth Insights · Simple, customized suggestions on saving, investing, and planning · Alerts for overspending, cash shortages, or missed opportunities · Clear explanation behind every recommendation
+3. Predict Future Financial Scenarios · Show possible future outcomes (e.g., savings growth, investment
+projections) · Suggest goal-based improvements (e.g., "Save 500 more to meet your
+goal")
+4. Recommend Wealth-Building Actions For Individuals:
+· Start/adjust SIPs · Optimize spending patterns · Select tax-saving options · Promote healthy financial habits
+For Businesses (optional): · Manage surplus funds · Improve cash flow · Reduce financial risks · Suggest short-term and long-term treasury options
+5. Protect Wealth Through Cyber-Risk-Aware Actions a. Apply security and cyber-fraud checks before critical wealth actions b. Demonstrate warnings, delays, or blocks when risk is high
+6. Present a Simple, Engaging User Experience · Clean dashboard · Easy-to-understand visuals
+
+6. Success Metrics
+
+· Possibly include gamification or conversational AI
+7. Demonstrate Responsible Use of AI · Show how data privacy, consent, and explainability are handled · Display why the system gives certain recommendations
+Evaluation will be based on the following:
+1. Quality of Wealth Intelligence o Relevance and usefulness of financial insights o Logical and practical wealth recommendations
+2. Effectiveness of Wealth Protection o Sensible identification of cyber-risky or unusual actions o Appropriate and explainable protection responses
+3. Simplicity & User Experience o Clean UI and intuitive flow o Protection measures that do not confuse or scare users
+4. Use of AI / Data Analytics o Smart use of data to detect patterns and predict outcomes o Responsible use of AI or rule-based intelligence
+5. Innovation o Unique ideas beyond basic budgeting tools o Behavioral nudges, scenario simulation, or AI coach concepts
+6. Technical Design & Architecture o Clear modular design o Demonstrated data flow and decision logic
+7. Scalability & Practicality o Feasibility of scaling to millions of customers o Realistic integration into a bank's digital ecosystem
+
+7. Compliance Requirements
+
+1. Customer Data Privacy & Consent · Always take clear permission from users before using their financial
+data. · Explain what data you're collecting and why. · No hidden data usage!
+2. Secure Handling of Financial Information · Use encryption, secure APIs, and avoid storing sensitive data in plain
+text. · Ensure your prototype shows safe data flow (even if simulated).
+3. Transparent & Explainable AI · Your AI/logic must not give "mysterious" investment advice. · Show how and why a recommendation was made (simple rules, or logic).
+4. No Guaranteed Returns or Misleading Claims · Your system should not promise profits or claim "zero risk" investments.
+
+· Only provide suggestions or simulated outcomes, not final financial advice.
+
+5. Follow Basic Financial Regulations · Keep in mind simple rules: · KYC is needed before real investment. · Students can show "for simulation/demo only" in their projects.
+
+8. Applicability in Banking
+
+High ­ Core banking operations
+
+1. Individual Banking Customers · Young professionals, salaried employees, and beginners who want help
+forming good saving and investing habits. · Customers who need personalized nudges instead of generic advice. · Users seeking guided wealth creation with safety.
+
+2. Students & First-Time Investors · People who are just starting their financial journey and need simple,
+guided investment planning.
+
+9. Target Beneficiaries
+
+3. Families & Mass-Affluent Users · Households planning for education, retirement, or long-term wealth
+building. · Users who need scenario simulations (goals, expenses, financial
+shocks).
+
+4. SMEs & Small Business Owners (Corporate Wealth Segment) · Businesses that need help managing cash flows, short-term
+investments, and risk planning. · Useful for analyzing liquidity, future projections, or working capital
+needs.
+
+5. The Bank Itself · Better customer engagement, cross-selling, and long-term retention. · Data-driven insights to improve product offerings. · Safer digital wealth adoption
+1. Artificial Intelligence & Machine Learning · Building predictive models for spending patterns, savings behavior, and
+investment suggestions. · Using ML to create the "SecureWealth Twin" that simulates financial
+futures.
+
+10. Technology 2. Data Analytics & Visualization
+
+Focus
+
+· Analyze transaction data, income trends, expenses, and risk patterns.
+
+· Represent insights using charts, dashboards, and goal-tracking visuals.
+
+3. Generative AI for Personalized Guidance · AI-based suggested investment options in simple language. · User-friendly nudges, reminders, FAQs, and scenario breakdowns.
+
+11. Scalability Potential
+12. Additional Notes
+
+4. Rule Engines & Recommendation Systems · Logic-driven systems that recommend SIPs, insurance, deposits, or
+investment products based on user behaviour.
+5. Cloud-Based Micro-services · Lightweight, scalable backend services supporting large user volumes. · Students can simulate this using any simple cloud or container setup.
+6. APIs & Integrations · Use mock APIs for bank systems (CBS, wealth platforms). · Connect modules like spending analysis, investment suggestions, or
+investment-risk scores, and cyber-risk score.
+7. Security & Data Privacy Techniques · Basic anonymization, encryption, and safe data handling. · Ensuring user data is protected while training AI models.
+8. Mobile App / Web App Development · Simple UI/UX to show insights, track goals, and display the Wealth. · Responsive, intuitive designs for smooth user navigation.
+Yes; scalable
+Can evolve into conversational AI for wealth
+
+Architecture
+
+
+
+
+
+Customer
+
+
+
+ Mobile / Web App
+
+
+
+ (Goals, Insights, Action)
+
+
+
+
+
+
+
+
+
+ Wealth Intelligence 
+
+
+
+Twin
+
+
+
+
+
+
+
+ · Understand income
+
+
+
+ · Track spending
+
+
+
+ · Manage goals
+
+
+
+ · Give wealth advice
+
+
+
+
+
+
+
+(Before any major action)
+
+
+
+
+
+  Wealth Protection
+
+
+
+
+
+Check
+
+
+
+
+
+
+
+ · Does the action pose 
+
+Cyber-risk?
+
+
+
+ · Is amount unusual?
+
+
+
+ · Is behavior suspicious 
+
+
+
+
+
+
+
+
+
+ Final Cyber-Risk Decision
+
+
+
+
+
+  Allow
+
+
+
+  Warn / Wait
+
+
+
+  Block
+
+
+
+
+
+
+
+
+
+
+
+ Action / Simulation
+
+
+
+ (SIP, Investment, etc.) 
+
+
+
+How Students Can Build This
+
+Layer
+
+Hackathon Implementation
+
+UI API Wealth Twin Protection Layer Decision Engine Execution Audit
+
+React / Flutter Spring Boot / FastAPI Rules + simple ML Scoring logic (if-else) Threshold based Simulation / mock APIs Logs + UI messages
+
+Cyber-Protection Layer ­ Implementation Guide
+
+Protection Aspect
+1. Device Trust Check
+
+What It Protects
+
+How Students Can Implement Example Output
+
+Maintain a simple flag in backend:
+
+Protects against isTrustedDevice = true / false.
+
+risky or unfamiliar devices
+
+Mark first login device as trusted. If login happens from a new device, increase risk score. No real device
+
+monitoring needed.
+
+"New device detected ­ risk increased"
+
+Track time between login and action.
+
+2. Login & Session Behaviour
+3. Action Amount vs. History
+4. OTP Usage Pattern (Simulated)
+
+Detects rushed or unusual activity
+
+If a high-value action happens very quickly (e.g., < 10 seconds), add risk points.
+
+"Action taken unusually fast"
+
+Implement using timestamps in backend.
+
+Prevents sudden large wealth actions
+
+Compare current amount with user's
+
+historical average.
+
+"Amount higher
+
+than your normal
+
+If amount is >2­3× usual value, pattern"
+
+mark as unusual.
+
+Track OTP attempts in backend Protects against (count + timestamps). coerced or misused OTPs Multiple retries or first-time OTP for
+a large action increases risk.
+
+"Multiple OTP attempts detected"
+
+5. New Action / New Investment Type
+
+Prevents unfamiliar or risky first-time actions
+
+6. Behaviour Consistency Check
+
+Detects abnormal behaviour
+
+If user is starting a new SIP, fund, or investment type for the first time, assign moderate risk.
+This is a simple boolean check in data.
+
+"First-time investment ­ additional review applied"
+
+Track basic behaviour such as repeated clicks, cancel-retry loops, or sudden corrections.
+Implement using counters and state flags.
+
+"Unusual retry pattern observed"
+
+Assign weights to each signal (e.g., +10, +20).
+
+7. Simple Risk Converts signals Sum them to calculate a Wealth Scoring Engine into a decision Protection Risk Score.
+
+Risk Score = 65 (Medium)
+
+Use thresholds for Low / Medium / High risk.
+
+

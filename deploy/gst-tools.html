@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GST Tools Suite - DS Financial Solutions</title>
+    <meta name="description" content="Complete GST toolkit with 11 advanced calculators - GST Calculator, HSN Finder, ITC Calculator, RCM, Refund, Interest & Late Fee, E-Way Bill, Composition Scheme, 2A vs 3B Reconciliation">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="gst-tools.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="sidebar-logo-text">
+                        <h1>GST Tools</h1>
+                        <span>11 Advanced Calculators</span>
+                    </div>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Basic Calculators</div>
+                    <a class="sidebar-nav-link active" data-tool="gst-calc">
+                        <i class="fas fa-calculator"></i>
+                        <span>GST Calculator</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="hsn-finder">
+                        <i class="fas fa-search"></i>
+                        <span>HSN/SAC Rate Finder</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="itc-calc">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <span>ITC Calculator</span>
+                    </a>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Advanced Tools</div>
+                    <a class="sidebar-nav-link" data-tool="rcm-calc">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>RCM Calculator</span>
+                        <span class="nav-badge new">New</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="refund-calc">
+                        <i class="fas fa-undo-alt"></i>
+                        <span>GST Refund Calculator</span>
+                        <span class="nav-badge new">New</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="interest-calc">
+                        <i class="fas fa-percent"></i>
+                        <span>Interest & Late Fee</span>
+                    </a>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Compliance Tools</div>
+                    <a class="sidebar-nav-link" data-tool="eway-bill">
+                        <i class="fas fa-truck"></i>
+                        <span>E-Way Bill Validity</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="composition">
+                        <i class="fas fa-balance-scale"></i>
+                        <span>Composition Scheme</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="reconciliation">
+                        <i class="fas fa-not-equal"></i>
+                        <span>2A vs 3B Reconciliation</span>
+                        <span class="nav-badge pro">Pro</span>
+                    </a>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Resources</div>
+                    <a class="sidebar-nav-link" data-tool="gst-rates">
+                        <i class="fas fa-list-alt"></i>
+                        <span>GST Rate Chart</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="due-dates">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Due Dates Calendar</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-title">
+                    <h2>GST Tools Suite</h2>
+                    <span class="subtitle">FY 2025-26 | All calculations as per latest GST rules</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary btn-icon" onclick="toggleTheme()" title="Toggle Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <a href="index.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </div>
+            </header>
+            
+            <div class="content-area">
+                <!-- Stats Dashboard -->
+                <div class="stats-dashboard">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon green">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="statGSTCalculated">₹0</div>
+                        <div class="stat-card-label">Total GST Calculated</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon blue">
+                                <i class="fas fa-hand-holding-usd"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="statITCAvailable">₹0</div>
+                        <div class="stat-card-label">ITC Available</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon orange">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="statNetLiability">₹0</div>
+                        <div class="stat-card-label">Net GST Liability</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-icon purple">
+                                <i class="fas fa-undo-alt"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="statRefund">₹0</div>
+                        <div class="stat-card-label">Refund Eligible</div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 1: GST CALCULATOR ==================== -->
+                <div class="tool-panel active" id="panel-gst-calc">
+                    <div class="calc-grid">
+                        <div class="calc-card">
+                            <div class="calc-card-header">
+                                <h3><i class="fas fa-calculator"></i> GST Calculator</h3>
+                            </div>
+                            <div class="calc-card-body">
+                                <!-- Mode Tabs -->
+                                <div class="tabs">
+                                    <button class="tab active" onclick="setGSTMode('exclusive')">Add GST (Exclusive)</button>
+                                    <button class="tab" onclick="setGSTMode('inclusive')">Remove GST (Inclusive)</button>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Amount (₹)</label>
+                                    <input type="number" class="form-input" id="gstAmount" placeholder="Enter amount" oninput="calculateGST()">
+                                </div>
+                                
+                                <!-- Rate Tabs -->
+                                <div class="form-group">
+                                    <label class="form-label">GST Rate</label>
+                                    <div class="tabs">
+                                        <button class="tab" onclick="setGSTRate(5)">5%</button>
+                                        <button class="tab" onclick="setGSTRate(12)">12%</button>
+                                        <button class="tab active" onclick="setGSTRate(18)">18%</button>
+                                        <button class="tab" onclick="setGSTRate(28)">28%</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Transaction Type</label>
+                                    <select class="form-select" id="gstTransType" onchange="calculateGST()">
+                                        <option value="intra">Intra-State (CGST + SGST)</option>
+                                        <option value="inter">Inter-State (IGST)</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Results -->
+                                <div class="result-card">
+                                    <div class="result-card-title">Total Amount</div>
+                                    <div class="result-card-value" id="gstTotal">₹0</div>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <div class="result-item-label">Base Amount</div>
+                                            <div class="result-item-value" id="gstBase">₹0</div>
+                                        </div>
+                                        <div class="result-item">
+                                            <div class="result-item-label">GST Amount</div>
+                                            <div class="result-item-value" id="gstTax">₹0</div>
+                                        </div>
+                                        <div class="result-item" id="cgstRow">
+                                            <div class="result-item-label">CGST (9%)</div>
+                                            <div class="result-item-value" id="cgstAmount">₹0</div>
+                                        </div>
+                                        <div class="result-item" id="sgstRow">
+                                            <div class="result-item-label">SGST (9%)</div>
+                                            <div class="result-item-value" id="sgstAmount">₹0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Reference -->
+                        <div class="calc-card">
+                            <div class="calc-card-header">
+                                <h3><i class="fas fa-info-circle"></i> GST Quick Reference</h3>
+                            </div>
+                            <div class="calc-card-body">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Rate</th>
+                                            <th>Examples</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Essential Items</td>
+                                            <td class="rate">5%</td>
+                                            <td>Sugar, Tea, Spices, Footwear below ₹1000</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Standard Goods</td>
+                                            <td class="rate">12%</td>
+                                            <td>Computers, Processed Food, Mobile Phones</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Most Services</td>
+                                            <td class="rate">18%</td>
+                                            <td>IT Services, Telecom, Restaurant Food</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Luxury Items</td>
+                                            <td class="rate">28%</td>
+                                            <td>Cars, AC, Aerated Drinks, Cement</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <div class="alert info" style="margin-top: 20px;">
+                                    <div class="alert-icon"><i class="fas fa-lightbulb"></i></div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">Pro Tip</div>
+                                        <div class="alert-text">Use HSN/SAC Rate Finder to get exact GST rate for specific products and services.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 2: HSN/SAC RATE FINDER ==================== -->
+                <div class="tool-panel" id="panel-hsn-finder">
+                    <div class="calc-card full-width">
+                        <div class="calc-card-header">
+                            <h3><i class="fas fa-search"></i> HSN/SAC Rate Finder</h3>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="search-container">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" class="search-input" id="hsnSearchInput" placeholder="Search by HSN code, SAC code, or product/service name..." oninput="searchHSN()">
+                            </div>
+                            
+                            <div class="tabs" style="margin-top: 20px;">
+                                <button class="tab active" onclick="setHSNCategory('all')">All</button>
+                                <button class="tab" onclick="setHSNCategory('goods')">Goods (HSN)</button>
+                                <button class="tab" onclick="setHSNCategory('services')">Services (SAC)</button>
+                            </div>
+                            
+                            <div class="search-results" id="hsnResults">
+                                <!-- Results will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 3: ITC CALCULATOR ==================== -->
+                <div class="tool-panel" id="panel-itc-calc">
+                    <div class="calc-card full-width">
+                        <div class="calc-card-header">
+                            <h3><i class="fas fa-hand-holding-usd"></i> Input Tax Credit (ITC) Calculator</h3>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="itc-summary">
+                                <div class="itc-summary-card">
+                                    <div class="itc-summary-label">Total ITC Available</div>
+                                    <div class="itc-summary-value" id="itcTotal">₹0</div>
+                                </div>
+                                <div class="itc-summary-card">
+                                    <div class="itc-summary-label">ITC Blocked</div>
+                                    <div class="itc-summary-value" id="itcBlocked">₹0</div>
+                                </div>
+                                <div class="itc-summary-card">
+                                    <div class="itc-summary-label">ITC Reversed</div>
+                                    <div class="itc-summary-value" id="itcReversed">₹0</div>
+                                </div>
+                                <div class="itc-summary-card highlight">
+                                    <div class="itc-summary-label">Net ITC Claimable</div>
+                                    <div class="itc-summary-value" id="itcNet">₹0</div>
+                                </div>
+                            </div>
+                            
+                            <div class="calc-grid">
+                                <div>
+                                    <h4 style="margin-bottom: 16px; color: var(--text-secondary);">ITC Available (GSTR-2B)</h4>
+                                    <div class="form-group">
+                                        <label class="form-label">CGST Credit (₹)</label>
+                                        <input type="number" class="form-input" id="itcCGST" placeholder="0" oninput="calculateITC()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">SGST Credit (₹)</label>
+                                        <input type="number" class="form-input" id="itcSGST" placeholder="0" oninput="calculateITC()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">IGST Credit (₹)</label>
+                                        <input type="number" class="form-input" id="itcIGST" placeholder="0" oninput="calculateITC()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Cess Credit (₹)</label>
+                                        <input type="number" class="form-input" id="itcCess" placeholder="0" oninput="calculateITC()">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 style="margin-bottom: 16px; color: var(--text-secondary);">Blocked/Reversed ITC</h4>
+                                    <div class="form-group">
+                                        <label class="form-label">ITC on Blocked Items <span class="hint">(Sec 17(5))</span></label>
+                                        <input type="number" class="form-input" id="itcBlockedInput" placeholder="0" oninput="calculateITC()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">ITC Reversal - Rule 42 <span class="hint">(Common Credit)</span></label>
+                                        <input type="number" class="form-input" id="itcRule42" placeholder="0" oninput="calculateITC()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">ITC Reversal - Rule 43 <span class="hint">(Capital Goods)</span></label>
+                                        <input type="number" class="form-input" id="itcRule43" placeholder="0" oninput="calculateITC()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Other Reversals (₹)</label>
+                                        <input type="number" class="form-input" id="itcOther" placeholder="0" oninput="calculateITC()">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert warning" id="itcAlert" style="display: none;">
+                                <div class="alert-icon"><i class="fas fa-exclamation"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">ITC Mismatch Alert</div>
+                                    <div class="alert-text" id="itcAlertText"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 4: RCM CALCULATOR ==================== -->
+                <div class="tool-panel" id="panel-rcm-calc">
+                    <div class="calc-grid">
+                        <div class="calc-card">
+                            <div class="calc-card-header">
+                                <h3><i class="fas fa-exchange-alt"></i> RCM Calculator</h3>
+                            </div>
+                            <div class="calc-card-body">
+                                <div class="form-group">
+                                    <label class="form-label">Select RCM Category</label>
+                                    <select class="form-select" id="rcmCategory" onchange="updateRCMRate()">
+                                        <option value="gta">GTA - Goods Transport Agency (5%)</option>
+                                        <option value="legal">Legal Services (18%)</option>
+                                        <option value="sponsor">Sponsorship Services (18%)</option>
+                                        <option value="director">Director's Fees (18%)</option>
+                                        <option value="rent">Rent from Unregistered Person (18%)</option>
+                                        <option value="advocate">Advocate Services (18%)</option>
+                                        <option value="import">Import of Services (18%)</option>
+                                        <option value="security">Security Services (18%)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Invoice Amount (₹) <span class="hint">(Excluding GST)</span></label>
+                                    <input type="number" class="form-input" id="rcmAmount" placeholder="Enter invoice amount" oninput="calculateRCM()">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Transaction Type</label>
+                                    <select class="form-select" id="rcmTransType" onchange="calculateRCM()">
+                                        <option value="intra">Intra-State (CGST + SGST)</option>
+                                        <option value="inter">Inter-State (IGST)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-card-title">GST Payable under RCM</div>
+                                    <div class="result-card-value" id="rcmTotal">₹0</div>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <div class="result-item-label" id="rcmLabel1">CGST</div>
+                                            <div class="result-item-value" id="rcmCGST">₹0</div>
+                                        </div>
+                                        <div class="result-item">
+                                            <div class="result-item-label" id="rcmLabel2">SGST</div>
+                                            <div class="result-item-value" id="rcmSGST">₹0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert success" style="margin-top: 16px;">
+                                    <div class="alert-icon"><i class="fas fa-check"></i></div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">ITC Available</div>
+                                        <div class="alert-text">GST paid under RCM is eligible for ITC in the same month if used for business purposes.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- RCM Categories Reference -->
+                        <div class="calc-card">
+                            <div class="calc-card-header">
+                                <h3><i class="fas fa-list"></i> RCM Categories & Rates</h3>
+                            </div>
+                            <div class="calc-card-body">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Rate</th>
+                                            <th>Recipient</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>GTA Services</td>
+                                            <td class="rate">5%</td>
+                                            <td>Business Entity</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Legal Services</td>
+                                            <td class="rate">18%</td>
+                                            <td>Business Entity</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Director's Fees</td>
+                                            <td class="rate">18%</td>
+                                            <td>Company</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Security Services</td>
+                                            <td class="rate">18%</td>
+                                            <td>Registered Person</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Rent from URD</td>
+                                            <td class="rate">18%</td>
+                                            <td>Registered Person</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sponsorship</td>
+                                            <td class="rate">18%</td>
+                                            <td>Any Person</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 5: GST REFUND CALCULATOR ==================== -->
+                <div class="tool-panel" id="panel-refund-calc">
+                    <div class="calc-card full-width">
+                        <div class="calc-card-header">
+                            <h3><i class="fas fa-undo-alt"></i> GST Refund Calculator</h3>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="tabs">
+                                <button class="tab active" onclick="setRefundType('export')">Export Refund</button>
+                                <button class="tab" onclick="setRefundType('inverted')">Inverted Duty</button>
+                                <button class="tab" onclick="setRefundType('accumulate')">Accumulated ITC</button>
+                            </div>
+                            
+                            <!-- Export Refund -->
+                            <div id="refundExportForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Export Turnover (Zero Rated) (₹)</label>
+                                        <input type="number" class="form-input" id="refundExportTurnover" placeholder="0" oninput="calculateRefund()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Total Turnover (₹)</label>
+                                        <input type="number" class="form-input" id="refundTotalTurnover" placeholder="0" oninput="calculateRefund()">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">ITC on Inputs & Input Services (₹)</label>
+                                        <input type="number" class="form-input" id="refundITC" placeholder="0" oninput="calculateRefund()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">ITC on Capital Goods (₹)</label>
+                                        <input type="number" class="form-input" id="refundITCCapital" placeholder="0" oninput="calculateRefund()">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Inverted Duty -->
+                            <div id="refundInvertedForm" style="display: none;">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Turnover of Inverted Rated Supply (₹)</label>
+                                        <input type="number" class="form-input" id="refundInvertedTurnover" placeholder="0" oninput="calculateInvertedRefund()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Net ITC on Inputs (₹)</label>
+                                        <input type="number" class="form-input" id="refundInvertedITC" placeholder="0" oninput="calculateInvertedRefund()">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Tax Payable on Inverted Supply (₹)</label>
+                                        <input type="number" class="form-input" id="refundInvertedTax" placeholder="0" oninput="calculateInvertedRefund()">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Accumulated ITC -->
+                            <div id="refundAccumulateForm" style="display: none;">
+                                <div class="alert info">
+                                    <div class="alert-icon"><i class="fas fa-info"></i></div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">Accumulated ITC Refund</div>
+                                        <div class="alert-text">Refund of accumulated ITC is available for zero-rated supplies made without payment of tax or where credit accumulates due to inverted duty structure.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="result-card" style="margin-top: 24px;">
+                                <div class="result-card-title">Maximum Refund Eligible</div>
+                                <div class="result-card-value" id="refundAmount">₹0</div>
+                                <div class="result-grid">
+                                    <div class="result-item">
+                                        <div class="result-item-label">Formula Used</div>
+                                        <div class="result-item-value" id="refundFormula" style="font-size: 12px;">-</div>
+                                    </div>
+                                    <div class="result-item">
+                                        <div class="result-item-label">Refund Form</div>
+                                        <div class="result-item-value" id="refundForm">RFD-01</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 6: INTEREST & LATE FEE ==================== -->
+                <div class="tool-panel" id="panel-interest-calc">
+                    <div class="calc-grid">
+                        <div class="calc-card">
+                            <div class="calc-card-header">
+                                <h3><i class="fas fa-percent"></i> Interest Calculator</h3>
+                            </div>
+                            <div class="calc-card-body">
+                                <div class="form-group">
+                                    <label class="form-label">GST Amount Due (₹)</label>
+                                    <input type="number" class="form-input" id="interestAmount" placeholder="Enter GST amount" oninput="calculateInterest()">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Due Date</label>
+                                        <input type="date" class="form-input" id="interestDueDate" onchange="calculateInterest()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Payment Date</label>
+                                        <input type="date" class="form-input" id="interestPayDate" onchange="calculateInterest()">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Interest Type</label>
+                                    <select class="form-select" id="interestType" onchange="calculateInterest()">
+                                        <option value="18">Normal Interest (18% p.a.)</option>
+                                        <option value="24">Interest on wrong ITC (24% p.a.)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="result-card">
+                                    <div class="result-card-title">Interest Payable</div>
+                                    <div class="result-card-value" id="interestPayable">₹0</div>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <div class="result-item-label">Delay Days</div>
+                                            <div class="result-item-value" id="interestDays">0</div>
+                                        </div>
+                                        <div class="result-item">
+                                            <div class="result-item-label">Daily Interest</div>
+                                            <div class="result-item-value" id="interestDaily">₹0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="calc-card">
+                            <div class="calc-card-header">
+                                <h3><i class="fas fa-money-bill"></i> Late Fee Calculator</h3>
+                            </div>
+                            <div class="calc-card-body">
+                                <div class="form-group">
+                                    <label class="form-label">Return Type</label>
+                                    <select class="form-select" id="lateFeeReturn" onchange="calculateLateFee()">
+                                        <option value="gstr1">GSTR-1</option>
+                                        <option value="gstr3b">GSTR-3B</option>
+                                        <option value="gstr4">GSTR-4 (Composition)</option>
+                                        <option value="gstr9">GSTR-9 (Annual)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Is there any Tax Liability?</label>
+                                    <select class="form-select" id="lateFeeHasTax" onchange="calculateLateFee()">
+                                        <option value="yes">Yes - With Tax Liability</option>
+                                        <option value="no">No - Nil Return</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Days of Delay</label>
+                                    <input type="number" class="form-input" id="lateFeeDays" placeholder="Enter delay days" oninput="calculateLateFee()">
+                                </div>
+                                
+                                <div class="result-card secondary">
+                                    <div class="result-card-title">Late Fee Payable</div>
+                                    <div class="result-card-value" id="lateFeeTotal">₹0</div>
+                                    <div class="result-grid">
+                                        <div class="result-item">
+                                            <div class="result-item-label">CGST Late Fee</div>
+                                            <div class="result-item-value" id="lateFeeCGST">₹0</div>
+                                        </div>
+                                        <div class="result-item">
+                                            <div class="result-item-label">SGST Late Fee</div>
+                                            <div class="result-item-value" id="lateFeeSGST">₹0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert info" style="margin-top: 16px;">
+                                    <div class="alert-icon"><i class="fas fa-info"></i></div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">Late Fee Caps</div>
+                                        <div class="alert-text" id="lateFeeCaps">GSTR-1/3B: ₹50/day (₹20/day for Nil), Max ₹5000/₹500</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 7: E-WAY BILL VALIDITY ==================== -->
+                <div class="tool-panel" id="panel-eway-bill">
+                    <div class="calc-card full-width">
+                        <div class="calc-card-header">
+                            <h3><i class="fas fa-truck"></i> E-Way Bill Validity Calculator</h3>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="form-row three-col">
+                                <div class="form-group">
+                                    <label class="form-label">Transport Mode</label>
+                                    <select class="form-select" id="ewayMode" onchange="calculateEwayValidity()">
+                                        <option value="road">Road</option>
+                                        <option value="rail">Rail</option>
+                                        <option value="air">Air</option>
+                                        <option value="ship">Ship</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Consignment Type</label>
+                                    <select class="form-select" id="ewayType" onchange="calculateEwayValidity()">
+                                        <option value="normal">Normal Goods</option>
+                                        <option value="odc">Over Dimensional Cargo (ODC)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Distance (KM)</label>
+                                    <input type="number" class="form-input" id="ewayDistance" placeholder="Enter distance" oninput="calculateEwayValidity()">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">E-Way Bill Generation Date & Time</label>
+                                    <input type="datetime-local" class="form-input" id="ewayGenDate" onchange="calculateEwayValidity()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Invoice Value (₹)</label>
+                                    <input type="number" class="form-input" id="ewayValue" placeholder="Enter invoice value" oninput="checkEwayRequired()">
+                                </div>
+                            </div>
+                            
+                            <div class="distance-card">
+                                <div class="distance-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="distance-info">
+                                    <h4 id="ewayValidity">-</h4>
+                                    <p id="ewayExpiryDate">Enter details to calculate validity</p>
+                                </div>
+                            </div>
+                            
+                            <div class="alert" id="ewayAlert" style="display: none;">
+                                <div class="alert-icon"><i class="fas fa-info"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title" id="ewayAlertTitle">Note</div>
+                                    <div class="alert-text" id="ewayAlertText"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Validity Reference -->
+                            <h4 style="margin: 24px 0 16px; color: var(--text-secondary);">E-Way Bill Validity Reference</h4>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Transport Mode</th>
+                                        <th>Normal Goods</th>
+                                        <th>Over Dimensional Cargo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><i class="fas fa-truck"></i> Road</td>
+                                        <td>1 day per 200 KM</td>
+                                        <td>1 day per 20 KM</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-train"></i> Rail</td>
+                                        <td>1 day per 200 KM</td>
+                                        <td>1 day per 20 KM</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-plane"></i> Air</td>
+                                        <td>1 day per 200 KM</td>
+                                        <td>1 day per 20 KM</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-ship"></i> Ship</td>
+                                        <td>1 day per 200 KM</td>
+                                        <td>1 day per 20 KM</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 8: COMPOSITION SCHEME ==================== -->
+                <div class="tool-panel" id="panel-composition">
+                    <div class="calc-card full-width">
+                        <div class="calc-card-header">
+                            <h3><i class="fas fa-balance-scale"></i> Composition Scheme Eligibility & Comparison</h3>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="form-row three-col">
+                                <div class="form-group">
+                                    <label class="form-label">Business Type</label>
+                                    <select class="form-select" id="compBusinessType" onchange="calculateComposition()">
+                                        <option value="trader">Trader / Supplier of Goods</option>
+                                        <option value="manufacturer">Manufacturer</option>
+                                        <option value="restaurant">Restaurant (Non-AC)</option>
+                                        <option value="service">Service Provider</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Annual Turnover (₹)</label>
+                                    <input type="number" class="form-input" id="compTurnover" placeholder="Enter turnover" oninput="calculateComposition()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">State</label>
+                                    <select class="form-select" id="compState" onchange="calculateComposition()">
+                                        <option value="normal">Normal States (₹1.5 Cr limit)</option>
+                                        <option value="special">Special Category (₹75 L limit)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Annual Purchase Value (₹) <span class="hint">(For regular GST calculation)</span></label>
+                                <input type="number" class="form-input" id="compPurchase" placeholder="Enter purchase value" oninput="calculateComposition()">
+                            </div>
+                            
+                            <div class="scheme-comparison">
+                                <div class="scheme-card" id="compSchemeCard">
+                                    <div class="scheme-card-header">
+                                        <h4>Composition Scheme</h4>
+                                        <div class="rate" id="compRate">1%</div>
+                                    </div>
+                                    <div class="scheme-card-body">
+                                        <div class="scheme-feature">
+                                            <i class="fas fa-check"></i>
+                                            <span>Simple quarterly returns (CMP-08)</span>
+                                        </div>
+                                        <div class="scheme-feature">
+                                            <i class="fas fa-check"></i>
+                                            <span>Lower tax rate on turnover</span>
+                                        </div>
+                                        <div class="scheme-feature">
+                                            <i class="fas fa-check"></i>
+                                            <span>No detailed invoicing needed</span>
+                                        </div>
+                                        <div class="scheme-feature">
+                                            <i class="fas fa-times"></i>
+                                            <span>Cannot claim ITC</span>
+                                        </div>
+                                        <div class="scheme-feature">
+                                            <i class="fas fa-times"></i>
+                                            <span>Cannot do inter-state supply</span>
+                                        </div>
+                                        <div class="result-card secondary" style="margin-top: 16px;">
+                                            <div class="result-card-title">Tax Payable</div>
+                                            <div class="result-card-value" id="compTax">₹0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="scheme-card" id="regularSchemeCard">
+                                    <div class="scheme-card-header">
+                                        <h4>Regular Scheme</h4>
+                                        <div class="rate">18%</div>
+                                    </div>
+                                    <div class="scheme-card-body">
+                                        <div class="scheme-feature">
+                                            <i class="fas fa-check"></i>
+                                            <span>Can claim full ITC</span>
+                                        </div>
+                                        <div class="scheme-feature">
+                                            <i class="fas fa-check"></i>
+                                            <span>Inter-state supply allowed</span>
+                                        </div>
+                                        <div class="scheme-feature">
+                                            <i class="fas fa-check"></i>
+                                            <span>Can supply to large buyers</span>
+                                        </div>
+                                        <div class="scheme-feature">
+                                            <i class="fas fa-times"></i>
+                                            <span>Monthly/Quarterly returns</span>
+                                        </div>
+                                        <div class="scheme-feature">
+                                            <i class="fas fa-times"></i>
+                                            <span>Detailed compliance required</span>
+                                        </div>
+                                        <div class="result-card secondary" style="margin-top: 16px;">
+                                            <div class="result-card-title">Net Tax (After ITC)</div>
+                                            <div class="result-card-value" id="regularTax">₹0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert" id="compAlert" style="margin-top: 24px;">
+                                <div class="alert-icon"><i class="fas fa-lightbulb"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title" id="compAlertTitle">Recommendation</div>
+                                    <div class="alert-text" id="compAlertText">Enter turnover to get recommendation</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 9: 2A VS 3B RECONCILIATION ==================== -->
+                <div class="tool-panel" id="panel-reconciliation">
+                    <div class="calc-card full-width">
+                        <div class="calc-card-header">
+                            <h3><i class="fas fa-not-equal"></i> GSTR-2A vs GSTR-3B Reconciliation</h3>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Period</label>
+                                    <input type="month" class="form-input" id="reconPeriod">
+                                </div>
+                            </div>
+                            
+                            <div class="calc-grid">
+                                <div>
+                                    <h4 style="margin-bottom: 16px; color: var(--primary);">GSTR-2A / 2B (Auto-Populated)</h4>
+                                    <div class="form-group">
+                                        <label class="form-label">Total ITC as per GSTR-2B (₹)</label>
+                                        <input type="number" class="form-input" id="recon2BITC" placeholder="0" oninput="calculateReconciliation()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">CGST (₹)</label>
+                                        <input type="number" class="form-input" id="recon2BCGST" placeholder="0" oninput="calculateReconciliation()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">SGST (₹)</label>
+                                        <input type="number" class="form-input" id="recon2BSGST" placeholder="0" oninput="calculateReconciliation()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">IGST (₹)</label>
+                                        <input type="number" class="form-input" id="recon2BIGST" placeholder="0" oninput="calculateReconciliation()">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 style="margin-bottom: 16px; color: var(--secondary);">GSTR-3B (As Filed)</h4>
+                                    <div class="form-group">
+                                        <label class="form-label">Total ITC Claimed in GSTR-3B (₹)</label>
+                                        <input type="number" class="form-input" id="recon3BITC" placeholder="0" oninput="calculateReconciliation()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">CGST (₹)</label>
+                                        <input type="number" class="form-input" id="recon3BCGST" placeholder="0" oninput="calculateReconciliation()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">SGST (₹)</label>
+                                        <input type="number" class="form-input" id="recon3BSGST" placeholder="0" oninput="calculateReconciliation()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">IGST (₹)</label>
+                                        <input type="number" class="form-input" id="recon3BIGST" placeholder="0" oninput="calculateReconciliation()">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="recon-comparison">
+                                <div class="recon-card">
+                                    <h4>GSTR-2B ITC</h4>
+                                    <div class="value" id="reconTotal2B">₹0</div>
+                                </div>
+                                <div class="recon-vs">VS</div>
+                                <div class="recon-card">
+                                    <h4>GSTR-3B ITC</h4>
+                                    <div class="value" id="reconTotal3B">₹0</div>
+                                </div>
+                            </div>
+                            
+                            <div class="recon-diff" id="reconDiff">
+                                <h4>Difference</h4>
+                                <div class="value" id="reconDiffValue">₹0</div>
+                                <p id="reconDiffText" style="margin-top: 8px; font-size: 13px; color: var(--text-secondary);">-</p>
+                            </div>
+                            
+                            <div class="btn-group" style="justify-content: center;">
+                                <button class="btn btn-primary" onclick="downloadReconReport()">
+                                    <i class="fas fa-download"></i> Download Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 10: GST RATE CHART ==================== -->
+                <div class="tool-panel" id="panel-gst-rates">
+                    <div class="calc-card full-width">
+                        <div class="calc-card-header">
+                            <h3><i class="fas fa-list-alt"></i> GST Rate Chart - Complete Reference</h3>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="tabs">
+                                <button class="tab active" onclick="showRateCategory('goods')">Goods</button>
+                                <button class="tab" onclick="showRateCategory('services')">Services</button>
+                                <button class="tab" onclick="showRateCategory('exempt')">Exempt</button>
+                            </div>
+                            
+                            <div id="rateChartContent">
+                                <!-- Will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TOOL 11: DUE DATES CALENDAR ==================== -->
+                <div class="tool-panel" id="panel-due-dates">
+                    <div class="calc-card full-width">
+                        <div class="calc-card-header">
+                            <h3><i class="fas fa-calendar-alt"></i> GST Due Dates Calendar - FY 2025-26</h3>
+                        </div>
+                        <div class="calc-card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Select Month</label>
+                                    <select class="form-select" id="dueDateMonth" onchange="showDueDates()">
+                                        <option value="1">January 2026</option>
+                                        <option value="2">February 2026</option>
+                                        <option value="3">March 2026</option>
+                                        <option value="4">April 2025</option>
+                                        <option value="5">May 2025</option>
+                                        <option value="6">June 2025</option>
+                                        <option value="7">July 2025</option>
+                                        <option value="8">August 2025</option>
+                                        <option value="9">September 2025</option>
+                                        <option value="10">October 2025</option>
+                                        <option value="11">November 2025</option>
+                                        <option value="12">December 2025</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Taxpayer Category</label>
+                                    <select class="form-select" id="dueDateCategory" onchange="showDueDates()">
+                                        <option value="regular">Regular Taxpayer</option>
+                                        <option value="qrmp">QRMP Scheme</option>
+                                        <option value="composition">Composition Dealer</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline" id="dueDatesTimeline">
+                                <!-- Will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </main>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-items">
+            <a class="mobile-nav-item active" data-tool="gst-calc">
+                <i class="fas fa-calculator"></i>
+                <span>GST</span>
+            </a>
+            <a class="mobile-nav-item" data-tool="hsn-finder">
+                <i class="fas fa-search"></i>
+                <span>HSN</span>
+            </a>
+            <a class="mobile-nav-item" data-tool="itc-calc">
+                <i class="fas fa-hand-holding-usd"></i>
+                <span>ITC</span>
+            </a>
+            <a class="mobile-nav-item" data-tool="rcm-calc">
+                <i class="fas fa-exchange-alt"></i>
+                <span>RCM</span>
+            </a>
+            <a class="mobile-nav-item" data-tool="interest-calc">
+                <i class="fas fa-percent"></i>
+                <span>Interest</span>
+            </a>
+        </div>
+    </nav>
+    
+    <!-- JavaScript -->
+    <script src="gst-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+                            <div id="compsTab" class="hidden">
+                                <div class="section-title"><i class="fas fa-balance-scale"></i> Comparable Companies Analysis</div>
+                                <p style="color: var(--text-light); margin-bottom: 16px;">Trading multiples vs. deterministic peer set</p>
+
+                                <div class="card" style="margin-bottom: 20px; overflow-x: auto;">
+                                    <table class="data-table" id="compsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Company</th>
+                                                <th>EV / Revenue</th>
+                                                <th>EV / EBITDA</th>
+                                                <th>P / E</th>
+                                                <th>P / B</th>
+                                                <th>ROE</th>
+                                                <th>Revenue Growth</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="compsTableBody">
+                                            <tr><td colspan="7" style="text-align: center; color: var(--text-light);">Run analysis to see comparables</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                                    <div class="card">
+                                        <h4 style="margin-bottom: 12px; color: var(--primary);">EV/EBITDA vs Revenue Growth</h4>
+                                        <canvas id="compsScatterChart" style="height: 320px;"></canvas>
+                                    </div>
+                                    <div class="card">
+                                        <h4 style="margin-bottom: 12px; color: var(--primary);">Valuation Multiples Comparison</h4>
+                                        <canvas id="compsValuationChart" style="height: 320px;"></canvas>
+                                    </div>
+                                </div>
+
+                                <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--accent)); color: white;">
+                                    <h4 style="margin-bottom: 16px; color: white;">Valuation Summary</h4>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                        <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 8px; text-align: center;">
+                                            <div style="font-size: 0.85rem; opacity: 0.9;">Implied EV Range</div>
+                                            <div style="font-size: 1.6rem; font-weight: 700; margin-top: 4px;" id="compsEvRange">—</div>
+                                            <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 4px;">Median-based multiples</div>
+                                        </div>
+                                        <div style="background: rgba(255,255,255,0.15); padding: 16px; border-radius: 8px; text-align: center;">
+                                            <div style="font-size: 0.85rem; opacity: 0.9;">Premium / Discount to Peers</div>
+                                            <div style="font-size: 1.6rem; font-weight: 700; margin-top: 4px;" id="compsPremium">—</div>
+                                            <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 4px;">vs median implied EV</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>

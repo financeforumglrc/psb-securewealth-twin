@@ -1,0 +1,830 @@
+// ====================buildCanonicalModel====================
+function buildCanonicalModel(params, d) {
+            const price = parseFloat(document.getElementById('price')?.value) || 100;
+            const shares = (parseFloat(document.getElementById('shares')?.value) || 10) * 1e7; // Convert Cr to absolute
+            const baseRev = (parseFloat(document.getElementById('baseRev')?.value) || 100) * 1e7;
+            const wacc = parseFloat(document.getElementById('wacc')?.value) || 10;
+            const tgr = parseFloat(document.getElementById('tgr')?.value) || 2;
+            
+            // Build canonical model structure for Phase 4 services
+            window.__model = {
+                company: { name: document.getElementById('companyName')?.value || 'Company' },
+                assumptions: {
+                    revenue_base: baseRev,
+                    revenue_growth: (parseFloat(document.getElementById('growth1')?.value) || 10) / 100,
+                    ebitda_margin: (parseFloat(document.getElementById('ebitdaMargin')?.value) || 20) / 100,
+                    tax_rate: (parseFloat(document.getElementById('taxRate')?.value) || 25.17) / 100,
+                    wacc: wacc / 100,
+                    terminal_growth_rate: tgr / 100,
+                    d_and_a_pct: 0.03,
+                    capex_pct_revenue: 0.05,
+                    working_capital_pct_revenue: 0.03,
+                    net_debt: (parseFloat(document.getElementById('netDebt')?.value) || 0) * 1e7,
+                    shares_outstanding: shares,
+                    projection_years: 5,
+                    minority_interest: 0,
+                    options_outstanding: 0
+                },
+                dcf: {
+                    intrinsic_value_per_share: modelData?.dcfPrice || (baseRev * 0.15 / shares),
+                    terminal_value: modelData?.pvTv || 0,
+                    enterprise_value: modelData?.ev || 0
+                },
+                market_data: {
+                    current_price: price,
+                    high_52w: price * 1.2,
+                    low_52w: price * 0.8
+                },
+                comps: {
+                    comparable_companies: []
+                },
+                precedent_transactions: {
+                    transactions: []
+                }
+            };
+        }
+
+// ====================updateAllOutputs====================
+function updateAllOutputs() {
+            if (!modelData) return;
+
+            // Update header
+            document.getElementById('displayCompany').textContent = modelData.company;
+
+            // Update metrics with animation
+            animateValue(document.getElementById('mPrice'), 0, modelData.price, 600, '₹', '');
+            animateValue(document.getElementById('mDcf'), 0, Math.round(modelData.dcfPrice), 800, '₹', '');
+            document.getElementById('mUpside').textContent = (modelData.upside > 0 ? '+' : '') + modelData.upside.toFixed(1) + '%';
+            document.getElementById('mUpside').className = 'metric-value ' + (modelData.upside > 0 ? 'positive' : 'negative');
+            document.getElementById('mRating').textContent = modelData.rating;
+
+            animateValue(document.getElementById('mRevenue'), 0, Math.round(modelData.rev[4]), 700, '₹', '');
+            animateValue(document.getElementById('mEbitda'), 0, Math.round(modelData.ebitda[4]), 700, '₹', '');
+            document.getElementById('mMargin').textContent = (modelData.ni[4] / modelData.rev[4] * 100).toFixed(1) + '%';
+            document.getElementById('mRoe').textContent = modelData.roe[4].toFixed(1) + '%';
+
+            // Update summary (with null-safety for optional elements)
+            const evEl = document.getElementById('evVal');
+            if (evEl) evEl.textContent = '₹' + modelData.ev.toFixed(0) + ' Cr';
+            const eqEl = document.getElementById('eqVal');
+            if (eqEl) eqEl.textContent = '₹' + modelData.eq.toFixed(0) + ' Cr';
+            const fairEl = document.getElementById('fairVal');
+            if (fairEl) fairEl.textContent = '₹' + modelData.dcfPrice.toFixed(0);
+            const targetEl = document.getElementById('targetVal');
+            if (targetEl) targetEl.textContent = '₹' + modelData.target.toFixed(0);
+
+            const badge = document.getElementById('ratingBadge');
+            if (badge) {
+                badge.textContent = modelData.rating;
+                badge.className = 'rating-badge rating-' + modelData.rating.toLowerCase();
+            }
+            const confEl = document.getElementById('confidenceText');
+            if (confEl) confEl.textContent = 'Confidence: 85%';
+
+            const keyEl = document.getElementById('keyMetrics');
+            if (keyEl) {
+                keyEl.innerHTML = `
+                    <li>Revenue CAGR: ${(modelData.cagr * 100).toFixed(1)}%</li>
+                    <li>EBITDA CAGR: ${((Math.pow(modelData.ebitda[4] / modelData.ebitda[0], 0.2) - 1) * 100).toFixed(1)}%</li>
+                    <li>Net Margin: ${(modelData.ni[4] / modelData.rev[4] * 100).toFixed(1)}%</li>
+                    <li>ROE: ${modelData.roe[4].toFixed(1)}%</li>
+                `;
+            }
+
+            // Update financials table
+            document.getElementById('financialsBody').innerHTML = `
+                <tr><td>Revenue</td>${modelData.rev.map(r => `<td>₹${r.toFixed(1)}</td>`).join('')}</tr>
+                <tr><td>EBITDA</td>${modelData.ebitda.map(e => `<td>₹${e.toFixed(1)}</td>`).join('')}</tr>
+                <tr><td>EBIT</td>${modelData.ebit.map(e => `<td>₹${e.toFixed(1)}</td>`).join('')}</tr>
+                <tr><td>Net Income</td>${modelData.ni.map(n => `<td>₹${n.toFixed(1)}</td>`).join('')}</tr>
+                <tr><td>FCF</td>${modelData.fcf.map(f => `<td>₹${f.toFixed(1)}</td>`).join('')}</tr>
+            `;
+
+            // Update DCF table
+            document.getElementById('dcfBody').innerHTML = modelData.fcf.map((f, i) => {
+                const df = 1 / Math.pow(1 + modelData.wacc / 100, i + 1);
+                const pv = f * df;
+                return `<tr><td>Y${i + 1}</td><td>₹${f.toFixed(1)}</td><td>${df.toFixed(3)}</td><td>₹${pv.toFixed(1)}</td></tr>`;
+            }).join('');
+
+            document.getElementById('pvFcfVal').textContent = '₹' + modelData.pvFcf.toFixed(0);
+            document.getElementById('tvVal').textContent = '₹' + modelData.tv.toFixed(0);
+            document.getElementById('pvTvVal').textContent = '₹' + modelData.pvTv.toFixed(0);
+
+            // Update valuation matrix
+            const peVal = modelData.eq / modelData.ni[4] * 20;
+            const evEbitdaVal = modelData.ev / modelData.ebitda[4] * 8;
+            const grahamVal = Math.sqrt(22.5 * (modelData.ni[4] / modelData.shares) * 50);
+
+            document.getElementById('valMatrixBody').innerHTML = `
+                <tr><td>DCF</td><td>₹${modelData.dcfPrice.toFixed(0)}</td><td class="${modelData.upside > 0 ? 'positive' : 'negative'}">${modelData.upside > 0 ? '+' : ''}${modelData.upside.toFixed(1)}%</td><td><span class="rating-badge rating-${modelData.rating.toLowerCase()}">${modelData.rating}</span></td></tr>
+                <tr><td>P/E</td><td>₹${peVal.toFixed(0)}</td><td>${((peVal/modelData.price-1)*100 > 0 ? '+' : '')}${((peVal/modelData.price-1)*100).toFixed(1)}%</td><td><span class="rating-badge rating-${((peVal/modelData.price-1)*100 > 20 ? 'buy' : ((peVal/modelData.price-1)*100 > 0 ? 'hold' : 'sell'))}">${((peVal/modelData.price-1)*100 > 20 ? 'BUY' : ((peVal/modelData.price-1)*100 > 0 ? 'HOLD' : 'SELL'))}</span></td></tr>
+                <tr><td>EV/EBITDA</td><td>₹${evEbitdaVal.toFixed(0)}</td><td>${((evEbitdaVal/modelData.price-1)*100 > 0 ? '+' : '')}${((evEbitdaVal/modelData.price-1)*100).toFixed(1)}%</td><td><span class="rating-badge rating-buy">BUY</span></td></tr>
+                <tr><td>Graham</td><td>₹${grahamVal.toFixed(0)}</td><td>${((grahamVal/modelData.price-1)*100 > 0 ? '+' : '')}${((grahamVal/modelData.price-1)*100).toFixed(1)}%</td><td><span class="rating-badge rating-hold">HOLD</span></td></tr>
+            `;
+
+            // Update ratios
+            const margins = modelData.ni.map((n, i) => (n / modelData.rev[i] * 100).toFixed(1));
+            document.getElementById('ratiosBody').innerHTML = `
+                <tr><td>Net Margin %</td>${margins.map(m => `<td>${m}%</td>`).join('')}</tr>
+                <tr><td>ROE %</td>${modelData.roe.map(r => `<td>${r.toFixed(1)}%</td>`).join('')}</tr>
+                <tr><td>Debt/Equity</td>${[0.3, 0.28, 0.26, 0.24, 0.22].map(d => `<td>${d.toFixed(2)}</td>`).join('')}</tr>
+            `;
+
+            // Generate charts
+            generateCharts();
+
+            // Generate thesis
+            generateThesis();
+
+            // Render new dashboard and model grid
+            renderDashboard();
+            renderModelGrid();
+        }
+
+// ====================switchGridSheet====================
+function switchGridSheet(sheet, btn) {
+            gridCurrentSheet = sheet;
+            document.querySelectorAll('.model-grid-sheet-tab').forEach(t => t.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            renderModelGrid();
+        }
+
+// ====================switchView (NOT FOUND)====================
+
+// ====================serializeModelContext (NOT FOUND)====================
+
+// ====================encryptKey (NOT FOUND)====================
+
+// ====================decryptKey (NOT FOUND)====================
+
+// ====================saveApiKey (NOT FOUND)====================
+
+// ====================getApiKey (NOT FOUND)====================
+
+// ====================generateModel====================
+function generateModel(p) {
+            const data = {
+                company: p.company,
+                price: p.price,
+                shares: p.shares,
+                baseRev: p.baseRev,
+                rev: [],
+                ebitda: [],
+                ebit: [],
+                ni: [],
+                fcf: [],
+                equity: [],
+                roe: []
+            };
+
+            let rev = p.baseRev;
+            for (let i = 0; i < 5; i++) {
+                const growth = i < 2 ? p.growth1 / 100 : p.growth2 / 100;
+                rev *= (1 + growth);
+                data.rev.push(rev);
+
+                const ebitda = rev * (p.ebitdaMargin / 100);
+                data.ebitda.push(ebitda);
+
+                const dep = rev * 0.03;
+                const ebit = ebitda - dep;
+                data.ebit.push(ebit);
+
+                const interest = p.netDebt * 0.08;
+                const ebt = ebit - interest;
+                const tax = Math.max(0, ebt * (p.taxRate / 100));
+                const netIncome = ebt - tax;
+                data.ni.push(netIncome);
+
+                const capex = rev * 0.05;
+                const fcf = netIncome + dep - capex;
+                data.fcf.push(fcf);
+
+                data.equity.push(50 + netIncome);
+                data.roe.push((netIncome / (50 + netIncome * 0.5)) * 100);
+            }
+
+            // DCF
+            let pvFcf = 0;
+            data.fcf.forEach((f, i) => {
+                pvFcf += f / Math.pow(1 + p.wacc / 100, i + 1);
+            });
+
+            const terminalFcf = data.fcf[4] * (1 + p.tgr / 100);
+            const tv = terminalFcf / ((p.wacc - p.tgr) / 100);
+            const pvTv = tv / Math.pow(1 + p.wacc / 100, 5);
+
+            const ev = pvFcf + pvTv;
+            const eq = ev - p.netDebt;
+            const dcfPrice = eq / p.shares;
+            const upside = (dcfPrice / p.price - 1) * 100;
+            const rating = upside > 20 ? 'BUY' : upside > 0 ? 'HOLD' : 'SELL';
+
+            return {
+                ...data,
+                ev, eq, dcfPrice, upside, rating,
+                pvFcf, tv, pvTv,
+                wacc: p.wacc,
+                tgr: p.tgr,
+                target: dcfPrice * 1.15,
+                cagr: Math.pow(data.rev[4] / data.rev[0], 0.2) - 1,
+                netDebt: p.netDebt
+            };
+        }
+
+// ====================getCurrentParams====================
+function getCurrentParams() {
+            const name = (document.getElementById('companyName')?.value || '').toLowerCase();
+            let industry = 'Conglomerate';
+            if (name.includes('tcs') || name.includes('infosys') || name.includes('wipro') || name.includes('hcl') || name.includes('tech')) industry = 'IT Services';
+            else if (name.includes('hdfc') || name.includes('icici') || name.includes('sbi') || name.includes('kotak') || name.includes('axis') || name.includes('bank')) industry = 'Banking';
+            else if (name.includes('reliance') || name.includes('ongc') || name.includes('oil') || name.includes('gas') || name.includes('energy')) industry = 'Energy';
+            else if (name.includes('maruti') || name.includes('tata motor') || name.includes('mahindra') || name.includes('bajaj') || name.includes('auto')) industry = 'Automotive';
+            else if (name.includes('sun pharma') || name.includes('dr reddy') || name.includes('cipla') || name.includes('pharma') || name.includes('drug')) industry = 'Pharma';
+            else if (name.includes('itc') || name.includes('hul') || name.includes('nestle') || name.includes('consumer') || name.includes('fmcg')) industry = 'FMCG';
+            else if (name.includes('bharti') || name.includes('airtel') || name.includes('vodafone') || name.includes('telecom')) industry = 'Telecom';
+            else if (name.includes('lt') || name.includes('construction') || name.includes('infra')) industry = 'Infrastructure';
+            else if (name.includes('steel') || name.includes('cement') || name.includes('metal') || name.includes('mining')) industry = 'Materials';
+            return {
+                company: document.getElementById('companyName')?.value || 'Company',
+                price: parseFloat(document.getElementById('price')?.value) || 100,
+                shares: parseFloat(document.getElementById('shares')?.value) || 10,
+                baseRev: parseFloat(document.getElementById('baseRev')?.value) || 100,
+                growth1: parseFloat(document.getElementById('growth1')?.value) || 10,
+                growth2: parseFloat(document.getElementById('growth2')?.value) || 8,
+                ebitdaMargin: parseFloat(document.getElementById('ebitdaMargin')?.value) || 20,
+                wacc: parseFloat(document.getElementById('wacc')?.value) || 10.5,
+                tgr: parseFloat(document.getElementById('tgr')?.value) || 3.5,
+                netDebt: parseFloat(document.getElementById('netDebt')?.value) || 0,
+                taxRate: parseFloat(document.getElementById('taxRate')?.value) || 25.17,
+                industry: industry,
+            };
+        }
+
+// ====================safeCreateChart====================
+function safeCreateChart(key, ctx, config) {
+            if (chartRegistry[key]) {
+                chartRegistry[key].destroy();
+                delete chartRegistry[key];
+            }
+            const chart = new Chart(ctx, config);
+            chartRegistry[key] = chart;
+            return chart;
+        }
+
+// ====================getWorldClassChartOptions====================
+function getWorldClassChartOptions(custom = {}) {
+            const defaults = {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 700, easing: 'easeOutQuart' },
+                layout: { padding: { top: 8, right: 16, bottom: 4, left: 8 } },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        align: 'center',
+                        labels: {
+                            font: { family: "'Inter', sans-serif", size: 11, weight: '500' },
+                            color: '#64748b',
+                            padding: 16,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            pointRadius: 5,
+                            boxWidth: 8
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255,255,255,0.96)',
+                        titleColor: '#111827',
+                        bodyColor: '#374151',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1,
+                        cornerRadius: 10,
+                        padding: { top: 10, right: 14, bottom: 10, left: 14 },
+                        titleFont: { family: "'Inter', sans-serif", size: 12, weight: '600' },
+                        bodyFont: { family: "'Inter', sans-serif", size: 11 },
+                        boxPadding: 5,
+                        usePointStyle: true,
+                        displayColors: true,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                let val = context.parsed?.y !== undefined ? context.parsed.y : (context.parsed?.x !== undefined ? context.parsed.x : context.raw);
+                                if (typeof val === 'number') label += val.toLocaleString(undefined, { maximumFractionDigits: 2 });
+                                else label += val;
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false, drawBorder: false },
+                        ticks: {
+                            font: { family: "'Inter', sans-serif", size: 10 },
+                            color: '#9ca3af',
+                            maxRotation: 0,
+                            autoSkip: true,
+                            maxTicksLimit: 10
+                        },
+                        border: { display: false }
+                    },
+                    y: {
+                        grid: { color: '#f3f4f6', drawBorder: false, lineWidth: 1 },
+                        ticks: {
+                            font: { family: "'Inter', sans-serif", size: 10 },
+                            color: '#9ca3af',
+                            padding: 8,
+                            maxTicksLimit: 6
+                        },
+                        border: { display: false }
+                    }
+                }
+            };
+            // Deep merge custom options
+            function deepMerge(target, source) {
+                for (const key in source) {
+                    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                        if (!target[key]) target[key] = {};
+                        deepMerge(target[key], source[key]);
+                    } else {
+                        target[key] = source[key];
+                    }
+                }
+                return target;
+            }
+            return deepMerge(defaults, custom);
+        }
+
+// ====================checkAnomalies====================
+function checkAnomalies() {
+            if (!modelData) return;
+            try {
+                const res = await fetch(API_BASE + '/ai/anomalies', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Device-Id': deviceId },
+                    body: JSON.stringify({ model_snapshot: modelData })
+                });
+                const data = await res.json();
+                const banner = document.getElementById('anomalyBanner');
+                if (data.success && data.flags && data.flags.length > 0) {
+                    const errors = data.flags.filter(f => f.severity === 'error');
+                    const warnings = data.flags.filter(f => f.severity === 'warning');
+                    let html = '';
+                    if (errors.length > 0) {
+                        banner.style.background = '#FEE2E2';
+                        banner.style.border = '1px solid #EF4444';
+                        banner.style.color = '#991B1B';
+                        html += `<strong><i class="fas fa-exclamation-circle"></i> ${errors.length} Error${errors.length > 1 ? 's' : ''} detected:</strong> `;
+                        html += errors.map(e => `${escapeHtml(e.message)}`).join('; ');
+                    } else if (warnings.length > 0) {
+                        banner.style.background = '#FEF3C7';
+                        banner.style.border = '1px solid #F59E0B';
+                        banner.style.color = '#92400E';
+                        html += `<strong><i class="fas fa-exclamation-triangle"></i> ${warnings.length} Warning${warnings.length > 1 ? 's' : ''}:</strong> `;
+                        html += warnings.map(w => `${escapeHtml(w.message)}`).join('; ');
+                    }
+                    banner.innerHTML = html;
+                    banner.style.display = 'block';
+                } else {
+                    banner.style.display = 'none';
+                }
+            } catch (e) {
+                console.log('Anomaly check failed:', e.message);
+            }
+        }
+
+// ====================showAnomalies (NOT FOUND)====================
+
+// ====================initWaccTab (NOT FOUND)====================
+
+// ====================updateWACC====================
+function updateWACC() {
+            const rf = parseFloat(document.getElementById('waccRf').value);
+            const erp = parseFloat(document.getElementById('waccErp').value);
+            const beta = parseFloat(document.getElementById('waccBeta').value);
+            const cod = parseFloat(document.getElementById('waccCod').value);
+            const tax = parseFloat(document.getElementById('waccTax').value);
+            const de = parseFloat(document.getElementById('waccDe').value);
+            const coe = rf + beta * erp;
+            const codAt = cod * (1 - tax / 100);
+            const wd = de / 100;
+            const we = 1 - wd;
+            const wacc = we * coe + wd * codAt;
+            document.getElementById('waccRfVal').textContent = rf.toFixed(1);
+            document.getElementById('waccErpVal').textContent = erp.toFixed(1);
+            document.getElementById('waccBetaVal').textContent = beta.toFixed(2);
+            document.getElementById('waccCodVal').textContent = cod.toFixed(1);
+            document.getElementById('waccTaxVal').textContent = tax.toFixed(2);
+            document.getElementById('waccDeVal').textContent = de;
+            document.getElementById('waccCoe').textContent = coe.toFixed(2) + '%';
+            document.getElementById('waccCodAt').textContent = codAt.toFixed(2) + '%';
+            document.getElementById('waccWe').textContent = (we * 100).toFixed(0) + '%';
+            document.getElementById('waccWd').textContent = (wd * 100).toFixed(0) + '%';
+            document.getElementById('waccResult').textContent = wacc.toFixed(2) + '%';
+            renderWACCSensitivityChart(rf, erp, cod, tax);
+        }
+
+// ====================initCompsTab (NOT FOUND)====================
+
+// ====================updateComps (NOT FOUND)====================
+
+// ====================initLboTab (NOT FOUND)====================
+
+// ====================updateLBO====================
+function updateLBO() {
+            const ev = parseFloat(document.getElementById('lboEntryEV').value) || modelData.ev;
+            const de = parseFloat(document.getElementById('lboDe').value);
+            const exitMult = parseFloat(document.getElementById('lboExitMultiple').value);
+            const years = parseInt(document.getElementById('lboHoldYears').value);
+            const tlRate = parseFloat(document.getElementById('lboTlRate').value);
+            const hyRate = parseFloat(document.getElementById('lboHyRate').value);
+            const amortPct = parseFloat(document.getElementById('lboAmort').value);
+            document.getElementById('lboDeVal').textContent = de;
+            document.getElementById('lboExitVal').textContent = exitMult;
+            document.getElementById('lboHoldVal').textContent = years;
+            document.getElementById('lboTlVal').textContent = tlRate.toFixed(2);
+            document.getElementById('lboHyVal').textContent = hyRate.toFixed(2);
+            document.getElementById('lboAmortVal').textContent = amortPct;
+            const debt = ev * (de / 100);
+            const equity = ev - debt;
+            const tlShare = 0.65, hyShare = 0.35;
+            let tlDebt = debt * tlShare, hyDebt = debt * hyShare;
+            let schedule = [];
+            for (let y = 1; y <= years; y++) {
+                const ebitda = modelData.ebitda[Math.min(y - 1, 4)];
+                const interest = tlDebt * tlRate / 100 + hyDebt * hyRate / 100;
+                const fcf = ebitda * 0.45 - interest;
+                const tlRepay = Math.min(tlDebt, Math.max(tlDebt * amortPct / 100, fcf * 0.6));
+                const hyRepay = 0;
+                tlDebt -= tlRepay;
+                schedule.push({ year: y, open: tlDebt + hyDebt + tlRepay, tlRepay, hyRepay, interest, close: tlDebt + hyDebt });
+            }
+            const exitEV = modelData.ebitda[Math.min(years - 1, 4)] * exitMult;
+            const netDebtExit = schedule[years - 1].close;
+            const equityExit = exitEV - netDebtExit;
+            const moic = equityExit / equity;
+            const irr = Math.pow(moic, 1 / years) - 1;
+            document.getElementById('lboMOIC').textContent = moic.toFixed(1) + 'x';
+            document.getElementById('lboIRR').textContent = (irr * 100).toFixed(1) + '%';
+            document.getElementById('lboEquityInvested').textContent = '₹' + equity.toFixed(0) + ' Cr';
+            const tbody = document.getElementById('lboDebtBody');
+            if (tbody) tbody.innerHTML = schedule.map(s => `<tr><td>Year ${s.year}</td><td>₹${s.open.toFixed(0)}</td><td>₹${s.tlRepay.toFixed(0)}</td><td>₹${s.hyRepay.toFixed(0)}</td><td>₹${s.interest.toFixed(0)}</td><td>₹${s.close.toFixed(0)}</td></tr>`).join('');
+            const retCtx = document.getElementById('lboReturnsChart');
+            if (retCtx) safeCreateChart('lboReturnsChart', retCtx, { type: 'bar', data: { labels: ['Entry', ...schedule.map(s=>'Y'+s.year), 'Exit'], datasets: [{ label: 'Equity Value', data: [equity, ...schedule.map(()=>null), equityExit], backgroundColor: '#2563EB', borderRadius: 4 }, { label: 'Net Debt', data: [debt, ...schedule.map(s=>s.close), netDebtExit], backgroundColor: '#EF4444', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { stacked: true, title: { display: true, text: 'Rs Cr' } }, x: { stacked: true } } } });
+        }
+
+// ====================initMaTab (NOT FOUND)====================
+
+// ====================updateMA====================
+function updateMA() {
+            const targetEq = parseFloat(document.getElementById('maTargetEq').value) || modelData.eq;
+            const premium = parseFloat(document.getElementById('maPremium').value);
+            const cashPct = parseFloat(document.getElementById('maCashPct').value);
+            const synergyPct = parseFloat(document.getElementById('maSynergy').value);
+            const acqPE = parseFloat(document.getElementById('maAcqPE').value);
+            const debtRate = parseFloat(document.getElementById('maDebtRate').value);
+            const tax = parseFloat(document.getElementById('maTaxRate').value);
+            document.getElementById('maPremiumVal').textContent = premium;
+            document.getElementById('maCashVal').textContent = cashPct;
+            document.getElementById('maSynergyVal').textContent = synergyPct;
+            document.getElementById('maAcqPEVal').textContent = acqPE;
+            document.getElementById('maDebtVal').textContent = debtRate.toFixed(2);
+            document.getElementById('maTaxVal').textContent = tax.toFixed(2);
+            const offerValue = targetEq * (1 + premium / 100);
+            const cashPart = offerValue * (cashPct / 100);
+            const stockPart = offerValue * (1 - cashPct / 100);
+            const acqRev = modelData.rev[4] * 3;
+            const acqNI = modelData.ni[4] * 3;
+            const acqShares = p.shares * 3;
+            const acqEPS = acqNI / acqShares;
+            const newDebt = cashPart;
+            const newShares = stockPart / (acqEPS * acqPE);
+            const synergies = modelData.rev[4] * (synergyPct / 100);
+            const intExp = newDebt * debtRate / 100;
+            const pfNI = acqNI + modelData.ni[4] + synergies * (1 - tax / 100) - intExp;
+            const pfShares = acqShares + newShares;
+            const pfEPS = pfNI / pfShares;
+            const accretion = (pfEPS / acqEPS - 1) * 100;
+            document.getElementById('maAcqEPS').textContent = '₹' + acqEPS.toFixed(1);
+            document.getElementById('maPfEPS').textContent = '₹' + pfEPS.toFixed(1);
+            document.getElementById('maAccretion').textContent = (accretion > 0 ? '+' : '') + accretion.toFixed(1) + '%';
+            document.getElementById('maAccretion').style.color = accretion > 0 ? '#10B981' : accretion < 0 ? '#EF4444' : '#F59E0B';
+            const tbody = document.getElementById('maProFormaBody');
+            if (tbody) tbody.innerHTML = `
+                <tr><td>Revenue (Rs Cr)</td><td>${acqRev.toFixed(0)}</td><td>${modelData.rev[4].toFixed(0)}</td><td>${(acqRev + modelData.rev[4] + synergies).toFixed(0)}</td><td>—</td></tr>
+                <tr><td>Net Income (Rs Cr)</td><td>${acqNI.toFixed(0)}</td><td>${modelData.ni[4].toFixed(0)}</td><td>${pfNI.toFixed(0)}</td><td style="color:${pfNI>acqNI?'var(--accent)':'var(--danger)'}">${((pfNI/acqNI-1)*100).toFixed(1)}%</td></tr>
+                <tr><td>Shares (Cr)</td><td>${acqShares.toFixed(1)}</td><td>${p.shares.toFixed(1)}</td><td>${pfShares.toFixed(1)}</td><td>—</td></tr>
+                <tr><td>EPS (Rs)</td><td>${acqEPS.toFixed(2)}</td><td>${(modelData.ni[4]/p.shares).toFixed(2)}</td><td style="font-weight:600;">${pfEPS.toFixed(2)}</td><td style="color:${accretion>0?'var(--accent)':'var(--danger)'};font-weight:600;">${(accretion>0?'+':'')+accretion.toFixed(1)}%</td></tr>
+            `;
+            const chartCtx = document.getElementById('maAccretionChart');
+            if (chartCtx) {
+                const years = ['Y1', 'Y2', 'Y3', 'Y4', 'Y5'];
+                const acqLine = years.map((_, i) => acqEPS * Math.pow(1.08, i));
+                const synergyRamp = years.map((_, i) => Math.min(1, (i + 1) / 3));
+                const pfLine = years.map((_, i) => (acqNI * Math.pow(1.08, i) + modelData.ni[4] * Math.pow(1.06, i) + synergies * synergyRamp[i] * (1 - tax / 100) - intExp) / pfShares);
+                safeCreateChart('maAccretionChart', chartCtx, { type: 'line', data: { labels: years, datasets: [{ label: 'Acquirer Standalone', data: acqLine, borderColor: '#9CA3AF', tension: 0.3 }, { label: 'Pro Forma', data: pfLine, borderColor: '#2563EB', tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { title: { display: true, text: 'EPS (Rs)' } } } } });
+            }
+        }
+
+// ====================calculateDCF (NOT FOUND)====================
+
+// ====================projectFinancials (NOT FOUND)====================
+
+// ====================generateDupontAnalysis====================
+function generateDupontAnalysis() {
+            if (!modelData) return;
+
+            const roe = modelData.roe[4];
+            const netMargin = (modelData.ni[4] / modelData.rev[4]) * 100;
+            const assetTurnover = modelData.rev[4] / (modelData.rev[4] * 1.2);
+            const equityMultiplier = (modelData.rev[4] * 1.2) / modelData.eq;
+
+            document.getElementById('dupontRoe').textContent = roe.toFixed(1) + '%';
+            document.getElementById('dupontNpm').textContent = netMargin.toFixed(1) + '%';
+            document.getElementById('dupontAt').textContent = assetTurnover.toFixed(2) + 'x';
+            document.getElementById('dupontEm').textContent = equityMultiplier.toFixed(2) + 'x';
+
+            let body = '';
+            for (let i = 0; i < 5; i++) {
+                const npm = (modelData.ni[i] / modelData.rev[i]) * 100;
+                const at = modelData.rev[i] / (modelData.rev[i] * 1.2);
+                const em = (modelData.rev[i] * 1.2) / (modelData.eq * (0.8 + i * 0.05));
+                const roeVal = npm * at * em;
+                body += `<tr><td>Year ${i+1}</td><td>${npm.toFixed(1)}%</td><td>${at.toFixed(2)}x</td><td>${em.toFixed(2)}x</td><td style="font-weight: 600;">${roeVal.toFixed(1)}%</td></tr>`;
+            }
+            document.getElementById('dupontBody').innerHTML = body;
+
+            const ctx = document.getElementById('dupontChart');
+            if (ctx) {
+                safeCreateChart('dupontChart', ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Y1', 'Y2', 'Y3', 'Y4', 'Y5'],
+                        datasets: [
+                            { label: 'Net Margin %', data: modelData.ni.map((n, i) => (n/modelData.rev[i]*100)), borderColor: '#2563EB', tension: 0.4 },
+                            { label: 'Asset Turnover', data: modelData.rev.map(r => r/(r*1.2)), borderColor: '#10B981', tension: 0.4 },
+                            { label: 'ROE %', data: modelData.roe, borderColor: '#F59E0B', tension: 0.4 }
+                        ]
+                    },
+                    options: getWorldClassChartOptions()
+                });
+            }
+        }
+
+// ====================generateAltmanZScore====================
+function generateAltmanZScore() {
+            if (!modelData) return;
+
+            const wc = modelData.rev[4] * 0.15;
+            const retainedEarnings = modelData.ni[4] * 0.3;
+            const ebit = modelData.ebit[4];
+            const equity = modelData.eq;
+            const sales = modelData.rev[4];
+            const totalAssets = modelData.rev[4] * 1.2;
+            const currentLiabilities = modelData.rev[4] * 0.25;
+
+            // Z-Score formula (for manufacturing)
+            const x1 = (wc / totalAssets) * 1.2;
+            const x2 = (retainedEarnings / totalAssets) * 1.4;
+            const x3 = (ebit / totalAssets) * 3.3;
+            const x4 = (equity / totalAssets) * 0.6;
+            const x5 = (sales / totalAssets) * 1.0;
+
+            const zScore = x1 + x2 + x3 + x4 + x5;
+
+            let zone, prob, color;
+            if (zScore > 2.99) {
+                zone = 'Safe Zone';
+                prob = '< 5%';
+                color = 'var(--accent)';
+            } else if (zScore > 1.81) {
+                zone = 'Grey Zone';
+                prob = '5-20%';
+                color = 'var(--warning)';
+            } else {
+                zone = 'Distress Zone';
+                prob = '> 50%';
+                color = 'var(--danger)';
+            }
+
+            document.getElementById('zScoreVal').textContent = zScore.toFixed(2);
+            document.getElementById('zScoreVal').style.color = color;
+            document.getElementById('zScoreZone').textContent = zone;
+            document.getElementById('zScoreZone').style.color = color;
+            document.getElementById('zScoreProb').textContent = prob;
+
+            document.getElementById('zScoreBreakdown').innerHTML = `
+                <table class="data-table">
+                    <thead><tr><th>Ratio</th><th>Value</th><th>Weight</th><th>Contribution</th></tr></thead>
+                    <tbody>
+                        <tr><td>X1: Working Capital/TA</td><td>${(wc/totalAssets).toFixed(3)}</td><td>1.2</td><td>${x1.toFixed(2)}</td></tr>
+                        <tr><td>X2: Retained Earnings/TA</td><td>${(retainedEarnings/totalAssets).toFixed(3)}</td><td>1.4</td><td>${x2.toFixed(2)}</td></tr>
+                        <tr><td>X3: EBIT/TA</td><td>${(ebit/totalAssets).toFixed(3)}</td><td>3.3</td><td>${x3.toFixed(2)}</td></tr>
+                        <tr><td>X4: Equity/TA</td><td>${(equity/totalAssets).toFixed(3)}</td><td>0.6</td><td>${x4.toFixed(2)}</td></tr>
+                        <tr><td>X5: Sales/TA</td><td>${(sales/totalAssets).toFixed(3)}</td><td>1.0</td><td>${x5.toFixed(2)}</td></tr>
+                        <tr style="font-weight: bold;"><td colspan="3">Z-Score</td><td>${zScore.toFixed(2)}</td></tr>
+                    </tbody>
+                </table>
+            `;
+
+            // Chart
+            const ctx = document.getElementById('zScoreChart');
+            if (ctx) {
+                safeCreateChart('zScoreChart', ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['X1 (WC)', 'X2 (RE)', 'X3 (EBIT)', 'X4 (Equity)', 'X5 (Sales)'],
+                        datasets: [{
+                            label: 'Contribution',
+                            data: [x1, x2, x3, x4, x5],
+                            backgroundColor: ['#2563EB', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444']
+                        }]
+                    },
+                    options: getWorldClassChartOptions()
+                });
+            }
+        }
+
+// ====================generateSensitivityAnalysis====================
+function generateSensitivityAnalysis() {
+            if (!modelData) return;
+
+            // WACC Sensitivity
+            const waccValues = [8, 9, 10, 11, 12, 13];
+            let waccHtml = '<table class="data-table"><thead><tr><th>WACC</th><th>Fair Value</th><th>Upside</th><th>Rating</th></tr></thead><tbody>';
+            waccValues.forEach(w => {
+                let pvFcf = 0;
+                modelData.fcf.forEach((f, i) => { pvFcf += f / Math.pow(1 + w/100, i + 1); });
+                const tv = modelData.fcf[4] * (1 + modelData.tgr/100) / ((w - modelData.tgr)/100);
+                const pvTv = tv / Math.pow(1 + w/100, 5);
+                const ev = pvFcf + pvTv;
+                const eq = ev - modelData.netDebt;
+                const price = eq / modelData.shares;
+                const upside = (price / modelData.price - 1) * 100;
+                const rating = upside > 20 ? 'BUY' : upside > 0 ? 'HOLD' : 'SELL';
+                const color = rating === 'BUY' ? 'var(--accent)' : rating === 'HOLD' ? 'var(--warning)' : 'var(--danger)';
+                waccHtml += `<tr><td>${w}%</td><td style="color: var(--primary); font-weight: 600;">₹${price.toFixed(0)}</td><td style="color: ${color};">${upside > 0 ? '+' : ''}${upside.toFixed(1)}%</td><td><span class="rating-badge rating-${rating.toLowerCase()}">${rating}</span></td></tr>`;
+            });
+            waccHtml += '</tbody></table>';
+            document.getElementById('waccSensitivity').innerHTML = waccHtml;
+
+            // Terminal Growth Sensitivity
+            const tgValues = [1, 2, 3, 4, 5, 6];
+            let tgHtml = '<table class="data-table"><thead><tr><th>Terminal Growth</th><th>Fair Value</th><th>Upside</th><th>Rating</th></tr></thead><tbody>';
+            tgValues.forEach(t => {
+                let pvFcf = 0;
+                modelData.fcf.forEach((f, i) => { pvFcf += f / Math.pow(1 + modelData.wacc/100, i + 1); });
+                const tv = modelData.fcf[4] * (1 + t/100) / ((modelData.wacc - t)/100);
+                const pvTv = tv / Math.pow(1 + modelData.wacc/100, 5);
+                const ev = pvFcf + pvTv;
+                const eq = ev - modelData.netDebt;
+                const price = eq / modelData.shares;
+                const upside = (price / modelData.price - 1) * 100;
+                const rating = upside > 20 ? 'BUY' : upside > 0 ? 'HOLD' : 'SELL';
+                const color = rating === 'BUY' ? 'var(--accent)' : rating === 'HOLD' ? 'var(--warning)' : 'var(--danger)';
+                tgHtml += `<tr><td>${t}%</td><td style="color: var(--primary); font-weight: 600;">₹${price.toFixed(0)}</td><td style="color: ${color};">${upside > 0 ? '+' : ''}${upside.toFixed(1)}%</td><td><span class="rating-badge rating-${rating.toLowerCase()}">${rating}</span></td></tr>`;
+            });
+            tgHtml += '</tbody></table>';
+            document.getElementById('tgSensitivity').innerHTML = tgHtml;
+        }
+
+// ====================renderFootballField====================
+function renderFootballField(data, container, legend, summary) {
+            const { ranges, weighted_average, current_price } = data;
+            if (!ranges || ranges.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;">No valuation data available</div>';
+                return;
+            }
+            
+            // Find min/max for scaling
+            const allValues = ranges.flatMap(r => [r.low, r.high, r.midpoint]);
+            const minVal = Math.min(...allValues) * 0.9;
+            const maxVal = Math.max(...allValues) * 1.1;
+            const range = maxVal - minVal;
+            
+            // Generate HTML
+            let html = '<div style="position:relative;height:100%;padding:20px 40px 60px 150px;">';
+            
+            // Title
+            html += '<div style="text-align:center;font-weight:600;font-size:1.1rem;margin-bottom:20px;">Valuation Summary (₹ per share)</div>';
+            
+            // Y-axis labels
+            ranges.forEach((r, i) => {
+                const y = (i / (ranges.length - 1 || 1)) * 280 + 20;
+                html += `<div style="position:absolute;left:10px;top:${y}px;font-size:0.75rem;color:var(--text-medium);text-align:right;width:130px;">${escapeHtml(r.method)}</div>`;
+            });
+            
+            // Bars
+            ranges.forEach((r, i) => {
+                const y = (i / (ranges.length - 1 || 1)) * 280 + 20;
+                const left = ((r.low - minVal) / range) * 100;
+                const width = ((r.high - r.low) / range) * 100;
+                const midLeft = ((r.midpoint - minVal) / range) * 100;
+                
+                html += `<div style="position:absolute;left:${left}%;top:${y}px;width:${width}%;height:24px;background:${r.color}22;border-radius:4px;border:2px solid ${r.color};">`;
+                html += `<div style="position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:3px;height:36px;background:${r.color};"></div>`;
+                html += `<div style="position:absolute;left:50%;top:-22px;transform:translateX(-50%);font-size:0.7rem;font-weight:600;color:${r.color};">₹${r.midpoint.toFixed(0)}</div>`;
+                html += `<div style="position:absolute;left:4px;top:4px;font-size:0.65rem;color:${r.color};">₹${r.low.toFixed(0)}</div>`;
+                html += `<div style="position:absolute;right:4px;top:4px;font-size:0.65rem;color:${r.color};">₹${r.high.toFixed(0)}</div>`;
+                html += '</div>';
+            });
+            
+            // Current price line
+            if (current_price) {
+                const cpLeft = ((current_price - minVal) / range) * 100;
+                html += `<div style="position:absolute;left:${cpLeft}%;top:0;bottom:40px;width:2px;background:var(--danger);z-index:10;">`;
+                html += `<div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:var(--danger);color:white;padding:2px 8px;border-radius:4px;font-size:0.7rem;white-space:nowrap;">Market: ₹${current_price.toFixed(0)}</div>`;
+                html += '</div>';
+            }
+            
+            // Weighted average line
+            if (weighted_average) {
+                const waLeft = ((weighted_average - minVal) / range) * 100;
+                html += `<div style="position:absolute;left:${waLeft}%;top:0;bottom:40px;width:2px;background:var(--purple);border-left:2px dashed var(--purple);z-index:10;">`;
+                html += `<div style="position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);background:var(--purple);color:white;padding:2px 8px;border-radius:4px;font-size:0.7rem;white-space:nowrap;">Weighted Avg: ₹${weighted_average.toFixed(0)}</div>`;
+                html += '</div>';
+            }
+            
+            // X-axis
+            html += '<div style="position:absolute;bottom:20px;left:150px;right:20px;height:1px;background:var(--border);"></div>';
+            for (let v = Math.floor(minVal / 50) * 50; v <= maxVal; v += 50) {
+                const pos = ((v - minVal) / range) * 100;
+                html += `<div style="position:absolute;left:${pos}%;bottom:5px;font-size:0.65rem;color:var(--text-light);transform:translateX(-50%);">₹${v}</div>`;
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+            
+            // Legend
+            legend.innerHTML = ranges.map(r => 
+                `<span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:12px;height:12px;background:${r.color};border-radius:2px;"></span>${escapeHtml(r.method)}</span>`
+            ).join('');
+            
+            // Summary
+            const upside = current_price && weighted_average ? ((weighted_average - current_price) / current_price * 100).toFixed(1) : null;
+            summary.innerHTML = `<strong>Summary:</strong> Weighted average valuation is ₹${(weighted_average || 0).toFixed(0)}/share` + 
+                (upside ? ` — implying ${upside > 0 ? '+' : ''}${upside}% vs current market price of ₹${current_price.toFixed(0)}.` : '.');
+        }
+
+// ====================generateFootballField====================
+function generateFootballField() {
+            const container = document.getElementById('footballFieldContainer');
+            const status = document.getElementById('footballFieldStatus');
+            const legend = document.getElementById('footballFieldLegend');
+            const summary = document.getElementById('footballFieldSummary');
+            
+            if (!window.__model) {
+                container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--danger)"><i class="fas fa-exclamation-circle"></i> Please run analysis first to generate model data</div>';
+                return;
+            }
+            
+            status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            
+            try {
+                const res = await fetch(API_BASE + '/charts/football-field', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: window.__model })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    renderFootballField(data.data, container, legend, summary);
+                    status.innerHTML = '<i class="fas fa-check" style="color:var(--accent)"></i> Generated';
+                } else {
+                    status.innerHTML = '<span style="color:var(--danger)">Error: ' + data.error + '</span>';
+                }
+            } catch (e) {
+                // Fallback: generate locally
+                const ranges = generateFootballFieldLocal(window.__model);
+                renderFootballField(ranges, container, legend, summary);
+                status.innerHTML = '<i class="fas fa-check" style="color:var(--accent)"></i> Generated (local)';
+            }
+        }
+
+// ====================generateFootballFieldLocal====================
+function generateFootballFieldLocal(model) {
+            const { assumptions, dcf } = model;
+            const shares = assumptions.shares_outstanding;
+            const baseValue = dcf?.intrinsic_value_per_share || 0;
+            
+            const ranges = [];
+            if (baseValue > 0) {
+                ranges.push({ method: 'DCF Analysis', low: baseValue * 0.85, high: baseValue * 1.15, midpoint: baseValue, color: '#2563EB', weight: 0.35 });
+            }
+            // Add mock comps if available
+            const evEbitda = assumptions.ebitda_margin * 12;
+            const compValue = (evEbitda * assumptions.revenue_base * assumptions.revenue_growth) / shares;
+            if (compValue > 0) {
+                ranges.push({ method: 'Trading Comps', low: compValue * 0.90, high: compValue * 1.10, midpoint: compValue, color: '#10B981', weight: 0.25 });
+            }
+            // 52-week range
+            const currentPrice = parseFloat(document.getElementById('price')?.value) || baseValue;
+            ranges.push({ method: 'Current Price', low: currentPrice * 0.85, high: currentPrice * 1.15, midpoint: currentPrice, color: '#F59E0B', weight: 0.10 });
+            
+            return { ranges, weighted_average: baseValue, current_price: currentPrice };
+        }
+

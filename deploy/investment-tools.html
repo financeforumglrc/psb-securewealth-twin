@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Free Investment Calculators - SIP, Lumpsum, PPF. Plan your financial future with DS Financial Solutions.">
+    <title>Investment Calculators | DS Financial</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="futuristic-fintech.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="tax-portal.css">
+    <link rel="stylesheet" href="global-features.css">
+    <link rel="stylesheet" href="enhanced-features.css">
+    <link rel="stylesheet" href="fixed-layout.css">
+    <link rel="stylesheet" href="modern-layout.css">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e8eef5 100%);
+        }
+
+        .inv-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 2rem 3rem;
+        }
+
+        .inv-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .inv-header h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: #1A237E;
+            margin-bottom: 0.75rem;
+        }
+
+        .inv-header p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        /* Quick Stats Banner */
+        .quick-stats-banner {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(26, 35, 126, 0.05) 0%, rgba(255, 179, 0, 0.05) 100%);
+            border-radius: 20px;
+            border: 2px solid #f0f0f0;
+        }
+
+        .quick-stat {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .quick-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-stat i {
+            font-size: 2rem;
+            color: #FFB300;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255, 179, 0, 0.1) 0%, rgba(26, 35, 126, 0.1) 100%);
+            border-radius: 12px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1A237E;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Calculator Description */
+        .calc-description {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-left: 4px solid #FFB300;
+            border-radius: 8px;
+        }
+
+        /* Info Tooltip */
+        .info-tooltip {
+            color: #FFB300;
+            cursor: help;
+            margin-left: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .info-tooltip:hover {
+            color: #1A237E;
+            transform: scale(1.2);
+        }
+
+        /* Benefits Box */
+        .benefits-box {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+            border-radius: 16px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .benefits-box h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1A237E;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefits-box h4 i {
+            color: #FFB300;
+        }
+
+        .benefits-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefits-box li {
+            padding: 0.5rem 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .benefits-box li i {
+            color: #10b981;
+            font-size: 0.9rem;
+        }
+
+        /* Breakdown Item */
+        .breakdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .breakdown-item i {
+            font-size: 1.5rem;
+            color: #FFB300;
+        }
+
+        .breakdown-item span {
+            font-size: 0.85rem;
+        }
+
+        /* Yearly Breakdown */
+        .yearly-breakdown {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 16px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .yearly-breakdown h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1A237E;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .yearly-breakdown h4 i {
+            color: #FFB300;
+        }
+
+        #sipYearlyTable {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .year-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr 2fr;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .year-row:hover {
+            background: white;
+        }
+
+        .year-row.header {
+            font-weight: 700;
+            color: #1A237E;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .year-row span {
+            font-size: 0.9rem;
+        }
+
+        .year-row .amount {
+            font-weight: 600;
+            color: #1A237E;
+        }
+
+        .inv-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            justify-content: center;
+        }
+
+        .inv-tab {
+            padding: 1rem 2rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .inv-tab:hover {
+            border-color: #FFB300;
+            transform: translateY(-2px);
+        }
+
+        .inv-tab.active {
+            background: linear-gradient(135deg, #1A237E 0%, #3949AB 100%);
+            color: white;
+            border-color: #1A237E;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 35, 126, 0.3);
+        }
+
+        .inv-tab i {
+            font-size: 1.2rem;
+        }
+
+        .inv-content {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .inv-content.active {
+            display: grid;
+        }
+
+        .inv-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        .inv-card:hover {
+            border-color: #FFB300;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        .inv-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1A237E;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .inv-card h3 i {
+            color: #FFB300;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1A237E;
+            transition: all 0.2s ease;
+            background: #f9fafb;
+        }
+
+        .form-group input[type="number"]:focus {
+            outline: none;
+            border-color: #FFB300;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 179, 0, 0.1);
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #FFB300, #1A237E);
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            margin-bottom: 0.75rem;
+        }
+
+        .range-slider:hover {
+            opacity: 1;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #FFB300;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 179, 0, 0.4);
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #FFB300;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 179, 0, 0.4);
+            border: none;
+        }
+
+        .inv-result-box {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(26, 35, 126, 0.05) 0%, rgba(255, 179, 0, 0.05) 100%);
+            border-radius: 20px;
+            border: 2px solid #f0f0f0;
+        }
+
+        .inv-result-box span {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .inv-total {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #1A237E 0%, #FFB300 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 1rem 0;
+        }
+
+        .inv-breakdown {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e5e7eb;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .inv-breakdown b {
+            display: block;
+            font-size: 1.2rem;
+            color: #1A237E;
+            margin-top: 0.25rem;
+        }
+
+        .chart-container {
+            height: 320px;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .inv-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .inv-wrapper {
+                padding: 100px 1rem 2rem;
+            }
+            
+            .inv-total {
+                font-size: 2.5rem;
+            }
+            
+            .quick-stats-banner {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .inv-tabs {
+                overflow-x: scroll;
+                scrollbar-width: thin;
+            }
+            
+            .inv-tab {
+                font-size: 0.9rem;
+                padding: 0.875rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-stats-banner {
+                grid-template-columns: 1fr;
+            }
+            
+            .inv-breakdown {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">DS Financial</span>
+            </a>
+            <div class="nav-right">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="tax-portal.html" class="nav-link">Tax Portal</a>
+                <a href="pdf-tools.html" class="nav-link">PDF Tools</a>
+                <a href="resume-builder.html" class="nav-link">Resume</a>
+                <a href="#contact" class="btn-primary">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="header-spacer"></div>
+
+    <div class="inv-wrapper">
+        <div class="inv-header">
+            <h1>💰 Investment Calculators</h1>
+            <p>Plan your wealth with precision - Smart tools for smarter investing</p>
+            
+            <!-- Quick Stats Banner -->
+            <div class="quick-stats-banner">
+                <div class="quick-stat">
+                    <i class="fas fa-chart-line"></i>
+                    <div>
+                        <span class="stat-value">8+</span>
+                        <span class="stat-label">Calculators</span>
+                    </div>
+                </div>
+                <div class="quick-stat">
+                    <i class="fas fa-users"></i>
+                    <div>
+                        <span class="stat-value">10k+</span>
+                        <span class="stat-label">Users</span>
+                    </div>
+                </div>
+                <div class="quick-stat">
+                    <i class="fas fa-calculator"></i>
+                    <div>
+                        <span class="stat-value">100%</span>
+                        <span class="stat-label">Free</span>
+                    </div>
+                </div>
+                <div class="quick-stat">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <span class="stat-value">Secure</span>
+                        <span class="stat-label">& Private</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="inv-tabs">
+            <button class="inv-tab active" onclick="switchInv('sip')">
+                <i class="fas fa-chart-line"></i> SIP Calculator
+            </button>
+            <button class="inv-tab" onclick="switchInv('lumpsum')">
+                <i class="fas fa-money-bill-wave"></i> Lumpsum
+            </button>
+            <button class="inv-tab" onclick="switchInv('ppf')">
+                <i class="fas fa-piggy-bank"></i> PPF
+            </button>
+            <button class="inv-tab" onclick="switchInv('fd')">
+                <i class="fas fa-university"></i> Fixed Deposit
+            </button>
+            <button class="inv-tab" onclick="switchInv('emi')">
+                <i class="fas fa-home"></i> EMI
+            </button>
+            <button class="inv-tab" onclick="switchInv('retirement')">
+                <i class="fas fa-umbrella-beach"></i> Retirement
+            </button>
+        </div>
+
+        <!-- SIP Calculator -->
+        <div id="sip" class="inv-content active">
+            <div class="inv-card form-section">
+                <h3><i class="fas fa-coins"></i> SIP Investment Details</h3>
+                <p class="calc-description">Systematic Investment Plan - Build wealth through disciplined monthly investing</p>
+                
+                <div class="form-group">
+                    <label>Monthly Investment (₹) <span class="info-tooltip" title="Amount you invest every month"><i class="fas fa-info-circle"></i></span></label>
+                    <input type="range" class="range-slider" min="500" max="100000" step="500" value="5000"
+                        oninput="document.getElementById('sipAmount').value = this.value; updateSIP()">
+                    <input type="number" id="sipAmount" value="5000" min="500" max="100000" oninput="updateSIP()">
+                </div>
+                <div class="form-group">
+                    <label>Expected Return Rate (p.a %) <span class="info-tooltip" title="Expected annual return percentage"><i class="fas fa-info-circle"></i></span></label>
+                    <input type="range" class="range-slider" min="1" max="30" step="0.1" value="12"
+                        oninput="document.getElementById('sipRate').value = this.value; updateSIP()">
+                    <input type="number" id="sipRate" value="12" min="1" max="30" step="0.1" oninput="updateSIP()">
+                </div>
+                <div class="form-group">
+                    <label>Time Period (Years) <span class="info-tooltip" title="Investment duration in years"><i class="fas fa-info-circle"></i></span></label>
+                    <input type="range" class="range-slider" min="1" max="40" value="10"
+                        oninput="document.getElementById('sipYears').value = this.value; updateSIP()">
+                    <input type="number" id="sipYears" value="10" min="1" max="40" oninput="updateSIP()">
+                </div>
+                
+                <!-- Benefits Info -->
+                <div class="benefits-box">
+                    <h4><i class="fas fa-star"></i> SIP Benefits</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Power of compounding</li>
+                        <li><i class="fas fa-check"></i> Rupee cost averaging</li>
+                        <li><i class="fas fa-check"></i> Flexible investment</li>
+                        <li><i class="fas fa-check"></i> Tax benefits under 80C</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="inv-card result-section">
+                <div class="chart-container">
+                    <canvas id="sipChart"></canvas>
+                </div>
+                <div class="inv-result-box">
+                    <span><i class="fas fa-trophy"></i> Expected Total Value</span>
+                    <div class="inv-total" id="sipTotal">₹0</div>
+                    <div class="inv-breakdown">
+                        <div class="breakdown-item">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <span>Invested</span>
+                            <b id="sipInvested">₹0</b>
+                        </div>
+                        <div class="breakdown-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Returns</span>
+                            <b id="sipReturns" style="color: #10b981">₹0</b>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Year-wise breakdown -->
+                <div class="yearly-breakdown">
+                    <h4><i class="fas fa-calendar-alt"></i> Growth Projection</h4>
+                    <div id="sipYearlyTable"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lumpsum Calculator -->
+        <div id="lumpsum" class="inv-content">
+            <div class="inv-card form-section">
+                <h3><i class="fas fa-money-bill-wave"></i> Lumpsum Investment</h3>
+                <div class="form-group">
+                    <label>Total Investment (₹)</label>
+                    <input type="range" class="range-slider" min="5000" max="1000000" step="5000" value="50000"
+                        oninput="updateLumpsum()">
+                    <input type="number" id="lumAmount" value="50000" oninput="updateLumpsum()">
+                </div>
+                <div class="form-group">
+                    <label>Expected Return Rate (p.a %)</label>
+                    <input type="range" class="range-slider" min="1" max="30" step="0.1" value="12"
+                        oninput="updateLumpsum()">
+                    <input type="number" id="lumRate" value="12" oninput="updateLumpsum()">
+                </div>
+                <div class="form-group">
+                    <label>Time Period (Years)</label>
+                    <input type="range" class="range-slider" min="1" max="40" value="10" oninput="updateLumpsum()">
+                    <input type="number" id="lumYears" value="10" oninput="updateLumpsum()">
+                </div>
+            </div>
+
+            <div class="inv-card result-section">
+                <div class="chart-container" style="height: 300px; position: relative;">
+                    <canvas id="lumChart"></canvas>
+                </div>
+                <div class="inv-result-box">
+                    <span>Expected Total Value</span>
+                    <div class="inv-total" id="lumTotal">₹0</div>
+                    <div class="inv-breakdown">
+                        <span>Invested: <b id="lumInvested">₹0</b></span>
+                        <span>Returns: <b id="lumReturns" style="color: #10b981">₹0</b></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PPF Calculator -->
+        <div id="ppf" class="inv-content">
+            <div class="inv-card form-section">
+                <h3><i class="fas fa-piggy-bank"></i> PPF Calculator</h3>
+                <div class="badge-premium">Current Interest Rate: 7.1%</div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label>Yearly Investment (₹)</label>
+                    <input type="range" class="range-slider" min="500" max="150000" step="500" value="100000"
+                        oninput="updatePPF()">
+                    <input type="number" id="ppfAmount" value="100000" oninput="updatePPF()">
+                    <small>Max ₹1.5 Lakh per year</small>
+                </div>
+                <div class="form-group">
+                    <label>Time Period (Years)</label>
+                    <input type="range" class="range-slider" min="15" max="50" step="5" value="15"
+                        oninput="updatePPF()">
+                    <input type="number" id="ppfYears" value="15" oninput="updatePPF()">
+                    <small>Min lock-in 15 years</small>
+                </div>
+            </div>
+
+            <div class="inv-card result-section">
+                <div class="chart-container" style="height: 300px; position: relative;">
+                    <canvas id="ppfChart"></canvas>
+                </div>
+                <div class="inv-result-box">
+                    <span>Maturity Value</span>
+                    <div class="inv-total" id="ppfTotal">₹0</div>
+                    <div class="inv-breakdown">
+                        <span>Invested: <b id="ppfInvested">₹0</b></span>
+                        <span>Interest: <b id="ppfReturns" style="color: #10b981">₹0</b></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fixed Deposit Calculator -->
+        <div id="fd" class="inv-content">
+            <div class="inv-card form-section">
+                <h3><i class="fas fa-university"></i> Fixed Deposit Details</h3>
+                <p class="calc-description">Calculate returns on your Fixed Deposit investment with guaranteed interest</p>
+                
+                <div class="form-group">
+                    <label>Deposit Amount (₹)</label>
+                    <input type="range" class="range-slider" min="10000" max="10000000" step="10000" value="100000"
+                        oninput="document.getElementById('fdAmount').value = this.value; updateFD()">
+                    <input type="number" id="fdAmount" value="100000" oninput="updateFD()">
+                </div>
+                <div class="form-group">
+                    <label>Interest Rate (p.a %)</label>
+                    <input type="range" class="range-slider" min="3" max="12" step="0.1" value="6.5"
+                        oninput="document.getElementById('fdRate').value = this.value; updateFD()">
+                    <input type="number" id="fdRate" value="6.5" step="0.1" oninput="updateFD()">
+                </div>
+                <div class="form-group">
+                    <label>Time Period (Years)</label>
+                    <input type="range" class="range-slider" min="1" max="10" value="5"
+                        oninput="document.getElementById('fdYears').value = this.value; updateFD()">
+                    <input type="number" id="fdYears" value="5" oninput="updateFD()">
+                </div>
+            </div>
+
+            <div class="inv-card result-section">
+                <div class="chart-container">
+                    <canvas id="fdChart"></canvas>
+                </div>
+                <div class="inv-result-box">
+                    <span><i class="fas fa-trophy"></i> Maturity Value</span>
+                    <div class="inv-total" id="fdTotal">₹0</div>
+                    <div class="inv-breakdown">
+                        <div class="breakdown-item">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <span>Principal</span>
+                            <b id="fdInvested">₹0</b>
+                        </div>
+                        <div class="breakdown-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Interest</span>
+                            <b id="fdReturns" style="color: #10b981">₹0</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMI Calculator -->
+        <div id="emi" class="inv-content">
+            <div class="inv-card form-section">
+                <h3><i class="fas fa-home"></i> EMI Calculator</h3>
+                <p class="calc-description">Calculate your monthly loan EMI for home, car, or personal loans</p>
+                
+                <div class="form-group">
+                    <label>Loan Amount (₹)</label>
+                    <input type="range" class="range-slider" min="100000" max="10000000" step="10000" value="2000000"
+                        oninput="document.getElementById('emiAmount').value = this.value; updateEMI()">
+                    <input type="number" id="emiAmount" value="2000000" oninput="updateEMI()">
+                </div>
+                <div class="form-group">
+                    <label>Interest Rate (p.a %)</label>
+                    <input type="range" class="range-slider" min="6" max="18" step="0.1" value="8.5"
+                        oninput="document.getElementById('emiRate').value = this.value; updateEMI()">
+                    <input type="number" id="emiRate" value="8.5" step="0.1" oninput="updateEMI()">
+                </div>
+                <div class="form-group">
+                    <label>Loan Tenure (Years)</label>
+                    <input type="range" class="range-slider" min="1" max="30" value="20"
+                        oninput="document.getElementById('emiYears').value = this.value; updateEMI()">
+                    <input type="number" id="emiYears" value="20" oninput="updateEMI()">
+                </div>
+            </div>
+
+            <div class="inv-card result-section">
+                <div class="chart-container">
+                    <canvas id="emiChart"></canvas>
+                </div>
+                <div class="inv-result-box">
+                    <span><i class="fas fa-calendar-check"></i> Monthly EMI</span>
+                    <div class="inv-total" id="emiMonthly">₹0</div>
+                    <div class="inv-breakdown">
+                        <div class="breakdown-item">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <span>Principal</span>
+                            <b id="emiPrincipal">₹0</b>
+                        </div>
+                        <div class="breakdown-item">
+                            <i class="fas fa-percentage"></i>
+                            <span>Total Interest</span>
+                            <b id="emiInterest" style="color: #ef4444">₹0</b>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid #e5e7eb;">
+                        <span style="font-size: 0.85rem; color: #666;">Total Amount Payable</span>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #1A237E; margin-top: 0.5rem;" id="emiTotal">₹0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Retirement Calculator -->
+        <div id="retirement" class="inv-content">
+            <div class="inv-card form-section">
+                <h3><i class="fas fa-umbrella-beach"></i> Retirement Planning</h3>
+                <p class="calc-description">Plan your retirement corpus to maintain your lifestyle post-retirement</p>
+                
+                <div class="form-group">
+                    <label>Current Age (Years)</label>
+                    <input type="range" class="range-slider" min="20" max="60" value="30"
+                        oninput="document.getElementById('retAge').value = this.value; updateRetirement()">
+                    <input type="number" id="retAge" value="30" oninput="updateRetirement()">
+                </div>
+                <div class="form-group">
+                    <label>Retirement Age (Years)</label>
+                    <input type="range" class="range-slider" min="50" max="70" value="60"
+                        oninput="document.getElementById('retRetAge').value = this.value; updateRetirement()">
+                    <input type="number" id="retRetAge" value="60" oninput="updateRetirement()">
+                </div>
+                <div class="form-group">
+                    <label>Monthly Expenses Today (₹)</label>
+                    <input type="range" class="range-slider" min="10000" max="200000" step="5000" value="50000"
+                        oninput="document.getElementById('retExpense').value = this.value; updateRetirement()">
+                    <input type="number" id="retExpense" value="50000" oninput="updateRetirement()">
+                </div>
+                <div class="form-group">
+                    <label>Expected Return (p.a %)</label>
+                    <input type="range" class="range-slider" min="6" max="15" step="0.5" value="10"
+                        oninput="document.getElementById('retReturn').value = this.value; updateRetirement()">
+                    <input type="number" id="retReturn" value="10" step="0.5" oninput="updateRetirement()">
+                </div>
+                <div class="form-group">
+                    <label>Inflation Rate (p.a %)</label>
+                    <input type="range" class="range-slider" min="3" max="10" step="0.5" value="6"
+                        oninput="document.getElementById('retInflation').value = this.value; updateRetirement()">
+                    <input type="number" id="retInflation" value="6" step="0.5" oninput="updateRetirement()">
+                </div>
+            </div>
+
+            <div class="inv-card result-section">
+                <div class="inv-result-box">
+                    <span><i class="fas fa-bullseye"></i> Required Retirement Corpus</span>
+                    <div class="inv-total" id="retCorpus">₹0</div>
+                    <div class="inv-breakdown">
+                        <div class="breakdown-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Years to Retirement</span>
+                            <b id="retYears">0</b>
+                        </div>
+                        <div class="breakdown-item">
+                            <i class="fas fa-coins"></i>
+                            <span>Monthly SIP Required</span>
+                            <b id="retSIP" style="color: #10b981">₹0</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="benefits-box" style="margin-top: 1.5rem;">
+                    <h4><i class="fas fa-lightbulb"></i> Retirement Tips</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Start investing early for better returns</li>
+                        <li><i class="fas fa-check"></i> Consider inflation in retirement planning</li>
+                        <li><i class="fas fa-check"></i> Diversify your retirement portfolio</li>
+                        <li><i class="fas fa-check"></i> Review and adjust plans annually</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="global-features.js"></script>
+    <script src="enhanced-features.js"></script>
+    <script>
+        // Init Charts
+        let sipChart, lumChart, ppfChart;
+
+        function initCharts() {
+            const commonConfig = {
+                type: 'doughnut',
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            };
+
+            const ctxSip = document.getElementById('sipChart').getContext('2d');
+            sipChart = new Chart(ctxSip, {
+                ...commonConfig,
+                data: {
+                    labels: ['Invested Amount', 'Est. Returns'],
+                    datasets: [{
+                        data: [0, 0],
+                        backgroundColor: ['#e0e7ff', '#4f46e5'],
+                        borderWidth: 0
+                    }]
+                }
+            });
+
+            const ctxLum = document.getElementById('lumChart').getContext('2d');
+            lumChart = new Chart(ctxLum, {
+                ...commonConfig,
+                data: {
+                    labels: ['Invested Amount', 'Est. Returns'],
+                    datasets: [{
+                        data: [0, 0],
+                        backgroundColor: ['#fef3c7', '#d97706'],
+                        borderWidth: 0
+                    }]
+                }
+            });
+
+            const ctxPpf = document.getElementById('ppfChart').getContext('2d');
+            ppfChart = new Chart(ctxPpf, {
+                ...commonConfig,
+                data: {
+                    labels: ['Invested Amount', 'Total Interest'],
+                    datasets: [{
+                        data: [0, 0],
+                        backgroundColor: ['#dcfce7', '#16a34a'],
+                        borderWidth: 0
+                    }]
+                }
+            });
+
+            const ctxFd = document.getElementById('fdChart').getContext('2d');
+            window.fdChart = new Chart(ctxFd, {
+                ...commonConfig,
+                data: {
+                    labels: ['Principal', 'Interest Earned'],
+                    datasets: [{
+                        data: [0, 0],
+                        backgroundColor: ['#dbeafe', '#2563eb'],
+                        borderWidth: 0
+                    }]
+                }
+            });
+
+            const ctxEmi = document.getElementById('emiChart').getContext('2d');
+            window.emiChart = new Chart(ctxEmi, {
+                ...commonConfig,
+                data: {
+                    labels: ['Principal Amount', 'Total Interest'],
+                    datasets: [{
+                        data: [0, 0],
+                        backgroundColor: ['#fce7f3', '#ec4899'],
+                        borderWidth: 0
+                    }]
+                }
+            });
+        }
+
+        // Logic
+        function switchInv(id) {
+            document.querySelectorAll('.inv-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.inv-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function updateSIP() {
+            const p = parseFloat(document.getElementById('sipAmount').value);
+            const r = parseFloat(document.getElementById('sipRate').value) / 100 / 12;
+            const n = parseFloat(document.getElementById('sipYears').value) * 12;
+
+            if (p && r && n) {
+                // FV = P * [ (1+i)^n - 1 ] * (1+i)/i
+                const fv = p * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+                const invested = p * n;
+                const returns = fv - invested;
+
+                document.getElementById('sipTotal').innerText = formatCurrency(fv);
+                document.getElementById('sipInvested').innerText = formatCurrency(invested);
+                document.getElementById('sipReturns').innerText = formatCurrency(returns);
+
+                sipChart.data.datasets[0].data = [invested, returns];
+                sipChart.update();
+            }
+        }
+
+        function updateLumpsum() {
+            const p = parseFloat(document.getElementById('lumAmount').value);
+            const r = parseFloat(document.getElementById('lumRate').value) / 100;
+            const n = parseFloat(document.getElementById('lumYears').value);
+
+            if (p && r && n) {
+                // FV = P * (1+r)^n
+                const fv = p * Math.pow(1 + r, n);
+                const invested = p;
+                const returns = fv - invested;
+
+                document.getElementById('lumTotal').innerText = formatCurrency(fv);
+                document.getElementById('lumInvested').innerText = formatCurrency(invested);
+                document.getElementById('lumReturns').innerText = formatCurrency(returns);
+
+                lumChart.data.datasets[0].data = [invested, returns];
+                lumChart.update();
+            }
+        }
+
+        function updatePPF() {
+            const p = parseFloat(document.getElementById('ppfAmount').value); // Yearly
+            const r = 7.1 / 100;
+            const n = parseFloat(document.getElementById('ppfYears').value);
+
+            if (p && n) {
+                // Approximate PPF calc (Annual compounding)
+                // A = P * [({(1+i)^n} - 1) / i]
+                // Note: Actual PPF is compounded annually but interest calculated monthly. This is a close approx.
+                const fv = p * ((Math.pow(1 + r, n) - 1) / r) * (1 + r); // * (1+r) if invested at start of year
+                const invested = p * n;
+                const returns = fv - invested;
+
+                document.getElementById('ppfTotal').innerText = formatCurrency(fv);
+                document.getElementById('ppfInvested').innerText = formatCurrency(invested);
+                document.getElementById('ppfReturns').innerText = formatCurrency(returns);
+
+                ppfChart.data.datasets[0].data = [invested, returns];
+                ppfChart.update();
+            }
+        }
+
+        function updateFD() {
+            const p = parseFloat(document.getElementById('fdAmount').value);
+            const r = parseFloat(document.getElementById('fdRate').value) / 100;
+            const n = parseFloat(document.getElementById('fdYears').value);
+
+            if (p && r && n) {
+                const maturity = p * Math.pow(1 + r, n);
+                const interest = maturity - p;
+
+                document.getElementById('fdTotal').innerText = formatCurrency(maturity);
+                document.getElementById('fdInvested').innerText = formatCurrency(p);
+                document.getElementById('fdReturns').innerText = formatCurrency(interest);
+
+                if (window.fdChart) {
+                    fdChart.data.datasets[0].data = [p, interest];
+                    fdChart.update();
+                }
+            }
+        }
+
+        function updateEMI() {
+            const p = parseFloat(document.getElementById('emiAmount').value);
+            const r = parseFloat(document.getElementById('emiRate').value) / 100 / 12;
+            const n = parseFloat(document.getElementById('emiYears').value) * 12;
+
+            if (p && r && n) {
+                const emi = p * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+                const totalAmount = emi * n;
+                const totalInterest = totalAmount - p;
+
+                document.getElementById('emiMonthly').innerText = formatCurrency(emi);
+                document.getElementById('emiPrincipal').innerText = formatCurrency(p);
+                document.getElementById('emiInterest').innerText = formatCurrency(totalInterest);
+                document.getElementById('emiTotal').innerText = formatCurrency(totalAmount);
+
+                if (window.emiChart) {
+                    emiChart.data.datasets[0].data = [p, totalInterest];
+                    emiChart.update();
+                }
+            }
+        }
+
+        function updateRetirement() {
+            const currentAge = parseFloat(document.getElementById('retAge').value);
+            const retirementAge = parseFloat(document.getElementById('retRetAge').value);
+            const monthlyExpense = parseFloat(document.getElementById('retExpense').value);
+            const returnRate = parseFloat(document.getElementById('retReturn').value) / 100;
+            const inflationRate = parseFloat(document.getElementById('retInflation').value) / 100;
+
+            if (currentAge && retirementAge && monthlyExpense && returnRate && inflationRate) {
+                const yearsToRetirement = retirementAge - currentAge;
+                const yearlyExpense = monthlyExpense * 12;
+                
+                // Future value of expenses at retirement
+                const futureExpense = yearlyExpense * Math.pow(1 + inflationRate, yearsToRetirement);
+                
+                // Corpus needed (assuming 25 years post retirement)
+                const corpus = (futureExpense * 25) / Math.pow(1 + returnRate, 0);
+                
+                // Monthly SIP needed
+                const monthlyReturn = returnRate / 12;
+                const months = yearsToRetirement * 12;
+                const monthlySIP = (corpus * monthlyReturn) / (Math.pow(1 + monthlyReturn, months) - 1);
+
+                document.getElementById('retCorpus').innerText = formatCurrency(corpus);
+                document.getElementById('retYears').innerText = yearsToRetirement + ' years';
+                document.getElementById('retSIP').innerText = formatCurrency(monthlySIP);
+            }
+        }
+
+        function updateSIPYearlyTable() {
+            const amount = parseFloat(document.getElementById('sipAmount').value);
+            const rate = parseFloat(document.getElementById('sipRate').value) / 100 / 12;
+            const years = parseInt(document.getElementById('sipYears').value);
+            
+            let html = '<div class="year-row header"><span>Year</span><span>Invested</span><span>Value</span></div>';
+            
+            for (let year = 1; year <= Math.min(years, 10); year++) {
+                const months = year * 12;
+                const invested = amount * months;
+                const fv = amount * ((Math.pow(1 + rate, months) - 1) / rate) * (1 + rate);
+                
+                html += `<div class="year-row">
+                    <span>Year ${year}</span>
+                    <span class="amount">${formatCurrency(invested)}</span>
+                    <span class="amount">${formatCurrency(fv)}</span>
+                </div>`;
+            }
+            
+            if (years > 10) {
+                html += `<div class="year-row"><span colspan="3" style="text-align: center; color: #666;">... showing first 10 years</span></div>`;
+            }
+            
+            document.getElementById('sipYearlyTable').innerHTML = html;
+        }
+
+        // Modified updateSIP to include yearly table
+        const originalUpdateSIP = updateSIP;
+        updateSIP = function() {
+            originalUpdateSIP();
+            updateSIPYearlyTable();
+        };
+
+        // Sync inputs and ranges
+        document.querySelectorAll('input[type=range]').forEach(range => {
+            range.addEventListener('input', function () {
+                this.nextElementSibling.value = this.value;
+            });
+        });
+
+        document.querySelectorAll('input[type=number]').forEach(num => {
+            num.addEventListener('input', function () {
+                this.previousElementSibling.value = this.value;
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            updateSIP();
+            updateLumpsum();
+            updatePPF();
+            updateFD();
+            updateEMI();
+            updateRetirement();
+        });
+    </script>
+</body>
+
+</html>

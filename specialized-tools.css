@@ -1,0 +1,1298 @@
+/**
+ * DS Financial Specialized Tools - World Class Edition
+ * Crypto/VDA Tax & TDS Calculator
+ * Advanced CSS Framework
+ */
+
+/* ==================== CSS VARIABLES ==================== */
+:root {
+    /* Crypto Theme - Purple/Orange Gradient */
+    --crypto-primary: #7C3AED;
+    --crypto-secondary: #F59E0B;
+    --crypto-gradient: linear-gradient(135deg, #7C3AED 0%, #EC4899 50%, #F59E0B 100%);
+    --crypto-bg: rgba(124, 58, 237, 0.08);
+    
+    /* TDS Theme - Blue/Green */
+    --tds-primary: #0EA5E9;
+    --tds-secondary: #10B981;
+    --tds-gradient: linear-gradient(135deg, #0EA5E9 0%, #10B981 100%);
+    --tds-bg: rgba(14, 165, 233, 0.08);
+    
+    /* Neutral Colors */
+    --bg-primary: #F8FAFC;
+    --bg-secondary: #FFFFFF;
+    --bg-tertiary: #F1F5F9;
+    --bg-dark: #0F172A;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --border-color: #E2E8F0;
+    --border-light: #F1F5F9;
+    
+    /* Status Colors */
+    --success: #10B981;
+    --warning: #F59E0B;
+    --error: #EF4444;
+    --info: #3B82F6;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-glow-purple: 0 0 40px rgba(124, 58, 237, 0.3);
+    --shadow-glow-blue: 0 0 40px rgba(14, 165, 233, 0.3);
+    
+    /* Layout */
+    --sidebar-width: 280px;
+    --header-height: 70px;
+    --border-radius: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-tertiary: #334155;
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #64748B;
+    --border-color: #334155;
+    --border-light: #1E293B;
+    --crypto-bg: rgba(124, 58, 237, 0.15);
+    --tds-bg: rgba(14, 165, 233, 0.15);
+}
+
+/* ==================== BASE RESET ==================== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==================== LAYOUT ==================== */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ==================== SIDEBAR ==================== */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--crypto-gradient);
+}
+
+.sidebar-header.tds-theme {
+    background: var(--tds-gradient);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.sidebar-logo-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
+
+.sidebar-logo-text {
+    color: white;
+}
+
+.sidebar-logo-text h1 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.sidebar-logo-text span {
+    font-size: 11px;
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 12px;
+}
+
+.sidebar-section {
+    margin-bottom: 24px;
+}
+
+.sidebar-section-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    padding: 0 12px;
+    margin-bottom: 8px;
+}
+
+.sidebar-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 4px;
+    position: relative;
+}
+
+.sidebar-nav-link:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.sidebar-nav-link.active {
+    background: var(--crypto-bg);
+    color: var(--crypto-primary);
+    font-weight: 600;
+}
+
+.sidebar-nav-link.active.tds {
+    background: var(--tds-bg);
+    color: var(--tds-primary);
+}
+
+.sidebar-nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 24px;
+    background: var(--crypto-primary);
+    border-radius: 0 4px 4px 0;
+}
+
+.sidebar-nav-link.active.tds::before {
+    background: var(--tds-primary);
+}
+
+.sidebar-nav-link i {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.nav-badge {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.nav-badge.new {
+    background: var(--crypto-gradient);
+    color: white;
+}
+
+.nav-badge.pro {
+    background: var(--tds-gradient);
+    color: white;
+}
+
+/* ==================== MAIN CONTENT ==================== */
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+}
+
+.main-header {
+    height: var(--header-height);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-title h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.header-title .subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding-left: 16px;
+    border-left: 2px solid var(--border-color);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ==================== CONTENT AREA ==================== */
+.content-area {
+    padding: 32px;
+    max-width: 1400px;
+}
+
+.tool-panel {
+    display: none;
+}
+
+.tool-panel.active {
+    display: block;
+}
+
+/* ==================== HERO STATS ==================== */
+.hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.hero-stat-card {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+
+.hero-stat-card.crypto::before {
+    background: var(--crypto-gradient);
+}
+
+.hero-stat-card.tds::before {
+    background: var(--tds-gradient);
+}
+
+.hero-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 16px;
+}
+
+.hero-stat-icon.purple {
+    background: rgba(124, 58, 237, 0.1);
+    color: #7C3AED;
+}
+
+.hero-stat-icon.orange {
+    background: rgba(245, 158, 11, 0.1);
+    color: #F59E0B;
+}
+
+.hero-stat-icon.blue {
+    background: rgba(14, 165, 233, 0.1);
+    color: #0EA5E9;
+}
+
+.hero-stat-icon.green {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+}
+
+.hero-stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'Roboto Mono', monospace;
+    margin-bottom: 4px;
+}
+
+.hero-stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.hero-stat-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.hero-stat-change.positive {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+}
+
+.hero-stat-change.negative {
+    background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+}
+
+/* ==================== CRYPTO CARD STYLES ==================== */
+.crypto-card {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.crypto-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(236, 72, 153, 0.05));
+}
+
+.crypto-card-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.crypto-card-header h3 i {
+    color: var(--crypto-primary);
+}
+
+.crypto-card-body {
+    padding: 24px;
+}
+
+/* ==================== TDS CARD STYLES ==================== */
+.tds-card {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.tds-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.05), rgba(16, 185, 129, 0.05));
+}
+
+.tds-card-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tds-card-header h3 i {
+    color: var(--tds-primary);
+}
+
+.tds-card-body {
+    padding: 24px;
+}
+
+/* ==================== GRID LAYOUTS ==================== */
+.calc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.calc-grid.three-col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* ==================== FORM ELEMENTS ==================== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.form-label .hint {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.form-label .required {
+    color: var(--error);
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: 'Roboto Mono', monospace;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: var(--transition-fast);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--crypto-primary);
+    box-shadow: 0 0 0 3px var(--crypto-bg);
+}
+
+.form-input.tds-focus:focus {
+    border-color: var(--tds-primary);
+    box-shadow: 0 0 0 3px var(--tds-bg);
+}
+
+.form-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 14px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.form-row.three-col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.form-row.four-col {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* ==================== CRYPTO COIN INPUT ==================== */
+.coin-input-group {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.coin-selector {
+    width: 140px;
+}
+
+.coin-selector .form-select {
+    padding-left: 40px;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23F7931A"><circle cx="12" cy="12" r="10"/></svg>');
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 20px;
+}
+
+.coin-amount {
+    flex: 1;
+}
+
+/* ==================== TRANSACTION TABLE ==================== */
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transaction-table th,
+.transaction-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.transaction-table th {
+    background: var(--bg-tertiary);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+}
+
+.transaction-table td {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.transaction-table td.amount {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
+}
+
+.transaction-table td.profit {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.transaction-table td.loss {
+    color: var(--error);
+    font-weight: 600;
+}
+
+.transaction-table tr:last-child td {
+    border-bottom: none;
+}
+
+.coin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.coin-badge.btc {
+    background: rgba(247, 147, 26, 0.1);
+    color: #F7931A;
+}
+
+.coin-badge.eth {
+    background: rgba(98, 126, 234, 0.1);
+    color: #627EEA;
+}
+
+.coin-badge.usdt {
+    background: rgba(38, 161, 123, 0.1);
+    color: #26A17B;
+}
+
+.coin-badge.bnb {
+    background: rgba(243, 186, 47, 0.1);
+    color: #F3BA2F;
+}
+
+.coin-badge.sol {
+    background: rgba(0, 255, 163, 0.1);
+    color: #00FFA3;
+}
+
+/* ==================== PORTFOLIO CARD ==================== */
+.portfolio-card {
+    background: var(--crypto-gradient);
+    border-radius: var(--border-radius-xl);
+    padding: 32px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.portfolio-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.portfolio-value {
+    font-size: 42px;
+    font-weight: 800;
+    font-family: 'Roboto Mono', monospace;
+    margin-bottom: 8px;
+}
+
+.portfolio-label {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 24px;
+}
+
+.portfolio-stats {
+    display: flex;
+    gap: 32px;
+}
+
+.portfolio-stat {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 16px 20px;
+    border-radius: 12px;
+}
+
+.portfolio-stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.portfolio-stat-label {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* ==================== TAX BREAKDOWN ==================== */
+.tax-breakdown {
+    background: var(--bg-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 24px;
+    margin-top: 24px;
+}
+
+.tax-breakdown-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tax-breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tax-breakdown-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.tax-breakdown-item.total {
+    padding-top: 16px;
+    margin-top: 8px;
+    border-top: 2px solid var(--crypto-primary);
+    border-bottom: none;
+}
+
+.tax-breakdown-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.tax-breakdown-value {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--text-primary);
+}
+
+.tax-breakdown-item.total .tax-breakdown-value {
+    font-size: 20px;
+    color: var(--crypto-primary);
+}
+
+/* ==================== TDS RESULT CARD ==================== */
+.tds-result-card {
+    background: var(--tds-gradient);
+    border-radius: var(--border-radius-lg);
+    padding: 24px;
+    color: white;
+    margin-top: 24px;
+}
+
+.tds-result-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.tds-result-value {
+    font-size: 36px;
+    font-weight: 700;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.tds-result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.tds-result-item {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.tds-result-item-label {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 4px;
+}
+
+.tds-result-item-value {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* ==================== TDS SECTIONS TABLE ==================== */
+.tds-sections-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tds-sections-table th,
+.tds-sections-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tds-sections-table th {
+    background: var(--bg-tertiary);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+}
+
+.tds-sections-table td {
+    font-size: 14px;
+}
+
+.tds-sections-table .section-code {
+    font-weight: 600;
+    color: var(--tds-primary);
+    font-family: 'Roboto Mono', monospace;
+}
+
+.tds-sections-table .rate {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.tds-sections-table tr:hover td {
+    background: var(--tds-bg);
+}
+
+/* ==================== TABS ==================== */
+.tabs {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.tab:hover {
+    color: var(--text-primary);
+}
+
+.tab.active {
+    background: var(--bg-secondary);
+    color: var(--crypto-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.tab.active.tds {
+    color: var(--tds-primary);
+}
+
+/* ==================== BUTTONS ==================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.btn-crypto {
+    background: var(--crypto-gradient);
+    color: white;
+}
+
+.btn-crypto:hover {
+    opacity: 0.9;
+    box-shadow: var(--shadow-glow-purple);
+}
+
+.btn-tds {
+    background: var(--tds-gradient);
+    color: white;
+}
+
+.btn-tds:hover {
+    opacity: 0.9;
+    box-shadow: var(--shadow-glow-blue);
+}
+
+.btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--border-color);
+}
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 10px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* ==================== ALERTS ==================== */
+.alert {
+    display: flex;
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.alert.success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.alert.warning {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.alert.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.alert.info {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.alert.crypto {
+    background: var(--crypto-bg);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.alert-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+}
+
+.alert.success .alert-icon { background: #10B981; color: white; }
+.alert.warning .alert-icon { background: #F59E0B; color: white; }
+.alert.error .alert-icon { background: #EF4444; color: white; }
+.alert.info .alert-icon { background: #3B82F6; color: white; }
+.alert.crypto .alert-icon { background: var(--crypto-primary); color: white; }
+
+.alert-content { flex: 1; }
+
+.alert-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.alert-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ==================== CHART CONTAINER ==================== */
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-top: 20px;
+}
+
+/* ==================== TIMELINE ==================== */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-color);
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 24px;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--tds-primary);
+    border: 2px solid var(--bg-secondary);
+}
+
+.timeline-date {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.timeline-content {
+    background: var(--bg-tertiary);
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.timeline-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.timeline-description {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ==================== UNIQUE FEATURES - TAX HARVESTING ==================== */
+.harvest-card {
+    background: linear-gradient(135deg, #1E293B, #334155);
+    border-radius: var(--border-radius-lg);
+    padding: 24px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.harvest-card::after {
+    content: '🌾';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 64px;
+    opacity: 0.2;
+}
+
+.harvest-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.harvest-description {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 16px;
+    max-width: 70%;
+}
+
+.harvest-savings {
+    font-size: 28px;
+    font-weight: 700;
+    color: #10B981;
+}
+
+.harvest-savings-label {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+/* ==================== UNIQUE FEATURES - WASH SALE DETECTOR ==================== */
+.wash-sale-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.wash-sale-badge.safe {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+}
+
+.wash-sale-badge.warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: #F59E0B;
+}
+
+.wash-sale-badge.danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+}
+
+/* ==================== MOBILE NAVIGATION ==================== */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    padding: 8px 16px;
+    z-index: 100;
+}
+
+.mobile-nav-items {
+    display: flex;
+    justify-content: space-around;
+}
+
+.mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.mobile-nav-item i {
+    font-size: 20px;
+}
+
+.mobile-nav-item.active {
+    color: var(--crypto-primary);
+}
+
+.mobile-nav-item.active.tds {
+    color: var(--tds-primary);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1200px) {
+    .hero-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .calc-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .calc-grid.three-col {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .main-header {
+        padding: 0 16px;
+    }
+    
+    .content-area {
+        padding: 16px;
+        padding-bottom: 100px;
+    }
+    
+    .hero-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row,
+    .form-row.three-col,
+    .form-row.four-col {
+        grid-template-columns: 1fr;
+    }
+    
+    .tds-result-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .portfolio-stats {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .mobile-nav {
+        display: block;
+    }
+}
+
+/* ==================== PRINT STYLES ==================== */
+@media print {
+    .sidebar,
+    .mobile-nav,
+    .btn,
+    .header-actions {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.tool-panel.active {
+    animation: fadeIn 0.2s ease;
+}

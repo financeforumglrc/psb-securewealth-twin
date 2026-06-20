@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Invoice Generator | DS Financial</title>
+    <meta name="description" content="Create professional invoices instantly. Free invoice generator with customizable templates, PDF export, logo upload, and multi-currency support.">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="global-features.css">
+    <link rel="stylesheet" href="enhanced-features.css">
+
+    <style>
+        .invoice-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        .invoice-paper {
+            background: white;
+            padding: 3rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+            min-height: 1000px;
+            position: relative;
+        }
+
+        .invoice-controls {
+            position: relative;
+        }
+
+        .control-panel {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            position: sticky;
+            top: 100px;
+        }
+
+        /* Invoice Styling */
+        .inv-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+        }
+
+        .inv-logo-box {
+            width: 150px;
+            height: 150px;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #d1d5db;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .inv-logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .inv-title {
+            text-align: right;
+        }
+
+        .inv-title h1 {
+            font-size: 3rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .editable {
+            border: 1px solid transparent;
+            padding: 4px 8px;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .editable:hover,
+        .editable:focus {
+            background: #f9fafb;
+            border-color: #e5e7eb;
+            outline: none;
+        }
+
+        .inv-meta {
+            margin-top: 1rem;
+            text-align: right;
+        }
+
+        .inv-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .inv-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .inv-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .inv-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .inv-table input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+        }
+
+        .inv-totals {
+            width: 300px;
+            margin-left: auto;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            font-weight: 500;
+        }
+
+        .total-row.final {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-top: 2px solid #e5e7eb;
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+        }
+
+        .btn-add-item {
+            background: #e0e7ff;
+            color: var(--primary);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: -1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-download {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-download:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 900px) {
+            .invoice-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .invoice-paper {
+                padding: 1.5rem;
+            }
+
+            .control-panel {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">DS Financial</span>
+            </a>
+            <div class="nav-right">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="investment-tools.html" class="nav-link">Investments</a>
+                <a href="#contact" class="btn-primary">Contact</a>
+            </div>
+        </div>
+    </nav>
+    <div class="header-spacer"></div>
+
+    <div class="invoice-wrapper">
+        <!-- Invoice Paper -->
+        <div class="invoice-paper" id="invoice">
+            <div class="inv-header">
+                <div class="inv-logo-box" onclick="document.getElementById('logoInput').click()">
+                    <input type="file" id="logoInput" hidden accept="image/*" onchange="loadLogo(event)">
+                    <span id="logoPlaceholder" style="color:#9ca3af; text-align:center;">
+                        <i class="fas fa-image fa-2x"></i><br>+ Add Logo
+                    </span>
+                    <img id="logoImg" style="display:none;">
+                </div>
+                <div class="inv-title">
+                    <h1 contenteditable="true">INVOICE</h1>
+                    <div class="inv-meta">
+                        <div># <span contenteditable="true">INV-001</span></div>
+                        <div>Date: <input type="date" value="2024-01-26"
+                                style="border:none; color:inherit; font-family:inherit;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inv-grid">
+                <div>
+                    <h4 style="color:#6b7280; margin-bottom:0.5rem;">FROM:</h4>
+                    <div class="editable" contenteditable="true">
+                        <strong>Your Business Name</strong><br>
+                        123 Business Road<br>
+                        City, State, ZIP<br>
+                        contact@email.com
+                    </div>
+                </div>
+                <div>
+                    <h4 style="color:#6b7280; margin-bottom:0.5rem;">BILL TO:</h4>
+                    <div class="editable" contenteditable="true">
+                        <strong>Client Name</strong><br>
+                        456 Client Street<br>
+                        City, State, ZIP<br>
+                        client@email.com
+                    </div>
+                </div>
+            </div>
+
+            <table class="inv-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">Item Description</th>
+                        <th style="width: 15%; text-align:center;">Qty</th>
+                        <th style="width: 15%; text-align:right;">Rate</th>
+                        <th style="width: 20%; text-align:right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="itemsList">
+                    <tr>
+                        <td><input type="text" value="Web Development Service"></td>
+                        <td><input type="number" value="1" oninput="calcTotal()" class="qty"></td>
+                        <td><input type="number" value="5000" oninput="calcTotal()" class="rate"></td>
+                        <td style="text-align:right;" class="amount">₹5,000</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button class="btn-add-item" onclick="addItem()">+ Add Item</button>
+
+            <div class="inv-totals">
+                <div class="total-row">
+                    <span>Subtotal</span>
+                    <span id="subTotal">₹5,000</span>
+                </div>
+                <div class="total-row">
+                    <span>Tax (%) <input type="number" value="18"
+                            style="width:40px; border:1px solid #ddd; padding:2px;" oninput="calcTotal()"
+                            id="taxRate"></span>
+                    <span id="taxAmount">₹900</span>
+                </div>
+                <div class="total-row final">
+                    <span>Total</span>
+                    <span id="grandTotal">₹5,900</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h4 style="color:#6b7280; margin-bottom:0.5rem;">NOTES:</h4>
+                <div class="editable" contenteditable="true" style="font-size: 0.9rem; color: #4b5563;">
+                    Thank you for your business. Payment is due within 15 days.<br>
+                    Bank Details: DS Bank, Acc: 1234567890
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="invoice-controls">
+            <div class="control-panel">
+                <h3>Options</h3>
+                <div class="form-group">
+                    <label>Colors</label>
+                    <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+                        <button onclick="setTheme('#1A237E')"
+                            style="width:30px; height:30px; border-radius:50%; background:#1A237E; border:none; cursor:pointer;"></button>
+                        <button onclick="setTheme('#10b981')"
+                            style="width:30px; height:30px; border-radius:50%; background:#10b981; border:none; cursor:pointer;"></button>
+                        <button onclick="setTheme('#ef4444')"
+                            style="width:30px; height:30px; border-radius:50%; background:#ef4444; border:none; cursor:pointer;"></button>
+                        <button onclick="setTheme('#f59e0b')"
+                            style="width:30px; height:30px; border-radius:50%; background:#f59e0b; border:none; cursor:pointer;"></button>
+                        <button onclick="setTheme('#1f2937')"
+                            style="width:30px; height:30px; border-radius:50%; background:#1f2937; border:none; cursor:pointer;"></button>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top:1rem;">
+                    <label>Currency</label>
+                    <select id="currency" onchange="calcTotal()" style="width:100%; padding:0.5rem; border-radius:6px;">
+                        <option value="INR">₹ INR</option>
+                        <option value="USD">$ USD</option>
+                        <option value="EUR">€ EUR</option>
+                    </select>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn-download" onclick="downloadPDF()">
+                        <i class="fas fa-download"></i> Download PDF
+                    </button>
+                    <button onclick="window.print()"
+                        style="width:100%; margin-top:1rem; padding:0.75rem; background:var(--bg-secondary); border:none; border-radius:8px; font-weight:600; cursor:pointer;">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="global-features.js"></script>
+    <script>
+        function addItem() {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" value="New Item"></td>
+                <td><input type="number" value="1" oninput="calcTotal()" class="qty"></td>
+                <td><input type="number" value="0" oninput="calcTotal()" class="rate"></td>
+                <td style="text-align:right;" class="amount">0.00</td>
+            `;
+            document.getElementById('itemsList').appendChild(tr);
+        }
+
+        function formatMoney(amount) {
+            const curr = document.getElementById('currency').value;
+            return new Intl.NumberFormat('en-IN', { style: 'currency', currency: curr }).format(amount);
+        }
+
+        function calcTotal() {
+            let subtotal = 0;
+            document.querySelectorAll('#itemsList tr').forEach(row => {
+                const qty = parseFloat(row.querySelector('.qty').value) || 0;
+                const rate = parseFloat(row.querySelector('.rate').value) || 0;
+                const amt = qty * rate;
+                subtotal += amt;
+                row.querySelector('.amount').textContent = formatMoney(amt);
+            });
+
+            const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+            const tax = subtotal * (taxRate / 100);
+            const total = subtotal + tax;
+
+            document.getElementById('subTotal').textContent = formatMoney(subtotal);
+            document.getElementById('taxAmount').textContent = formatMoney(tax);
+            document.getElementById('grandTotal').textContent = formatMoney(total);
+        }
+
+        function loadLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('logoImg').src = e.target.result;
+                    document.getElementById('logoImg').style.display = 'block';
+                    document.getElementById('logoPlaceholder').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function setTheme(color) {
+            document.documentElement.style.setProperty('--primary', color);
+            document.querySelectorAll('th').forEach(th => th.style.background = color);
+            document.querySelector('.inv-title h1').style.color = color;
+            document.querySelector('.total-row.final').style.color = color;
+            document.querySelector('.btn-download').style.background = color;
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('invoice');
+            const opt = {
+                margin: 0.5,
+                filename: 'invoice.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Hide borders for PDF
+            document.querySelectorAll('input').forEach(i => i.style.border = 'none');
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                if (window.Confetti) window.Confetti.fire();
+            });
+        }
+    </script>
+</body>
+
+</html>

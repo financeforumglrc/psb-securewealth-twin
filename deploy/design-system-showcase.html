@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS Financial - Design System Showcase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="design-system.css">
+    <style>
+        body {
+            background: var(--color-neutral-100);
+            padding: var(--space-8);
+        }
+        .showcase-section {
+            margin-bottom: var(--space-12);
+        }
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+            margin-top: var(--space-6);
+        }
+        .component-item {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--color-neutral-200);
+        }
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-4);
+        }
+        .color-item {
+            padding: var(--space-4);
+            border-radius: var(--border-radius-md);
+            text-align: center;
+            color: white;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+        }
+        .shadow-demo {
+            padding: var(--space-6);
+            margin: var(--space-4) 0;
+            border-radius: var(--border-radius-lg);
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-4xl font-bold text-center mb-8">DS Financial Design System</h1>
+        <p class="text-center text-lg text-neutral-600 mb-12">Comprehensive design tokens and component library for the fintech platform</p>
+
+        <!-- Color System -->
+        <section class="showcase-section">
+            <h2 class="text-2xl font-bold mb-4">Color System</h2>
+            <div class="color-grid">
+                <div class="color-item" style="background: var(--color-primary-500);">Primary 500</div>
+                <div class="color-item" style="background: var(--color-secondary-500);">Secondary 500</div>
+                <div class="color-item" style="background: var(--color-accent-500);">Accent 500</div>
+                <div class="color-item" style="background: var(--color-success-500);">Success 500</div>
+                <div class="color-item" style="background: var(--color-warning-500);">Warning 500</div>
+                <div class="color-item" style="background: var(--color-danger-500);">Danger 500</div>
+                <div class="color-item text-neutral-900" style="background: var(--color-neutral-100);">Neutral 100</div>
+                <div class="color-item text-neutral-50" style="background: var(--color-neutral-900);">Neutral 900</div>
+            </div>
+        </section>
+
+        <!-- Typography -->
+        <section class="showcase-section">
+            <h2 class="text-2xl font-bold mb-4">Typography</h2>
+            <div class="component-grid">
+                <div class="component-item">
+                    <h1 class="text-4xl font-bold font-heading">Heading 1 - Poppins Bold</h1>
+                    <h2 class="text-3xl font-semibold font-heading mt-4">Heading 2 - Poppins Semibold</h2>
+                    <h3 class="text-2xl font-medium font-heading mt-4">Heading 3 - Poppins Medium</h3>
+                    <p class="text-base font-body mt-4">Body text - Inter Regular. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p class="text-sm text-neutral-600 mt-2">Small text - Inter Regular, neutral color</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Buttons -->
+        <section class="showcase-section">
+            <h2 class="text-2xl font-bold mb-4">Buttons</h2>
+            <div class="component-grid">
+                <div class="component-item">
+                    <h3 class="text-lg font-semibold mb-4">Button Variants</h3>
+                    <div class="space-y-4">
+                        <button class="btn btn-primary"><i class="fas fa-rocket"></i> Primary Button</button>
+                        <button class="btn btn-secondary"><i class="fas fa-star"></i> Secondary Button</button>
+                        <button class="btn btn-accent"><i class="fas fa-magic"></i> Accent Button</button>
+                        <button class="btn btn-outline">Outline Button</button>
+                        <button class="btn btn-ghost">Ghost Button</button>
+                    </div>
+                </div>
+                <div class="component-item">
+                    <h3 class="text-lg font-semibold mb-4">Button Sizes</h3>
+                    <div class="space-y-4">
+                        <button class="btn btn-primary btn-sm">Small Button</button>
+                        <button class="btn btn-primary">Default Button</button>
+                        <button class="btn btn-primary btn-lg">Large Button</button>
+                        <button class="btn btn-primary btn-xl">Extra Large Button</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cards -->
+        <section class="showcase-section">
+            <h2 class="text-2xl font-bold mb-4">Cards</h2>
+            <div class="component-grid">
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-2">Standard Card</h3>
+                    <p class="text-neutral-600 mb-4">This is a standard card with default styling and shadow.</p>
+                    <button class="btn btn-primary">Action Button</button>
+                </div>
+                <div class="card card-glass">
+                    <h3 class="text-xl font-bold mb-2">Glass Card</h3>
+                    <p class="text-neutral-600 mb-4">Glass morphism effect with backdrop blur.</p>
+                    <button class="btn btn-accent">Action Button</button>
+                </div>
+                <div class="card card-neon">
+                    <h3 class="text-xl font-bold mb-2">Neon Card</h3>
+                    <p class="text-neutral-600 mb-4">Neon effect with shimmer animation on hover.</p>
+                    <button class="btn btn-secondary">Action Button</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Forms -->
+        <section class="showcase-section">
+            <h2 class="text-2xl font-bold mb-4">Forms</h2>
+            <div class="component-grid">
+                <div class="component-item">
+                    <form>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-input" placeholder="Enter your password">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Country</label>
+                            <select class="form-input form-select">
+                                <option>Select country</option>
+                                <option>India</option>
+                                <option>United States</option>
+                                <option>United Kingdom</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-input form-textarea" placeholder="Enter your message"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Form</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shadows -->
+        <section class="showcase-section">
+            <h2 class="text-2xl font-bold mb-4">Shadows</h2>
+            <div class="component-grid">
+                <div class="shadow-demo shadow-xs">Extra Small Shadow</div>
+                <div class="shadow-demo shadow-sm">Small Shadow</div>
+                <div class="shadow-demo shadow-md">Medium Shadow</div>
+                <div class="shadow-demo shadow-lg">Large Shadow</div>
+                <div class="shadow-demo shadow-xl">Extra Large Shadow</div>
+                <div class="shadow-demo shadow-glow-md">Glow Shadow</div>
+            </div>
+        </section>
+
+        <!-- Animations -->
+        <section class="showcase-section">
+            <h2 class="text-2xl font-bold mb-4">Animations</h2>
+            <div class="component-grid">
+                <div class="component-item">
+                    <h3 class="text-lg font-semibold mb-4">Fade Animations</h3>
+                    <div class="space-y-2">
+                        <div class="animate-fade-in bg-primary-500 text-white p-3 rounded">Fade In</div>
+                        <div class="animate-fade-in-up bg-secondary-500 text-white p-3 rounded delay-200">Fade In Up</div>
+                        <div class="animate-fade-in-down bg-accent-500 text-white p-3 rounded delay-400">Fade In Down</div>
+                        <div class="animate-fade-in-left bg-success-500 text-white p-3 rounded delay-600">Fade In Left</div>
+                        <div class="animate-fade-in-right bg-warning-500 text-white p-3 rounded delay-800">Fade In Right</div>
+                    </div>
+                </div>
+                <div class="component-item">
+                    <h3 class="text-lg font-semibold mb-4">Scale & Bounce</h3>
+                    <div class="space-y-2">
+                        <div class="animate-scale-in bg-primary-500 text-white p-3 rounded">Scale In</div>
+                        <div class="animate-bounce-in bg-secondary-500 text-white p-3 rounded delay-200">Bounce In</div>
+                        <div class="animate-pulse bg-accent-500 text-white p-3 rounded">Pulse</div>
+                        <div class="animate-glow shadow-glow-md bg-neutral-50 p-3 rounded border">Glow Effect</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacing -->
+        <section class="showcase-section">
+            <h2 class="text-2xl font-bold mb-4">Spacing System</h2>
+            <div class="component-item">
+                <p class="mb-4">The spacing system uses a consistent scale based on 4px units:</p>
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-primary-500 rounded mr-3"></div>
+                        <span><code>space-1</code> - 4px</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-4 bg-secondary-500 rounded mr-3"></div>
+                        <span><code>space-2</code> - 8px</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-12 h-4 bg-accent-500 rounded mr-3"></div>
+                        <span><code>space-3</code> - 12px</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-16 h-4 bg-success-500 rounded mr-3"></div>
+                        <span><code>space-4</code> - 16px</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Utility Classes -->
+        <section class="showcase-section">
+            <h2 class="text-2xl font-bold mb-4">Utility Classes</h2>
+            <div class="component-grid">
+                <div class="component-item">
+                    <h3 class="text-lg font-semibold mb-4">Display</h3>
+                    <div class="space-y-2">
+                        <div class="d-flex bg-primary-100 p-2 rounded">Flex Container</div>
+                        <div class="d-grid bg-secondary-100 p-2 rounded">Grid Container</div>
+                    </div>
+                </div>
+                <div class="component-item">
+                    <h3 class="text-lg font-semibold mb-4">Flexbox</h3>
+                    <div class="d-flex justify-content-between bg-accent-100 p-2 rounded">
+                        <span>Start</span>
+                        <span>Center</span>
+                        <span>End</span>
+                    </div>
+                </div>
+                <div class="component-item">
+                    <h3 class="text-lg font-semibold mb-4">Colors</h3>
+                    <div class="space-y-2">
+                        <div class="bg-primary-500 text-white p-2 rounded">Primary Background</div>
+                        <div class="text-primary-600">Primary Text</div>
+                        <div class="text-secondary-600">Secondary Text</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal Demo -->
+    <div class="modal" id="demoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Modal Demo</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>This is a demo modal using the design system components.</p>
+                <div class="mt-4">
+                    <button class="btn btn-primary mr-3" onclick="closeModal()">Close</button>
+                    <button class="btn btn-secondary">Secondary Action</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-12">
+        <button class="btn btn-primary" onclick="openModal()">Open Modal Demo</button>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('demoModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('demoModal').classList.remove('show');
+        }
+
+        // Add some interactive demos
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate elements on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in-up');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.component-item').forEach(item => {
+                observer.observe(item);
+            });
+        });
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">E:\DS_Financial\design-system-showcase.html

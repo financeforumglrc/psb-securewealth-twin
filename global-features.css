@@ -1,0 +1,635 @@
+/**
+ * Global Features CSS
+ * Styles for cookie banner, newsletter popup, social proof, FAB, etc.
+ */
+
+/* ==================== COOKIE CONSENT BANNER ==================== */
+#cookieBanner {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-card, #fff);
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    transition: none;
+    padding: 1.5rem;
+}
+
+#cookieBanner.visible {
+    bottom: 0;
+}
+
+.cookie-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.cookie-icon {
+    font-size: 2.5rem;
+}
+
+.cookie-text {
+    flex: 1;
+    min-width: 250px;
+}
+
+.cookie-text strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+
+.cookie-text p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.cookie-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.cookie-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: none;
+    border: none;
+}
+
+.cookie-accept {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.cookie-accept:hover {
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.cookie-decline {
+    background: transparent;
+    border: 2px solid var(--text-secondary);
+    color: var(--text-secondary);
+}
+
+.cookie-decline:hover {
+    background: var(--bg-secondary);
+}
+
+/* ==================== NEWSLETTER POPUP ==================== */
+.newsletter-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    opacity: 0;
+    visibility: hidden;
+    transition: none;
+    backdrop-filter: blur(5px);
+}
+
+.newsletter-modal.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.newsletter-modal-content {
+    background: var(--bg-card, white);
+    border-radius: 20px;
+    padding: 3rem;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    transform: scale(0.9);
+    transition: none;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+.newsletter-modal.visible .newsletter-modal-content {
+    transform: scale(1);
+}
+
+.newsletter-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: var(--bg-secondary);
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: none;
+}
+
+.newsletter-close:hover {
+    background: #ef4444;
+    color: white;
+}
+
+.newsletter-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.newsletter-modal-content h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.newsletter-modal-content p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.newsletter-form-popup {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.newsletter-form-popup input {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid var(--bg-secondary);
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.newsletter-form-popup input:focus {
+    outline: none;
+    border-color: var(--primary, #1A237E);
+}
+
+.newsletter-form-popup button {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary, #1A237E), #4A148C);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: none;
+}
+
+.newsletter-form-popup button:hover {
+    opacity: 0.9;
+}
+
+.newsletter-trust {
+    margin-top: 1rem;
+    color: var(--text-muted);
+}
+
+/* ==================== SOCIAL PROOF NOTIFICATIONS ==================== */
+#socialProofNotif {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: var(--bg-card, white);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    z-index: 9998;
+    max-width: 350px;
+    transform: translateX(-120%);
+    transition: none;
+}
+
+#socialProofNotif.visible {
+    transform: translateX(0);
+}
+
+.sp-avatar {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.sp-content strong {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.sp-content span {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.sp-content small {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.sp-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: none;
+}
+
+#socialProofNotif:hover .sp-close {
+    opacity: 1;
+}
+
+/* ==================== TESTIMONIALS CAROUSEL ==================== */
+#testimonialsCarousel {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.testimonial-slide {
+    animation: none;
+}
+
+.testimonial-stars {
+    font-size: 1.5rem;
+    color: #f59e0b;
+    margin-bottom: 1rem;
+}
+
+.testimonial-text {
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.testimonial-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary, #1A237E), #4A148C);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.testimonial-author strong {
+    display: block;
+    color: var(--text-primary);
+}
+
+.testimonial-author span {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.testimonial-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.testimonial-dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    cursor: pointer;
+    transition: none;
+}
+
+.testimonial-dots .dot.active {
+    background: var(--secondary, #FFB300);
+    width: 30px;
+    border-radius: 5px;
+}
+
+/* ==================== QUICK ACTIONS FAB ==================== */
+#quickActionsFab {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    z-index: 9997;
+}
+
+.fab-main {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--secondary, #FFB300), #FF8F00);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 20px rgba(255, 179, 0, 0.4);
+    transition: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fab-main:hover {
+    box-shadow: 0 6px 25px rgba(255, 179, 0, 0.5);
+}
+
+#quickActionsFab.open .fab-main {
+    transform: rotate(45deg);
+    background: #ef4444;
+}
+
+.fab-menu {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: none;
+}
+
+#quickActionsFab.open .fab-menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.fab-item {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--bg-card, white);
+    color: var(--primary, #1A237E);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: none;
+    text-decoration: none;
+}
+
+.fab-item:hover {
+    background: var(--primary, #1A237E);
+    color: white;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* ==================== SCROLL REVEAL ANIMATIONS ==================== */
+/* Disabled - elements always visible */
+.scroll-reveal {
+    opacity: 1;
+    transform: none;
+}
+
+.scroll-reveal.scroll-revealed {
+    opacity: 1;
+    transform: none;
+}
+
+/* ==================== FORM VALIDATION ANIMATIONS ==================== */
+.shake {
+    animation: none;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20%,
+    60% {
+        transform: translateX(-8px);
+    }
+
+    40%,
+    80% {
+        transform: translateX(8px);
+    }
+}
+
+input.error,
+select.error,
+textarea.error {
+    border-color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.error-msg {
+    display: block;
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+/* ==================== PROGRESS INDICATOR ==================== */
+#progressIndicator {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: var(--bg-card, white);
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: none;
+}
+
+#progressIndicator.visible {
+    transform: translateX(-50%) translateY(0);
+}
+
+.progress-bar-global {
+    width: 150px;
+    height: 8px;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill-global {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary, #1A237E), var(--secondary, #FFB300));
+    border-radius: 10px;
+    transition: none;
+}
+
+/* ==================== CONFETTI CELEBRATION ==================== */
+#confettiContainer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99999;
+    overflow: hidden;
+}
+
+.confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    animation: none;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ==================== LOADING SKELETONS ==================== */
+.skeleton-card {
+    background: var(--bg-card, white);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.skeleton-header {
+    height: 24px;
+    background: linear-gradient(90deg, var(--bg-secondary) 25%, #e0e0e0 50%, var(--bg-secondary) 75%);
+    background-size: 200% 100%;
+    animation: none;
+    border-radius: 4px;
+    width: 60%;
+    margin-bottom: 1rem;
+}
+
+.skeleton-text {
+    height: 16px;
+    background: linear-gradient(90deg, var(--bg-secondary) 25%, #e0e0e0 50%, var(--bg-secondary) 75%);
+    background-size: 200% 100%;
+    animation: none;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.skeleton-text.short {
+    width: 40%;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    .cookie-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cookie-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    #socialProofNotif {
+        left: 1rem;
+        right: 1rem;
+        max-width: none;
+        bottom: 20px;
+    }
+
+    #quickActionsFab {
+        bottom: 80px;
+        right: 20px;
+    }
+
+    .newsletter-modal-content {
+        padding: 2rem;
+    }
+
+    .newsletter-form-popup {
+        flex-direction: column;
+    }
+}
+
+/* ==================== DARK MODE ==================== */
+[data-theme="dark"] #cookieBanner,
+[data-theme="dark"] .newsletter-modal-content,
+[data-theme="dark"] #socialProofNotif,
+[data-theme="dark"] .fab-item,
+[data-theme="dark"] #progressIndicator {
+    background: #1e1e1e;
+}
+
+[data-theme="dark"] .skeleton-header,
+[data-theme="dark"] .skeleton-text {
+    background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+    background-size: 200% 100%;
+}
+
+/* ==================== REDUCED MOTION PREFERENCE ==================== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}

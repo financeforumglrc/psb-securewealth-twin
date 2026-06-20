@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto/VDA Tax & TDS Calculator - DS Financial Solutions</title>
+    <meta name="description" content="India's most comprehensive Crypto/VDA Tax Calculator with 30% flat tax, 1% TDS, tax-loss harvesting, and complete TDS calculator with all sections">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="specialized-tools.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">
+                        <i class="fab fa-bitcoin"></i>
+                    </div>
+                    <div class="sidebar-logo-text">
+                        <h1>Specialized Tools</h1>
+                        <span>Crypto & TDS Suite</span>
+                    </div>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Crypto/VDA Tax</div>
+                    <a class="sidebar-nav-link active" data-tool="crypto-calc">
+                        <i class="fab fa-bitcoin"></i>
+                        <span>Crypto Tax Calculator</span>
+                        <span class="nav-badge new">New</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="crypto-portfolio">
+                        <i class="fas fa-wallet"></i>
+                        <span>Portfolio Tracker</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="crypto-tds">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <span>Crypto TDS (1%)</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="tax-harvest">
+                        <i class="fas fa-seedling"></i>
+                        <span>Tax-Loss Harvesting</span>
+                        <span class="nav-badge pro">Pro</span>
+                    </a>
+                    <a class="sidebar-nav-link" data-tool="wash-sale">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Wash Sale Detector</span>
+                    </a>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">TDS Calculator</div>
+                    <a class="sidebar-nav-link tds" data-tool="tds-calc">
+                        <i class="fas fa-calculator"></i>
+                        <span>TDS Calculator</span>
+                    </a>
+                    <a class="sidebar-nav-link tds" data-tool="tds-salary">
+                        <i class="fas fa-user-tie"></i>
+                        <span>TDS on Salary (192)</span>
+                    </a>
+                    <a class="sidebar-nav-link tds" data-tool="tds-sections">
+                        <i class="fas fa-list-alt"></i>
+                        <span>All TDS Sections</span>
+                    </a>
+                    <a class="sidebar-nav-link tds" data-tool="tds-interest">
+                        <i class="fas fa-percent"></i>
+                        <span>Interest & Penalty</span>
+                    </a>
+                    <a class="sidebar-nav-link tds" data-tool="tds-dates">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>TDS Due Dates</span>
+                    </a>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Resources</div>
+                    <a class="sidebar-nav-link" data-tool="crypto-rules">
+                        <i class="fas fa-gavel"></i>
+                        <span>India Crypto Tax Rules</span>
+                    </a>
+                    <a class="sidebar-nav-link tds" data-tool="tds-rates">
+                        <i class="fas fa-table"></i>
+                        <span>TDS Rate Chart</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-title">
+                    <h2>Specialized Tax Tools</h2>
+                    <span class="subtitle">FY 2025-26 | Crypto/VDA & TDS Calculators</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary btn-icon" onclick="toggleTheme()" title="Toggle Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <a href="index.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </div>
+            </header>
+            
+            <div class="content-area">
+                
+                <!-- ==================== CRYPTO TAX CALCULATOR ==================== -->
+                <div class="tool-panel active" id="panel-crypto-calc">
+                    <!-- Hero Stats -->
+                    <div class="hero-stats">
+                        <div class="hero-stat-card crypto">
+                            <div class="hero-stat-icon purple">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="hero-stat-value" id="statTotalGains">₹0</div>
+                            <div class="hero-stat-label">Total Gains</div>
+                        </div>
+                        <div class="hero-stat-card crypto">
+                            <div class="hero-stat-icon orange">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="hero-stat-value" id="statCryptoTax">₹0</div>
+                            <div class="hero-stat-label">Tax @ 30%</div>
+                        </div>
+                        <div class="hero-stat-card crypto">
+                            <div class="hero-stat-icon blue">
+                                <i class="fas fa-hand-holding-usd"></i>
+                            </div>
+                            <div class="hero-stat-value" id="statCryptoTDS">₹0</div>
+                            <div class="hero-stat-label">TDS Deducted (1%)</div>
+                        </div>
+                        <div class="hero-stat-card crypto">
+                            <div class="hero-stat-icon green">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <div class="hero-stat-value" id="statNetTax">₹0</div>
+                            <div class="hero-stat-label">Net Tax Payable</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calc-grid">
+                        <!-- Main Calculator -->
+                        <div class="crypto-card">
+                            <div class="crypto-card-header">
+                                <h3><i class="fab fa-bitcoin"></i> Crypto/VDA Tax Calculator (Section 115BBH)</h3>
+                            </div>
+                            <div class="crypto-card-body">
+                                <div class="form-group">
+                                    <label class="form-label">Transaction Type</label>
+                                    <div class="tabs">
+                                        <button class="tab active" onclick="setCryptoTransType('sell')">Sell/Trade</button>
+                                        <button class="tab" onclick="setCryptoTransType('gift')">Gift Received</button>
+                                        <button class="tab" onclick="setCryptoTransType('mining')">Mining/Staking</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Cryptocurrency</label>
+                                        <select class="form-select" id="cryptoCoin" onchange="updateCryptoPrice()">
+                                            <option value="BTC">Bitcoin (BTC)</option>
+                                            <option value="ETH">Ethereum (ETH)</option>
+                                            <option value="BNB">Binance Coin (BNB)</option>
+                                            <option value="SOL">Solana (SOL)</option>
+                                            <option value="XRP">Ripple (XRP)</option>
+                                            <option value="DOGE">Dogecoin (DOGE)</option>
+                                            <option value="USDT">Tether (USDT)</option>
+                                            <option value="OTHER">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Quantity</label>
+                                        <input type="number" class="form-input" id="cryptoQty" placeholder="0.00" step="0.00000001" oninput="calculateCryptoTax()">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Purchase Price (per unit) ₹</label>
+                                        <input type="number" class="form-input" id="cryptoBuyPrice" placeholder="0" oninput="calculateCryptoTax()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Sell Price (per unit) ₹</label>
+                                        <input type="number" class="form-input" id="cryptoSellPrice" placeholder="0" oninput="calculateCryptoTax()">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Purchase Date</label>
+                                        <input type="date" class="form-input" id="cryptoBuyDate">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Sell Date</label>
+                                        <input type="date" class="form-input" id="cryptoSellDate">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Exchange</label>
+                                    <select class="form-select" id="cryptoExchange">
+                                        <option value="wazirx">WazirX</option>
+                                        <option value="coinswitch">CoinSwitch</option>
+                                        <option value="coindcx">CoinDCX</option>
+                                        <option value="zebpay">ZebPay</option>
+                                        <option value="binance">Binance</option>
+                                        <option value="coinbase">Coinbase</option>
+                                        <option value="p2p">P2P / OTC</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Tax Breakdown -->
+                                <div class="tax-breakdown">
+                                    <div class="tax-breakdown-title">Tax Calculation Breakdown</div>
+                                    <div class="tax-breakdown-item">
+                                        <span class="tax-breakdown-label">Total Investment</span>
+                                        <span class="tax-breakdown-value" id="cryptoInvestment">₹0</span>
+                                    </div>
+                                    <div class="tax-breakdown-item">
+                                        <span class="tax-breakdown-label">Sale Proceeds</span>
+                                        <span class="tax-breakdown-value" id="cryptoProceeds">₹0</span>
+                                    </div>
+                                    <div class="tax-breakdown-item">
+                                        <span class="tax-breakdown-label">Capital Gains / Loss</span>
+                                        <span class="tax-breakdown-value" id="cryptoGains">₹0</span>
+                                    </div>
+                                    <div class="tax-breakdown-item">
+                                        <span class="tax-breakdown-label">Tax @ 30% (on gains only)</span>
+                                        <span class="tax-breakdown-value" id="cryptoTax30">₹0</span>
+                                    </div>
+                                    <div class="tax-breakdown-item">
+                                        <span class="tax-breakdown-label">Surcharge (if applicable)</span>
+                                        <span class="tax-breakdown-value" id="cryptoSurcharge">₹0</span>
+                                    </div>
+                                    <div class="tax-breakdown-item">
+                                        <span class="tax-breakdown-label">Health & Education Cess (4%)</span>
+                                        <span class="tax-breakdown-value" id="cryptoCess">₹0</span>
+                                    </div>
+                                    <div class="tax-breakdown-item">
+                                        <span class="tax-breakdown-label">TDS Deducted @ 1%</span>
+                                        <span class="tax-breakdown-value" id="cryptoTDS1">₹0</span>
+                                    </div>
+                                    <div class="tax-breakdown-item total">
+                                        <span class="tax-breakdown-label">Net Tax Payable</span>
+                                        <span class="tax-breakdown-value" id="cryptoNetTax">₹0</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="btn-group">
+                                    <button class="btn btn-crypto" onclick="addToPortfolio()">
+                                        <i class="fas fa-plus"></i> Add to Portfolio
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="downloadCryptoReport()">
+                                        <i class="fas fa-download"></i> Download Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Important Info -->
+                        <div>
+                            <div class="crypto-card" style="margin-bottom: 24px;">
+                                <div class="crypto-card-header">
+                                    <h3><i class="fas fa-info-circle"></i> India Crypto Tax Rules (FY 2025-26)</h3>
+                                </div>
+                                <div class="crypto-card-body">
+                                    <div class="alert crypto">
+                                        <div class="alert-icon"><i class="fas fa-gavel"></i></div>
+                                        <div class="alert-content">
+                                            <div class="alert-title">Section 115BBH - VDA Taxation</div>
+                                            <div class="alert-text">Flat 30% tax on gains from Virtual Digital Assets. No deductions except cost of acquisition.</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <table class="transaction-table" style="margin-top: 20px;">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Tax Rate</strong></td>
+                                                <td>30% (flat, regardless of income slab)</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>TDS Rate</strong></td>
+                                                <td>1% on transfers above ₹10,000/year</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Loss Set-off</strong></td>
+                                                <td>❌ Not allowed (crypto losses can't offset other income)</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Loss Carry Forward</strong></td>
+                                                <td>❌ Not allowed</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Deductions</strong></td>
+                                                <td>Only cost of acquisition (no expenses)</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Gift Tax</strong></td>
+                                                <td>30% if value > ₹50,000 from non-relative</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Recent Transactions -->
+                            <div class="crypto-card">
+                                <div class="crypto-card-header">
+                                    <h3><i class="fas fa-history"></i> Recent Calculations</h3>
+                                </div>
+                                <div class="crypto-card-body">
+                                    <div id="recentCryptoTxns">
+                                        <p style="text-align: center; color: var(--text-muted); padding: 20px;">No transactions yet. Calculate your first crypto tax above.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== CRYPTO PORTFOLIO TRACKER ==================== -->
+                <div class="tool-panel" id="panel-crypto-portfolio">
+                    <div class="portfolio-card">
+                        <div class="portfolio-value" id="portfolioValue">₹0</div>
+                        <div class="portfolio-label">Total Portfolio Value</div>
+                        <div class="portfolio-stats">
+                            <div class="portfolio-stat">
+                                <div class="portfolio-stat-value" id="portfolioGains">₹0</div>
+                                <div class="portfolio-stat-label">Total Gains</div>
+                            </div>
+                            <div class="portfolio-stat">
+                                <div class="portfolio-stat-value" id="portfolioTax">₹0</div>
+                                <div class="portfolio-stat-label">Estimated Tax</div>
+                            </div>
+                            <div class="portfolio-stat">
+                                <div class="portfolio-stat-value" id="portfolioAssets">0</div>
+                                <div class="portfolio-stat-label">Assets</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="crypto-card" style="margin-top: 24px;">
+                        <div class="crypto-card-header">
+                            <h3><i class="fas fa-wallet"></i> Portfolio Holdings</h3>
+                        </div>
+                        <div class="crypto-card-body">
+                            <table class="transaction-table" id="portfolioTable">
+                                <thead>
+                                    <tr>
+                                        <th>Asset</th>
+                                        <th>Quantity</th>
+                                        <th>Avg. Cost</th>
+                                        <th>Current Value</th>
+                                        <th>Gain/Loss</th>
+                                        <th>Tax</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="portfolioBody">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                                            No holdings yet. Add transactions from the calculator.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== CRYPTO TDS (1%) ==================== -->
+                <div class="tool-panel" id="panel-crypto-tds">
+                    <div class="calc-grid">
+                        <div class="crypto-card">
+                            <div class="crypto-card-header">
+                                <h3><i class="fas fa-hand-holding-usd"></i> Crypto TDS Calculator (Section 194S)</h3>
+                            </div>
+                            <div class="crypto-card-body">
+                                <div class="alert info" style="margin-bottom: 20px;">
+                                    <div class="alert-icon"><i class="fas fa-info"></i></div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">1% TDS on VDA Transfers</div>
+                                        <div class="alert-text">TDS is deducted by the buyer/exchange on the total consideration, not just gains.</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Total Transfer Amount (₹)</label>
+                                    <input type="number" class="form-input" id="cryptoTDSAmount" placeholder="Enter total sale value" oninput="calculateCryptoTDS()">
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Buyer Type</label>
+                                        <select class="form-select" id="cryptoTDSBuyer" onchange="calculateCryptoTDS()">
+                                            <option value="exchange">Exchange (WazirX, CoinDCX, etc.)</option>
+                                            <option value="individual">Individual Buyer</option>
+                                            <option value="business">Business Entity</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Annual Threshold Used (₹)</label>
+                                        <input type="number" class="form-input" id="cryptoTDSThreshold" placeholder="10000" value="0" oninput="calculateCryptoTDS()">
+                                    </div>
+                                </div>
+                                
+                                <div class="tds-result-card" style="background: var(--crypto-gradient);">
+                                    <div class="tds-result-title">TDS to be Deducted</div>
+                                    <div class="tds-result-value" id="cryptoTDSResult">₹0</div>
+                                    <div class="tds-result-grid">
+                                        <div class="tds-result-item">
+                                            <div class="tds-result-item-label">Taxable Amount</div>
+                                            <div class="tds-result-item-value" id="cryptoTDSTaxable">₹0</div>
+                                        </div>
+                                        <div class="tds-result-item">
+                                            <div class="tds-result-item-label">TDS Rate</div>
+                                            <div class="tds-result-item-value">1%</div>
+                                        </div>
+                                        <div class="tds-result-item">
+                                            <div class="tds-result-item-label">Net Amount to Seller</div>
+                                            <div class="tds-result-item-value" id="cryptoTDSNet">₹0</div>
+                                        </div>
+                                        <div class="tds-result-item">
+                                            <div class="tds-result-item-label">TDS Deposit Due</div>
+                                            <div class="tds-result-item-value" id="cryptoTDSDue">30th of next month</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="crypto-card">
+                            <div class="crypto-card-header">
+                                <h3><i class="fas fa-book"></i> TDS Rules for Crypto</h3>
+                            </div>
+                            <div class="crypto-card-body">
+                                <table class="transaction-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Scenario</th>
+                                            <th>TDS Rate</th>
+                                            <th>Threshold</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Exchange to Individual</td>
+                                            <td class="profit">1%</td>
+                                            <td>₹10,000/year</td>
+                                        </tr>
+                                        <tr>
+                                            <td>P2P Transfer (Specified Person)</td>
+                                            <td class="profit">1%</td>
+                                            <td>₹50,000/year</td>
+                                        </tr>
+                                        <tr>
+                                            <td>No PAN Provided</td>
+                                            <td class="loss">5%</td>
+                                            <td>-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <div class="alert warning" style="margin-top: 20px;">
+                                    <div class="alert-icon"><i class="fas fa-exclamation"></i></div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">Important</div>
+                                        <div class="alert-text">TDS is deducted on the TOTAL sale value, not profit. You can claim credit in your ITR.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TAX-LOSS HARVESTING ==================== -->
+                <div class="tool-panel" id="panel-tax-harvest">
+                    <div class="harvest-card">
+                        <div class="harvest-title">
+                            <i class="fas fa-seedling"></i> Tax-Loss Harvesting Opportunities
+                        </div>
+                        <div class="harvest-description">
+                            Unlike stocks, crypto losses CANNOT offset gains. However, you can strategically realize losses for accounting purposes.
+                        </div>
+                        <div class="harvest-savings" id="harvestSavings">₹0</div>
+                        <div class="harvest-savings-label">Potential Loss to Book</div>
+                    </div>
+                    
+                    <div class="crypto-card" style="margin-top: 24px;">
+                        <div class="crypto-card-header">
+                            <h3><i class="fas fa-chart-line"></i> Loss Analysis</h3>
+                        </div>
+                        <div class="crypto-card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Select Asset</label>
+                                    <select class="form-select" id="harvestAsset" onchange="analyzeHarvest()">
+                                        <option value="BTC">Bitcoin (BTC)</option>
+                                        <option value="ETH">Ethereum (ETH)</option>
+                                        <option value="SOL">Solana (SOL)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Current Holding Qty</label>
+                                    <input type="number" class="form-input" id="harvestQty" placeholder="0" oninput="analyzeHarvest()">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Average Purchase Price (₹)</label>
+                                    <input type="number" class="form-input" id="harvestAvgPrice" placeholder="0" oninput="analyzeHarvest()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Current Market Price (₹)</label>
+                                    <input type="number" class="form-input" id="harvestCurrentPrice" placeholder="0" oninput="analyzeHarvest()">
+                                </div>
+                            </div>
+                            
+                            <div class="tax-breakdown" id="harvestBreakdown">
+                                <div class="tax-breakdown-title">Harvest Analysis</div>
+                                <div class="tax-breakdown-item">
+                                    <span class="tax-breakdown-label">Total Investment</span>
+                                    <span class="tax-breakdown-value" id="harvestInvestment">₹0</span>
+                                </div>
+                                <div class="tax-breakdown-item">
+                                    <span class="tax-breakdown-label">Current Value</span>
+                                    <span class="tax-breakdown-value" id="harvestValue">₹0</span>
+                                </div>
+                                <div class="tax-breakdown-item">
+                                    <span class="tax-breakdown-label">Unrealized Loss</span>
+                                    <span class="tax-breakdown-value" id="harvestLoss" style="color: var(--error);">₹0</span>
+                                </div>
+                                <div class="tax-breakdown-item total">
+                                    <span class="tax-breakdown-label">Recommendation</span>
+                                    <span class="tax-breakdown-value" id="harvestRecommendation" style="font-size: 14px;">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="alert warning" style="margin-top: 20px;">
+                                <div class="alert-icon"><i class="fas fa-exclamation"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">India Crypto Tax Limitation</div>
+                                    <div class="alert-text">Unlike US, India does NOT allow crypto losses to offset gains. Tax harvesting here is only useful for portfolio rebalancing at lower prices.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== WASH SALE DETECTOR ==================== -->
+                <div class="tool-panel" id="panel-wash-sale">
+                    <div class="crypto-card">
+                        <div class="crypto-card-header">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Wash Sale Detector</h3>
+                        </div>
+                        <div class="crypto-card-body">
+                            <div class="alert info">
+                                <div class="alert-icon"><i class="fas fa-info"></i></div>
+                                <div class="alert-content">
+                                    <div class="alert-title">What is Wash Sale?</div>
+                                    <div class="alert-text">Selling at a loss and buying back the same asset within 30 days. While India doesn't have specific wash sale rules for crypto yet, tracking helps for future compliance.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row" style="margin-top: 20px;">
+                                <div class="form-group">
+                                    <label class="form-label">Asset Sold</label>
+                                    <select class="form-select" id="washSaleAsset">
+                                        <option value="BTC">Bitcoin (BTC)</option>
+                                        <option value="ETH">Ethereum (ETH)</option>
+                                        <option value="SOL">Solana (SOL)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Sale Date</label>
+                                    <input type="date" class="form-input" id="washSaleDate" onchange="checkWashSale()">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Repurchase Date</label>
+                                    <input type="date" class="form-input" id="washBuyDate" onchange="checkWashSale()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Status</label>
+                                    <div id="washSaleStatus" style="padding-top: 12px;">
+                                        <span class="wash-sale-badge safe"><i class="fas fa-check"></i> No Wash Sale</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="washSaleResult" style="margin-top: 20px;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TDS CALCULATOR ==================== -->
+                <div class="tool-panel" id="panel-tds-calc">
+                    <div class="hero-stats">
+                        <div class="hero-stat-card tds">
+                            <div class="hero-stat-icon blue">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="hero-stat-value" id="statTDSAmount">₹0</div>
+                            <div class="hero-stat-label">TDS Amount</div>
+                        </div>
+                        <div class="hero-stat-card tds">
+                            <div class="hero-stat-icon green">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="hero-stat-value" id="statNetPayable">₹0</div>
+                            <div class="hero-stat-label">Net Payable</div>
+                        </div>
+                        <div class="hero-stat-card tds">
+                            <div class="hero-stat-icon orange">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="hero-stat-value" id="statTDSDueDate">7th</div>
+                            <div class="hero-stat-label">Deposit Due Date</div>
+                        </div>
+                        <div class="hero-stat-card tds">
+                            <div class="hero-stat-icon purple">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="hero-stat-value" id="statTDSSection">-</div>
+                            <div class="hero-stat-label">Section</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calc-grid">
+                        <div class="tds-card">
+                            <div class="tds-card-header">
+                                <h3><i class="fas fa-calculator"></i> TDS Calculator</h3>
+                            </div>
+                            <div class="tds-card-body">
+                                <div class="form-group">
+                                    <label class="form-label">Select TDS Section <span class="required">*</span></label>
+                                    <select class="form-select tds-focus" id="tdsSection" onchange="updateTDSRate()">
+                                        <option value="">-- Select Section --</option>
+                                        <optgroup label="Salary & Wages">
+                                            <option value="192">192 - Salary</option>
+                                            <option value="192A">192A - Premature PF Withdrawal</option>
+                                        </optgroup>
+                                        <optgroup label="Interest">
+                                            <option value="194A">194A - Interest (Other than Securities)</option>
+                                            <option value="194">194 - Dividends</option>
+                                        </optgroup>
+                                        <optgroup label="Contractor & Professional">
+                                            <option value="194C">194C - Contractor/Sub-contractor</option>
+                                            <option value="194J">194J - Professional/Technical Fees</option>
+                                            <option value="194H">194H - Commission/Brokerage</option>
+                                        </optgroup>
+                                        <optgroup label="Rent">
+                                            <option value="194I-a">194I(a) - Rent (Plant & Machinery)</option>
+                                            <option value="194I-b">194I(b) - Rent (Land & Building)</option>
+                                            <option value="194IB">194IB - Rent by Individual/HUF</option>
+                                        </optgroup>
+                                        <optgroup label="Property & Others">
+                                            <option value="194IA">194IA - Property Transfer</option>
+                                            <option value="194M">194M - Payments by Individuals/HUF</option>
+                                            <option value="194N">194N - Cash Withdrawal</option>
+                                            <option value="194Q">194Q - Purchase of Goods</option>
+                                            <option value="194S">194S - Crypto/VDA Transfer</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Payment Amount (₹)</label>
+                                        <input type="number" class="form-input tds-focus" id="tdsPaymentAmount" placeholder="Enter amount" oninput="calculateTDS()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">TDS Rate (%)</label>
+                                        <input type="number" class="form-input tds-focus" id="tdsRate" placeholder="Auto-filled" oninput="calculateTDS()">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Payee Category</label>
+                                        <select class="form-select tds-focus" id="tdsPayeeType" onchange="updateTDSRate()">
+                                            <option value="individual">Individual / HUF</option>
+                                            <option value="company">Company</option>
+                                            <option value="firm">Partnership Firm</option>
+                                            <option value="nopan">No PAN Provided</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Lower Deduction Certificate?</label>
+                                        <select class="form-select tds-focus" id="tdsLowerCert" onchange="calculateTDS()">
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes - Enter Rate Below</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group" id="lowerCertRateGroup" style="display: none;">
+                                    <label class="form-label">Certificate Rate (%)</label>
+                                    <input type="number" class="form-input tds-focus" id="tdsLowerRate" placeholder="Enter certificate rate" oninput="calculateTDS()">
+                                </div>
+                                
+                                <div class="tds-result-card">
+                                    <div class="tds-result-title">TDS to be Deducted</div>
+                                    <div class="tds-result-value" id="tdsResultAmount">₹0</div>
+                                    <div class="tds-result-grid">
+                                        <div class="tds-result-item">
+                                            <div class="tds-result-item-label">Gross Amount</div>
+                                            <div class="tds-result-item-value" id="tdsGross">₹0</div>
+                                        </div>
+                                        <div class="tds-result-item">
+                                            <div class="tds-result-item-label">Effective Rate</div>
+                                            <div class="tds-result-item-value" id="tdsEffectiveRate">0%</div>
+                                        </div>
+                                        <div class="tds-result-item">
+                                            <div class="tds-result-item-label">Net to Payee</div>
+                                            <div class="tds-result-item-value" id="tdsNetPayee">₹0</div>
+                                        </div>
+                                        <div class="tds-result-item">
+                                            <div class="tds-result-item-label">TDS Deposit Due</div>
+                                            <div class="tds-result-item-value" id="tdsDueDate">7th of next month</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="btn-group">
+                                    <button class="btn btn-tds" onclick="downloadTDSReport()">
+                                        <i class="fas fa-download"></i> Download Challan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Reference -->
+                        <div class="tds-card">
+                            <div class="tds-card-header">
+                                <h3><i class="fas fa-bolt"></i> Quick TDS Rates</h3>
+                            </div>
+                            <div class="tds-card-body">
+                                <table class="tds-sections-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Section</th>
+                                            <th>Nature</th>
+                                            <th>Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr onclick="selectTDSSection('194C')">
+                                            <td class="section-code">194C</td>
+                                            <td>Contractor</td>
+                                            <td class="rate">1% / 2%</td>
+                                        </tr>
+                                        <tr onclick="selectTDSSection('194J')">
+                                            <td class="section-code">194J</td>
+                                            <td>Professional</td>
+                                            <td class="rate">10%</td>
+                                        </tr>
+                                        <tr onclick="selectTDSSection('194A')">
+                                            <td class="section-code">194A</td>
+                                            <td>Interest</td>
+                                            <td class="rate">10%</td>
+                                        </tr>
+                                        <tr onclick="selectTDSSection('194I-b')">
+                                            <td class="section-code">194I</td>
+                                            <td>Rent</td>
+                                            <td class="rate">2% / 10%</td>
+                                        </tr>
+                                        <tr onclick="selectTDSSection('194H')">
+                                            <td class="section-code">194H</td>
+                                            <td>Commission</td>
+                                            <td class="rate">5%</td>
+                                        </tr>
+                                        <tr onclick="selectTDSSection('194IA')">
+                                            <td class="section-code">194IA</td>
+                                            <td>Property</td>
+                                            <td class="rate">1%</td>
+                                        </tr>
+                                        <tr onclick="selectTDSSection('194S')">
+                                            <td class="section-code">194S</td>
+                                            <td>Crypto/VDA</td>
+                                            <td class="rate">1%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <div class="alert warning" style="margin-top: 20px;">
+                                    <div class="alert-icon"><i class="fas fa-exclamation"></i></div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">No PAN Penalty</div>
+                                        <div class="alert-text">If payee doesn't provide PAN, TDS is deducted at 20% or applicable rate, whichever is higher.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TDS ON SALARY ==================== -->
+                <div class="tool-panel" id="panel-tds-salary">
+                    <div class="tds-card full-width">
+                        <div class="tds-card-header">
+                            <h3><i class="fas fa-user-tie"></i> TDS on Salary Calculator (Section 192)</h3>
+                        </div>
+                        <div class="tds-card-body">
+                            <div class="form-row three-col">
+                                <div class="form-group">
+                                    <label class="form-label">Annual Gross Salary (₹)</label>
+                                    <input type="number" class="form-input tds-focus" id="salaryGross" placeholder="Enter CTC" oninput="calculateSalaryTDS()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tax Regime</label>
+                                    <select class="form-select tds-focus" id="salaryRegime" onchange="calculateSalaryTDS()">
+                                        <option value="new">New Regime (Default)</option>
+                                        <option value="old">Old Regime</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Months Remaining in FY</label>
+                                    <input type="number" class="form-input tds-focus" id="salaryMonths" value="12" min="1" max="12" oninput="calculateSalaryTDS()">
+                                </div>
+                            </div>
+                            
+                            <div id="oldRegimeDeductions" style="display: none;">
+                                <h4 style="margin: 20px 0 16px; color: var(--text-secondary);">Deductions (Old Regime Only)</h4>
+                                <div class="form-row four-col">
+                                    <div class="form-group">
+                                        <label class="form-label">80C (₹)</label>
+                                        <input type="number" class="form-input tds-focus" id="salary80C" placeholder="Max 1.5L" oninput="calculateSalaryTDS()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">80D (₹)</label>
+                                        <input type="number" class="form-input tds-focus" id="salary80D" placeholder="Health Insurance" oninput="calculateSalaryTDS()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">HRA Exemption (₹)</label>
+                                        <input type="number" class="form-input tds-focus" id="salaryHRA" placeholder="HRA Exempt" oninput="calculateSalaryTDS()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Other Deductions (₹)</label>
+                                        <input type="number" class="form-input tds-focus" id="salaryOther" placeholder="80CCD, 80E, etc." oninput="calculateSalaryTDS()">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tax-breakdown" style="background: var(--tds-bg);">
+                                <div class="tax-breakdown-title">Monthly TDS Calculation</div>
+                                <div class="tax-breakdown-item">
+                                    <span class="tax-breakdown-label">Gross Salary</span>
+                                    <span class="tax-breakdown-value" id="salaryGrossDisplay">₹0</span>
+                                </div>
+                                <div class="tax-breakdown-item">
+                                    <span class="tax-breakdown-label">Standard Deduction</span>
+                                    <span class="tax-breakdown-value" id="salaryStdDed">₹75,000</span>
+                                </div>
+                                <div class="tax-breakdown-item">
+                                    <span class="tax-breakdown-label">Other Deductions</span>
+                                    <span class="tax-breakdown-value" id="salaryTotalDed">₹0</span>
+                                </div>
+                                <div class="tax-breakdown-item">
+                                    <span class="tax-breakdown-label">Taxable Income</span>
+                                    <span class="tax-breakdown-value" id="salaryTaxable">₹0</span>
+                                </div>
+                                <div class="tax-breakdown-item">
+                                    <span class="tax-breakdown-label">Annual Tax</span>
+                                    <span class="tax-breakdown-value" id="salaryAnnualTax">₹0</span>
+                                </div>
+                                <div class="tax-breakdown-item total">
+                                    <span class="tax-breakdown-label">Monthly TDS</span>
+                                    <span class="tax-breakdown-value" id="salaryMonthlyTDS" style="color: var(--tds-primary);">₹0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== ALL TDS SECTIONS ==================== -->
+                <div class="tool-panel" id="panel-tds-sections">
+                    <div class="tds-card full-width">
+                        <div class="tds-card-header">
+                            <h3><i class="fas fa-list-alt"></i> Complete TDS Sections Reference (FY 2025-26)</h3>
+                        </div>
+                        <div class="tds-card-body">
+                            <div class="tabs">
+                                <button class="tab active tds" onclick="showTDSCategory('all')">All Sections</button>
+                                <button class="tab tds" onclick="showTDSCategory('salary')">Salary</button>
+                                <button class="tab tds" onclick="showTDSCategory('contractor')">Contractor</button>
+                                <button class="tab tds" onclick="showTDSCategory('property')">Property</button>
+                                <button class="tab tds" onclick="showTDSCategory('others')">Others</button>
+                            </div>
+                            
+                            <div id="tdsSectionsContent">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TDS INTEREST & PENALTY ==================== -->
+                <div class="tool-panel" id="panel-tds-interest">
+                    <div class="calc-grid">
+                        <div class="tds-card">
+                            <div class="tds-card-header">
+                                <h3><i class="fas fa-percent"></i> TDS Interest Calculator</h3>
+                            </div>
+                            <div class="tds-card-body">
+                                <div class="form-group">
+                                    <label class="form-label">TDS Amount (₹)</label>
+                                    <input type="number" class="form-input tds-focus" id="tdsInterestAmount" placeholder="Enter TDS amount" oninput="calculateTDSInterest()">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Due Date</label>
+                                        <input type="date" class="form-input tds-focus" id="tdsInterestDueDate" onchange="calculateTDSInterest()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Actual Payment Date</label>
+                                        <input type="date" class="form-input tds-focus" id="tdsInterestPayDate" onchange="calculateTDSInterest()">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Default Type</label>
+                                    <select class="form-select tds-focus" id="tdsDefaultType" onchange="calculateTDSInterest()">
+                                        <option value="non-deduction">Non-deduction of TDS (1.5% per month)</option>
+                                        <option value="late-deposit">Late deposit after deduction (1% per month)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="tds-result-card">
+                                    <div class="tds-result-title">Interest Payable</div>
+                                    <div class="tds-result-value" id="tdsInterestResult">₹0</div>
+                                    <div class="tds-result-grid">
+                                        <div class="tds-result-item">
+                                            <div class="tds-result-item-label">Delay (Months)</div>
+                                            <div class="tds-result-item-value" id="tdsDelayMonths">0</div>
+                                        </div>
+                                        <div class="tds-result-item">
+                                            <div class="tds-result-item-label">Interest Rate</div>
+                                            <div class="tds-result-item-value" id="tdsInterestRate">1.5%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tds-card">
+                            <div class="tds-card-header">
+                                <h3><i class="fas fa-exclamation-circle"></i> Penalty Reference</h3>
+                            </div>
+                            <div class="tds-card-body">
+                                <table class="tds-sections-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Default</th>
+                                            <th>Section</th>
+                                            <th>Penalty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Non-deduction</td>
+                                            <td class="section-code">201(1A)</td>
+                                            <td>1.5% p.m.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Late deposit</td>
+                                            <td class="section-code">201(1A)</td>
+                                            <td>1% p.m.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Late filing 26Q</td>
+                                            <td class="section-code">234E</td>
+                                            <td>₹200/day</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Wrong info in return</td>
+                                            <td class="section-code">271H</td>
+                                            <td>₹10K - ₹1L</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Non-furnishing of TDS return</td>
+                                            <td class="section-code">271H</td>
+                                            <td>₹10K - ₹1L</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <div class="alert error" style="margin-top: 20px;">
+                                    <div class="alert-icon"><i class="fas fa-gavel"></i></div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">Section 276B - Prosecution</div>
+                                        <div class="alert-text">Failure to deposit TDS can lead to rigorous imprisonment from 3 months to 7 years with fine.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TDS DUE DATES ==================== -->
+                <div class="tool-panel" id="panel-tds-dates">
+                    <div class="tds-card full-width">
+                        <div class="tds-card-header">
+                            <h3><i class="fas fa-calendar-alt"></i> TDS Compliance Calendar - FY 2025-26</h3>
+                        </div>
+                        <div class="tds-card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Select Quarter</label>
+                                    <select class="form-select tds-focus" id="tdsQuarter" onchange="showTDSDueDates()">
+                                        <option value="Q1">Q1 (Apr - Jun 2025)</option>
+                                        <option value="Q2">Q2 (Jul - Sep 2025)</option>
+                                        <option value="Q3">Q3 (Oct - Dec 2025)</option>
+                                        <option value="Q4">Q4 (Jan - Mar 2026)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline" id="tdsDueDatesTimeline">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== CRYPTO RULES ==================== -->
+                <div class="tool-panel" id="panel-crypto-rules">
+                    <div class="crypto-card full-width">
+                        <div class="crypto-card-header">
+                            <h3><i class="fas fa-gavel"></i> India Crypto/VDA Tax Rules - Complete Guide</h3>
+                        </div>
+                        <div class="crypto-card-body">
+                            <div id="cryptoRulesContent">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ==================== TDS RATE CHART ==================== -->
+                <div class="tool-panel" id="panel-tds-rates">
+                    <div class="tds-card full-width">
+                        <div class="tds-card-header">
+                            <h3><i class="fas fa-table"></i> Complete TDS Rate Chart - FY 2025-26</h3>
+                        </div>
+                        <div class="tds-card-body">
+                            <div id="tdsRateChartContent">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </main>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-items">
+            <a class="mobile-nav-item active" data-tool="crypto-calc">
+                <i class="fab fa-bitcoin"></i>
+                <span>Crypto</span>
+            </a>
+            <a class="mobile-nav-item" data-tool="crypto-tds">
+                <i class="fas fa-hand-holding-usd"></i>
+                <span>1% TDS</span>
+            </a>
+            <a class="mobile-nav-item tds" data-tool="tds-calc">
+                <i class="fas fa-calculator"></i>
+                <span>TDS</span>
+            </a>
+            <a class="mobile-nav-item tds" data-tool="tds-salary">
+                <i class="fas fa-user-tie"></i>
+                <span>Salary</span>
+            </a>
+            <a class="mobile-nav-item tds" data-tool="tds-sections">
+                <i class="fas fa-list"></i>
+                <span>Sections</span>
+            </a>
+        </div>
+    </nav>
+    
+    <!-- JavaScript -->
+    <script src="specialized-tools.js"></script>
+</body>
+</html>

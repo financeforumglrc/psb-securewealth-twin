@@ -1,0 +1,2369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dsFinancial | Professional Financial Modeling Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        :root {
+            /* Bloomberg Terminal Dark Palette */
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1a2332;
+            --bg-elevated: #1f2937;
+            --bg-hover: #243447;
+            --bg-active: #2d3e50;
+            --bg-input: #0d1117;
+            
+            --border-primary: #1e3a5f;
+            --border-secondary: #2a4365;
+            --border-focus: #3b82f6;
+            
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-accent: #60a5fa;
+            
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #22c55e;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            
+            --header-height: 36px;
+            --ribbon-height: 108px;
+            --formula-height: 32px;
+            --status-height: 28px;
+            --sidebar-width: 240px;
+            --right-panel-width: 320px;
+            
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+            
+            --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+            
+            --transition-fast: 0.12s ease;
+            --transition-base: 0.2s ease;
+        }
+
+        /* Light Theme Override */
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --bg-elevated: #e2e8f0;
+            --bg-hover: #dbeafe;
+            --bg-active: #bfdbfe;
+            --bg-input: #ffffff;
+            --border-primary: #cbd5e1;
+            --border-secondary: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            height: 100%;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* ===== ROUTING HELPERS ===== */
+        .hidden { display: none !important; }
+        .sheet-view {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* ===== TITLE BAR ===== */
+        .title-bar {
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 12px;
+            -webkit-app-region: drag;
+        }
+
+        .title-bar .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--accent-blue);
+        }
+
+        .title-bar .logo i { font-size: 18px; }
+
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .breadcrumbs .crumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .breadcrumbs .crumb:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .breadcrumbs .separator { color: var(--text-muted); font-size: 10px; }
+
+        .title-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .title-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            -webkit-app-region: no-drag;
+        }
+
+        .title-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .title-btn.active { background: var(--bg-active); color: var(--accent-blue); }
+
+        /* ===== RIBBON ===== */
+        .ribbon {
+            height: var(--ribbon-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ribbon-tabs {
+            display: flex;
+            height: 32px;
+            padding: 0 8px;
+            gap: 2px;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .ribbon-tab {
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            transition: var(--transition-fast);
+            border: none;
+            background: transparent;
+            font-family: var(--font-sans);
+        }
+
+        .ribbon-tab:hover { color: var(--text-primary); background: var(--bg-hover); }
+        .ribbon-tab.active {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        .ribbon-tab .shortcut {
+            font-size: 9px;
+            color: var(--text-muted);
+            background: var(--bg-primary);
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-family: var(--font-mono);
+        }
+
+        .ribbon-content {
+            flex: 1;
+            display: flex;
+            padding: 8px 12px;
+            gap: 12px;
+            overflow-x: auto;
+        }
+
+        .ribbon-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 0 12px;
+            border-right: 1px solid var(--border-primary);
+        }
+
+        .ribbon-group:last-child { border-right: none; }
+
+        .ribbon-group-title {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .ribbon-group-body {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .ribbon-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 4px 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            min-width: 52px;
+            font-family: var(--font-sans);
+            font-size: 11px;
+        }
+
+        .ribbon-btn i { font-size: 16px; }
+        .ribbon-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .ribbon-btn:active { background: var(--bg-active); transform: translateY(1px); }
+        .ribbon-btn.primary { background: var(--accent-blue); color: white; }
+        .ribbon-btn.primary:hover { background: #2563eb; }
+        .ribbon-btn.success { background: var(--accent-green); color: white; }
+        .ribbon-btn.danger { color: var(--accent-red); }
+        .ribbon-btn.danger:hover { background: rgba(239,68,68,0.1); }
+
+        /* Large ribbon buttons */
+        .ribbon-btn-lg {
+            padding: 6px 14px;
+            min-width: 64px;
+        }
+
+        .ribbon-btn-lg i { font-size: 20px; }
+
+        /* ===== FORMULA BAR ===== */
+        .formula-bar {
+            height: var(--formula-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 8px;
+        }
+
+        .name-box {
+            width: 100px;
+            height: 24px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-sm);
+            padding: 0 8px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .formula-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 24px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-sm);
+            padding: 0 8px;
+        }
+
+        .formula-input-wrapper i { color: var(--text-muted); font-size: 12px; }
+
+        .formula-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            outline: none;
+        }
+
+        .formula-input::placeholder { color: var(--text-muted); }
+
+        /* ===== MAIN LAYOUT ===== */
+        .app-body {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - var(--header-height) - var(--ribbon-height) - var(--formula-height) - var(--status-height));
+            overflow: hidden;
+        }
+
+        /* ===== LEFT SIDEBAR ===== */
+        .sidebar-left {
+            width: var(--sidebar-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-primary);
+            display: flex;
+            flex-direction: column;
+            transition: width var(--transition-base);
+            overflow: hidden;
+        }
+
+        .sidebar-left.collapsed { width: 44px; }
+
+        .sidebar-header {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .sidebar-header span {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .sidebar-toggle-btn {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-toggle-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 6px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-section-title {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            font-weight: 600;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 8px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .sidebar-item i {
+            width: 18px;
+            text-align: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .sidebar-item.active { background: var(--bg-active); color: var(--accent-blue); }
+        .sidebar-item .badge {
+            margin-left: auto;
+            font-size: 9px;
+            padding: 1px 5px;
+            border-radius: 8px;
+            background: var(--accent-red);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Collapsed sidebar */
+        .sidebar-left.collapsed .sidebar-header span,
+        .sidebar-left.collapsed .sidebar-section-title,
+        .sidebar-left.collapsed .sidebar-item span { display: none; }
+        .sidebar-left.collapsed .sidebar-item { justify-content: center; padding: 8px; }
+        .sidebar-left.collapsed .sidebar-item i { width: auto; font-size: 15px; }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg-primary);
+        }
+
+        .tab-bar {
+            height: 32px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+            gap: 2px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+            height: 28px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .tab:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .tab.active {
+            background: var(--bg-primary);
+            border-bottom-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .tab-close {
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            font-size: 10px;
+            opacity: 0.5;
+        }
+
+        .tab-close:hover { background: var(--accent-red); color: white; opacity: 1; }
+
+        .tab-add {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+        }
+
+        .tab-add:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+        /* ===== WORKSPACE ===== */
+        .workspace {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .sheet-container {
+            flex: 1;
+            overflow: auto;
+            padding: 16px;
+        }
+
+        /* Excel-like Grid */
+        .excel-grid {
+            display: grid;
+            grid-template-columns: 48px repeat(10, 100px);
+            gap: 1px;
+            background: var(--border-primary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            font-family: var(--font-mono);
+            font-size: 12px;
+        }
+
+        .grid-header-cell {
+            background: var(--bg-tertiary);
+            padding: 6px 4px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        .grid-header-cell.corner {
+            background: var(--bg-elevated);
+        }
+
+        .grid-cell {
+            background: var(--bg-secondary);
+            padding: 5px 8px;
+            color: var(--text-primary);
+            border: none;
+            outline: none;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            transition: var(--transition-fast);
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+        }
+
+        .grid-cell:hover { background: var(--bg-hover); }
+        .grid-cell.selected {
+            background: rgba(59,130,246,0.15);
+            box-shadow: inset 0 0 0 2px var(--accent-blue);
+        }
+        .grid-cell.editing { background: var(--bg-input); }
+        .grid-cell.header { background: var(--bg-tertiary); font-weight: 600; }
+        .grid-cell.number { text-align: right; justify-content: flex-end; }
+        .grid-cell.formula { color: var(--accent-green); }
+        .grid-cell.input { color: var(--accent-blue); }
+        .grid-cell.negative { color: var(--accent-red); }
+        .grid-cell.positive { color: var(--accent-green); }
+
+        .row-header {
+            background: var(--bg-tertiary);
+            padding: 6px 4px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        /* ===== RIGHT PANEL ===== */
+        .sidebar-right {
+            width: var(--right-panel-width);
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-primary);
+            display: flex;
+            flex-direction: column;
+            transition: width var(--transition-base);
+        }
+
+        .sidebar-right.collapsed { width: 0; overflow: hidden; }
+
+        .panel-header {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            border-bottom: 1px solid var(--border-primary);
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .panel-tabs {
+            display: flex;
+            height: 28px;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .panel-tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition-fast);
+            font-family: var(--font-sans);
+        }
+
+        .panel-tab:hover { color: var(--text-primary); background: var(--bg-hover); }
+        .panel-tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background: var(--bg-tertiary); }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        /* ===== STATUS BAR ===== */
+        .status-bar {
+            height: var(--status-height);
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 16px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+        }
+
+        .status-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .status-item i { font-size: 10px; }
+
+        .status-divider {
+            width: 1px;
+            height: 16px;
+            background: var(--border-primary);
+        }
+
+        .status-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: pulse-dot 2s infinite;
+        }
+
+        .status-indicator.warning { background: var(--accent-amber); }
+        .status-indicator.error { background: var(--accent-red); }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ===== COMMAND PALETTE ===== */
+        .command-palette-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9998;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 80px;
+        }
+
+        .command-palette-overlay.active { display: flex; }
+
+        .command-palette {
+            width: 560px;
+            max-height: 400px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .command-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .command-input-wrapper i { color: var(--text-muted); }
+
+        .command-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 15px;
+            outline: none;
+            font-family: var(--font-sans);
+        }
+
+        .command-input::placeholder { color: var(--text-muted); }
+
+        .command-shortcut-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            padding: 2px 6px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+        }
+
+        .command-list {
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .command-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .command-item:hover, .command-item.selected { background: var(--bg-hover); }
+
+        .command-item i { width: 20px; text-align: center; color: var(--text-muted); font-size: 14px; }
+        .command-item .command-name { flex: 1; font-size: 13px; }
+        .command-item .command-desc { font-size: 11px; color: var(--text-muted); }
+        .command-item .command-key { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+
+        /* ===== CONTEXT MENU ===== */
+        .context-menu {
+            position: fixed;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            z-index: 9999;
+            min-width: 180px;
+            padding: 4px;
+            display: none;
+        }
+
+        .context-menu.active { display: block; }
+
+        .context-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: var(--transition-fast);
+        }
+
+        .context-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .context-item i { width: 16px; text-align: center; font-size: 12px; }
+        .context-item .shortcut { margin-left: auto; font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); }
+        .context-divider { height: 1px; background: var(--border-primary); margin: 4px 0; }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast-container {
+            position: fixed;
+            top: 48px;
+            right: 16px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-lg);
+            min-width: 280px;
+            max-width: 400px;
+            pointer-events: all;
+            animation: toast-in 0.3s ease;
+            font-size: 12px;
+        }
+
+        .toast.toast-out { animation: toast-out 0.3s ease forwards; }
+
+        @keyframes toast-in {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toast-out {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(30px); }
+        }
+
+        .toast i { font-size: 16px; }
+        .toast.success { border-left: 3px solid var(--accent-green); }
+        .toast.error { border-left: 3px solid var(--accent-red); }
+        .toast.warning { border-left: 3px solid var(--accent-amber); }
+        .toast.info { border-left: 3px solid var(--accent-blue); }
+        .toast.success i { color: var(--accent-green); }
+        .toast.error i { color: var(--accent-red); }
+        .toast.warning i { color: var(--accent-amber); }
+        .toast.info i { color: var(--accent-blue); }
+
+        /* ===== CARDS & COMPONENTS ===== */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-primary);
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .card-body { padding: 14px; }
+
+        .metric-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .metric-card {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            border: 1px solid var(--border-primary);
+            transition: var(--transition-fast);
+        }
+
+        .metric-card:hover { border-color: var(--border-secondary); transform: translateY(-1px); }
+
+        .metric-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+        }
+
+        .metric-change {
+            font-size: 11px;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .metric-change.up { color: var(--accent-green); }
+        .metric-change.down { color: var(--accent-red); }
+
+        /* Charts Container */
+        .chart-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            height: 320px;
+            position: relative;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--bg-hover); }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease; }
+        .animate-slide-up { animation: slideUp 0.3s ease; }
+
+        /* Resizer */
+        .resizer {
+            width: 4px;
+            cursor: col-resize;
+            background: transparent;
+            transition: background var(--transition-fast);
+        }
+
+        .resizer:hover, .resizer.active { background: var(--accent-blue); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar-left { width: 44px; }
+            .sidebar-left .sidebar-header span,
+            .sidebar-left .sidebar-section-title,
+            .sidebar-left .sidebar-item span { display: none; }
+            .sidebar-left .sidebar-item { justify-content: center; padding: 8px; }
+            .sidebar-right { display: none; }
+        }
+
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-hover) 50%, var(--bg-tertiary) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: var(--radius-sm);
+        }
+
+        /* Tooltip */
+        [data-tooltip] {
+            position: relative;
+        }
+
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-4px);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition-fast);
+            border: 1px solid var(--border-primary);
+            z-index: 10001;
+        }
+
+        [data-tooltip]:hover::after { opacity: 1; }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <!-- ===== TITLE BAR ===== -->
+    <div class="title-bar">
+        <div class="logo">
+            <i class="fas fa-chart-line"></i>
+            <span>dsFinancial</span>
+        </div>
+        <div class="breadcrumbs">
+            <div class="crumb"><i class="fas fa-home" style="font-size:10px;"></i> Workspace</div>
+            <span class="separator"><i class="fas fa-chevron-right"></i></span>
+            <div class="crumb">Reliance Industries</div>
+            <span class="separator"><i class="fas fa-chevron-right"></i></span>
+            <div class="crumb" style="color:var(--accent-blue);">DCF Model v3</div>
+        </div>
+        <div class="title-actions">
+            <button class="title-btn" data-tooltip="Save (Ctrl+S)" onclick="saveModel()"><i class="fas fa-save"></i></button>
+            <button class="title-btn" data-tooltip="Undo (Ctrl+Z)" onclick="undo()"><i class="fas fa-undo"></i></button>
+            <button class="title-btn" data-tooltip="Redo (Ctrl+Y)" onclick="redo()"><i class="fas fa-redo"></i></button>
+            <button class="title-btn" data-tooltip="Command Palette (Ctrl+Shift+P)" onclick="toggleCommandPalette()"><i class="fas fa-search"></i></button>
+            <div style="width:1px;height:20px;background:var(--border-primary);margin:0 4px;"></div>
+            <button class="title-btn" data-tooltip="Theme" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <button class="title-btn" data-tooltip="Fullscreen" onclick="toggleFullscreen()"><i class="fas fa-expand"></i></button>
+            <button class="title-btn" data-tooltip="Settings" onclick="showSettings()"><i class="fas fa-cog"></i></button>
+        </div>
+    </div>
+
+    <!-- ===== RIBBON MENU ===== -->
+    <div class="ribbon">
+        <div class="ribbon-tabs">
+            <button class="ribbon-tab active" data-ribbon="home" onclick="switchRibbon('home')">
+                <i class="fas fa-home"></i> Home
+            </button>
+            <button class="ribbon-tab" data-ribbon="insert" onclick="switchRibbon('insert')">
+                <i class="fas fa-plus-circle"></i> Insert
+            </button>
+            <button class="ribbon-tab" data-ribbon="formulas" onclick="switchRibbon('formulas')">
+                <i class="fas fa-function"></i> Formulas
+            </button>
+            <button class="ribbon-tab" data-ribbon="data" onclick="switchRibbon('data')">
+                <i class="fas fa-database"></i> Data
+            </button>
+            <button class="ribbon-tab" data-ribbon="view" onclick="switchRibbon('view')">
+                <i class="fas fa-eye"></i> View
+            </button>
+            <button class="ribbon-tab" data-ribbon="ai" onclick="switchRibbon('ai')">
+                <i class="fas fa-robot"></i> AI <span class="shortcut">NEW</span>
+            </button>
+        </div>
+        
+        <!-- Home Ribbon -->
+        <div class="ribbon-content" id="ribbon-home">
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn ribbon-btn-lg primary" onclick="runAnalysis()">
+                        <i class="fas fa-rocket"></i>
+                        <span>Run Model</span>
+                    </button>
+                </div>
+                <div class="ribbon-group-title">Calculate</div>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="exportExcel()"><i class="fas fa-file-excel"></i><span>Excel</span></button>
+                    <button class="ribbon-btn" onclick="generateMemo()"><i class="fas fa-file-alt"></i><span>Memo</span></button>
+                    <button class="ribbon-btn" onclick="generatePitchBook()"><i class="fas fa-presentation"></i><span>Pitch</span></button>
+                </div>
+                <div class="ribbon-group-title">Export</div>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="showFootballField()"><i class="fas fa-chart-bar"></i><span>Football</span></button>
+                    <button class="ribbon-btn" onclick="showWaterfall()"><i class="fas fa-stream"></i><span>Waterfall</span></button>
+                    <button class="ribbon-btn" onclick="showTornado()"><i class="fas fa-wind"></i><span>Tornado</span></button>
+                    <button class="ribbon-btn" onclick="showMonteCarlo()"><i class="fas fa-dice"></i><span>Monte Carlo</span></button>
+                </div>
+                <div class="ribbon-group-title">Visualize</div>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="showScenarios()"><i class="fas fa-copy"></i><span>Scenarios</span></button>
+                    <button class="ribbon-btn" onclick="showSensitivity()"><i class="fas fa-sliders-h"></i><span>Sensitivity</span></button>
+                    <button class="ribbon-btn" onclick="showComparables()"><i class="fas fa-balance-scale"></i><span>Comps</span></button>
+                </div>
+                <div class="ribbon-group-title">Analyze</div>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="fetchMarketData()"><i class="fas fa-sync-alt"></i><span>Refresh</span></button>
+                    <button class="ribbon-btn" onclick="toggleAIChat()"><i class="fas fa-robot"></i><span>AI Chat</span></button>
+                </div>
+                <div class="ribbon-group-title">Live</div>
+            </div>
+        </div>
+
+        <!-- Insert Ribbon -->
+        <div class="ribbon-content hidden" id="ribbon-insert">
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="insertRow()"><i class="fas fa-plus"></i><span>Row</span></button>
+                    <button class="ribbon-btn" onclick="insertColumn()"><i class="fas fa-plus"></i><span>Column</span></button>
+                </div>
+                <div class="ribbon-group-title">Cells</div>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="insertChart()"><i class="fas fa-chart-pie"></i><span>Chart</span></button>
+                    <button class="ribbon-btn" onclick="insertTable()"><i class="fas fa-table"></i><span>Table</span></button>
+                    <button class="ribbon-btn" onclick="insertImage()"><i class="fas fa-image"></i><span>Image</span></button>
+                </div>
+                <div class="ribbon-group-title">Objects</div>
+            </div>
+        </div>
+
+        <!-- Formulas Ribbon -->
+        <div class="ribbon-content hidden" id="ribbon-formulas">
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="insertFormula('NPV')"><i class="fas fa-calculator"></i><span>NPV</span></button>
+                    <button class="ribbon-btn" onclick="insertFormula('IRR')"><i class="fas fa-percentage"></i><span>IRR</span></button>
+                    <button class="ribbon-btn" onclick="insertFormula('WACC')"><i class="fas fa-balance-scale"></i><span>WACC</span></button>
+                    <button class="ribbon-btn" onclick="insertFormula('FCFF')"><i class="fas fa-money-bill-wave"></i><span>FCFF</span></button>
+                </div>
+                <div class="ribbon-group-title">Valuation</div>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="insertFormula('SUM')"><i class="fas fa-sigma"></i><span>SUM</span></button>
+                    <button class="ribbon-btn" onclick="insertFormula('AVERAGE')"><i class="fas fa-chart-line"></i><span>AVG</span></button>
+                    <button class="ribbon-btn" onclick="insertFormula('MAX')"><i class="fas fa-arrow-up"></i><span>MAX</span></button>
+                    <button class="ribbon-btn" onclick="insertFormula('MIN')"><i class="fas fa-arrow-down"></i><span>MIN</span></button>
+                </div>
+                <div class="ribbon-group-title">Math</div>
+            </div>
+        </div>
+
+        <!-- Data Ribbon -->
+        <div class="ribbon-content hidden" id="ribbon-data">
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="fetchMarketData()"><i class="fas fa-download"></i><span>Import</span></button>
+                    <button class="ribbon-btn" onclick="exportData()"><i class="fas fa-upload"></i><span>Export</span></button>
+                </div>
+                <div class="ribbon-group-title">Transfer</div>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="showBenchmarks()"><i class="fas fa-industry"></i><span>Benchmarks</span></button>
+                    <button class="ribbon-btn" onclick="showComparables()"><i class="fas fa-balance-scale"></i><span>Comparables</span></button>
+                </div>
+                <div class="ribbon-group-title">Market</div>
+            </div>
+        </div>
+
+        <!-- View Ribbon -->
+        <div class="ribbon-content hidden" id="ribbon-view">
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="toggleSidebar()"><i class="fas fa-columns"></i><span>Sidebar</span></button>
+                    <button class="ribbon-btn" onclick="toggleRightPanel()"><i class="fas fa-columns"></i><span>Panel</span></button>
+                    <button class="ribbon-btn" onclick="toggleFormulaBar()"><i class="fas fa-equals"></i><span>Formula</span></button>
+                </div>
+                <div class="ribbon-group-title">Show/Hide</div>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="zoomIn()"><i class="fas fa-plus"></i><span>Zoom In</span></button>
+                    <button class="ribbon-btn" onclick="zoomOut()"><i class="fas fa-minus"></i><span>Zoom Out</span></button>
+                    <button class="ribbon-btn" onclick="resetZoom()"><i class="fas fa-compress"></i><span>Reset</span></button>
+                </div>
+                <div class="ribbon-group-title">Zoom</div>
+            </div>
+        </div>
+
+        <!-- AI Ribbon -->
+        <div class="ribbon-content hidden" id="ribbon-ai">
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn ribbon-btn-lg success" onclick="toggleAIChat()"><i class="fas fa-robot"></i><span>AI Analyst</span></button>
+                </div>
+                <div class="ribbon-group-title">Chat</div>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="generateMemo()"><i class="fas fa-file-alt"></i><span>Memo</span></button>
+                    <button class="ribbon-btn" onclick="auditModel()"><i class="fas fa-search"></i><span>Audit</span></button>
+                    <button class="ribbon-btn" onclick="explainCell()"><i class="fas fa-info-circle"></i><span>Explain</span></button>
+                </div>
+                <div class="ribbon-group-title">Generate</div>
+            </div>
+            <div class="ribbon-group">
+                <div class="ribbon-group-body">
+                    <button class="ribbon-btn" onclick="showNLPQuery()"><i class="fas fa-comments"></i><span>Ask Model</span></button>
+                    <button class="ribbon-btn" onclick="predictForecast()"><i class="fas fa-brain"></i><span>Forecast</span></button>
+                </div>
+                <div class="ribbon-group-title">Intelligence</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FORMULA BAR ===== -->
+    <div class="formula-bar" id="formulaBar">
+        <div class="name-box" id="nameBox">A1</div>
+        <div class="formula-input-wrapper">
+            <i class="fas fa-equals"></i>
+            <input type="text" class="formula-input" id="formulaInput" placeholder="Enter formula or value..." onkeydown="handleFormulaKey(event)">
+        </div>
+    </div>
+
+    <!-- ===== MAIN BODY ===== -->
+    <div class="app-body">
+        <!-- Left Sidebar -->
+        <div class="sidebar-left" id="sidebarLeft">
+            <div class="sidebar-header">
+                <span>Navigation</span>
+                <button class="sidebar-toggle-btn" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></button>
+            </div>
+            <div class="sidebar-nav">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Model</div>
+                    <div class="sidebar-item active" onclick="switchView('summary')">
+                        <i class="fas fa-tachometer-alt" style="color:var(--accent-blue)"></i>
+                        <span>Dashboard</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('assumptions')">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Assumptions</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('income')">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Income Statement</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('balance')">
+                        <i class="fas fa-balance-scale"></i>
+                        <span>Balance Sheet</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('cashflow')">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Cash Flow</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('screener')" style="border-left:3px solid var(--accent-blue)">
+                        <i class="fas fa-database" style="color:var(--accent-blue)"></i>
+                        <span>Screener.in Data</span>
+                        <span class="badge" style="background:var(--accent-blue);color:#fff">LIVE</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('dcf')">
+                        <i class="fas fa-calculator"></i>
+                        <span>DCF Valuation</span>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Analysis</div>
+                    <div class="sidebar-item" onclick="switchView('sensitivity')">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Sensitivity</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('ratios')">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Ratios &amp; Z-Score</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('scenarios')">
+                        <i class="fas fa-copy"></i>
+                        <span>Scenarios</span>
+                        <span class="badge">4</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('montecarlo')">
+                        <i class="fas fa-dice"></i>
+                        <span>Monte Carlo</span>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">World-Class</div>
+                    <div class="sidebar-item" onclick="switchView('football-field')">
+                        <i class="fas fa-chart-bar" style="color:var(--accent-blue)"></i>
+                        <span>Football Field</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('waterfall')">
+                        <i class="fas fa-stream" style="color:var(--accent-purple)"></i>
+                        <span>Waterfall</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('tornado')">
+                        <i class="fas fa-wind" style="color:var(--accent-amber)"></i>
+                        <span>Tornado</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('market')">
+                        <i class="fas fa-chart-line" style="color:var(--accent-green)"></i>
+                        <span>Market Data</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('benchmarks')">
+                        <i class="fas fa-industry" style="color:var(--accent-pink)"></i>
+                        <span>Benchmarks</span>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Tools</div>
+                    <div class="sidebar-item" onclick="switchView('comps')">
+                        <i class="fas fa-balance-scale"></i>
+                        <span>Comparable Cos</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('lbo')">
+                        <i class="fas fa-building"></i>
+                        <span>LBO Model</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('ma')">
+                        <i class="fas fa-handshake"></i>
+                        <span>M&A Analysis</span>
+                    </div>
+                    <div class="sidebar-item" onclick="switchView('wacc')">
+                        <i class="fas fa-percentage"></i>
+                        <span>WACC Builder</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+                <div class="tab active" onclick="switchTab(this, 'sheet1')">
+                    <i class="fas fa-table" style="font-size:10px;"></i>
+                    Reliance DCF
+                    <span class="tab-close" onclick="closeTab(event, this)"><i class="fas fa-times"></i></span>
+                </div>
+                <div class="tab" onclick="switchTab(this, 'sheet2')">
+                    <i class="fas fa-chart-bar" style="font-size:10px;"></i>
+                    Football Field
+                    <span class="tab-close" onclick="closeTab(event, this)"><i class="fas fa-times"></i></span>
+                </div>
+                <div class="tab" onclick="switchTab(this, 'sheet3')">
+                    <i class="fas fa-dice" style="font-size:10px;"></i>
+                    Monte Carlo
+                    <span class="tab-close" onclick="closeTab(event, this)"><i class="fas fa-times"></i></span>
+                </div>
+                <button class="tab-add" onclick="addTab()" title="New Sheet"><i class="fas fa-plus"></i></button>
+            </div>
+
+            <!-- Workspace -->
+            <div class="workspace" id="workspace">
+                <div class="sheet-container" id="sheetContainer">
+
+                    <!-- ===== SUMMARY / DASHBOARD TAB ===== -->
+                    <div id="view-summary" class="sheet-view">
+                        <div id="summaryTab">
+                            <div class="dashboard-container" style="padding:20px; overflow-y:auto; height:100%;">
+                                <div class="dashboard-kpi-strip" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;">
+                                    <div class="dashboard-kpi-card" style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;text-align:center;">
+                                        <div style="font-size:10px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;">Current Price</div>
+                                        <div id="dashPrice" style="font-size:1.4rem;font-weight:700;color:var(--text-primary)">-</div>
+                                    </div>
+                                    <div class="dashboard-kpi-card" style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;text-align:center;">
+                                        <div style="font-size:10px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;">DCF Fair Value</div>
+                                        <div id="dashFairValue" style="font-size:1.4rem;font-weight:700;color:var(--accent-blue)">-</div>
+                                    </div>
+                                    <div class="dashboard-kpi-card" style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;text-align:center;">
+                                        <div style="font-size:10px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;">Upside</div>
+                                        <div id="dashUpside" style="font-size:1.4rem;font-weight:700;color:var(--accent-green)">-</div>
+                                    </div>
+                                    <div class="dashboard-kpi-card" style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;text-align:center;">
+                                        <div style="font-size:10px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;">Rating</div>
+                                        <div id="dashRating" style="font-size:1.4rem;font-weight:700;color:var(--accent-amber)">-</div>
+                                    </div>
+                                    <div class="dashboard-kpi-card" style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;text-align:center;">
+                                        <div style="font-size:10px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;">Enterprise Value</div>
+                                        <div id="dashEV" style="font-size:1.4rem;font-weight:700;color:var(--accent-purple)">-</div>
+                                    </div>
+                                    <div class="dashboard-kpi-card" style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;text-align:center;">
+                                        <div style="font-size:10px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;">Equity Value</div>
+                                        <div id="dashEqValue" style="font-size:1.4rem;font-weight:700;color:var(--accent-cyan)">-</div>
+                                    </div>
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:16px;margin-bottom:20px;">
+                                    <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;">
+                                        <div style="font-weight:600;margin-bottom:12px;font-size:12px;">Revenue &amp; EBITDA Trajectory</div>
+                                        <div style="height:220px;"><canvas id="dashRevenueEbitdaChart"></canvas></div>
+                                    </div>
+                                    <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;">
+                                        <div style="font-weight:600;margin-bottom:12px;font-size:12px;">Free Cash Flow Build-Up</div>
+                                        <div style="height:220px;"><canvas id="dashFcfChart"></canvas></div>
+                                    </div>
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:16px;margin-bottom:20px;">
+                                    <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;">
+                                        <div style="font-weight:600;margin-bottom:12px;font-size:12px;">Peer Comparison</div>
+                                        <div style="height:220px;"><canvas id="dashPeerChart"></canvas></div>
+                                    </div>
+                                    <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;">
+                                        <div style="font-weight:600;margin-bottom:12px;font-size:12px;">Sensitivity Matrix (WACC × TGR)</div>
+                                        <div id="dashHeatmap" style="height:220px;overflow:auto;"></div>
+                                    </div>
+                                </div>
+                                <div style="display:flex;gap:12px;flex-wrap:wrap;padding-bottom:24px;">
+                                    <button class="btn" style="background:var(--accent-blue);color:#fff;border:none;padding:10px 20px;border-radius:var(--radius-md);cursor:pointer;font-size:12px;display:flex;align-items:center;gap:6px;" onclick="runAnalysis()"><i class="fas fa-rocket"></i> Run Analysis</button>
+                                    <button class="btn" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-primary);padding:10px 20px;border-radius:var(--radius-md);cursor:pointer;font-size:12px;display:flex;align-items:center;gap:6px;" onclick="switchView('dcf')"><i class="fas fa-calculator"></i> DCF Detail</button>
+                                    <button class="btn" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-primary);padding:10px 20px;border-radius:var(--radius-md);cursor:pointer;font-size:12px;display:flex;align-items:center;gap:6px;" onclick="switchView('football-field')"><i class="fas fa-chart-bar"></i> Football Field</button>
+                                    <button class="btn" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-primary);padding:10px 20px;border-radius:var(--radius-md);cursor:pointer;font-size:12px;display:flex;align-items:center;gap:6px;" onclick="switchView('sensitivity')"><i class="fas fa-sliders-h"></i> Sensitivity</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== DCF VALUATION TAB ===== -->
+                    <div id="view-dcf" class="sheet-view hidden">
+                        <div style="padding:20px;overflow-y:auto;height:100%;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+                                <div>
+                                    <h3 style="font-size:14px;font-weight:700;margin-bottom:2px;"><i class="fas fa-calculator" style="color:var(--accent-blue);margin-right:6px;"></i>DCF Valuation Detail</h3>
+                                    <div style="font-size:11px;color:var(--text-muted);">5-Year Free Cash Flow Projections with Terminal Value</div>
+                                </div>
+                                <div style="display:flex;gap:8px;align-items:center;">
+                                    <span style="font-size:11px;color:var(--text-muted);">Convention:</span>
+                                    <button id="dcfMidYearBtn" onclick="toggleMidYearConvention()" style="padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border-primary);background:var(--bg-tertiary);color:var(--text-primary);cursor:pointer;font-size:11px;">Mid-Year OFF</button>
+                                    <span id="dcfConvention" style="font-size:11px;color:var(--text-muted);background:var(--bg-tertiary);padding:4px 8px;border-radius:var(--radius-sm);border:1px solid var(--border-primary);">Year-End</span>
+                                </div>
+                            </div>
+
+                            <!-- DCF Summary Cards -->
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;">
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:12px;text-align:center;">
+                                    <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">WACC</div>
+                                    <div id="dcfWacc" style="font-size:1.2rem;font-weight:700;color:var(--accent-amber)">-</div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:12px;text-align:center;">
+                                    <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">TGR</div>
+                                    <div id="dcfTgr" style="font-size:1.2rem;font-weight:700;color:var(--accent-amber)">-</div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:12px;text-align:center;">
+                                    <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">PV of FCFs</div>
+                                    <div id="dcfPvFcf" style="font-size:1.2rem;font-weight:700;color:var(--accent-blue)">-</div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:12px;text-align:center;">
+                                    <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">Terminal Value</div>
+                                    <div id="dcfTv" style="font-size:1.2rem;font-weight:700;color:var(--accent-purple)">-</div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:12px;text-align:center;">
+                                    <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">PV of TV</div>
+                                    <div id="dcfPvTv" style="font-size:1.2rem;font-weight:700;color:var(--accent-purple)">-</div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:12px;text-align:center;">
+                                    <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">Enterprise Value</div>
+                                    <div id="dcfEV" style="font-size:1.2rem;font-weight:700;color:var(--accent-cyan)">-</div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:12px;text-align:center;">
+                                    <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">Equity Value</div>
+                                    <div id="dcfEquity" style="font-size:1.2rem;font-weight:700;color:var(--accent-green)">-</div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:12px;text-align:center;">
+                                    <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">Fair Value / Share</div>
+                                    <div id="dcfPrice" style="font-size:1.2rem;font-weight:700;color:var(--accent-blue)">-</div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:12px;text-align:center;">
+                                    <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">Upside</div>
+                                    <div id="dcfUpside" style="font-size:1.2rem;font-weight:700;">-</div>
+                                </div>
+                            </div>
+
+                            <!-- FCF Detail Table -->
+                            <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);overflow:hidden;margin-bottom:20px;">
+                                <div style="padding:12px 16px;border-bottom:1px solid var(--border-primary);font-size:12px;font-weight:600;">Projected Free Cash Flows</div>
+                                <div style="overflow-x:auto;">
+                                    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                                        <thead>
+                                            <tr style="background:var(--bg-tertiary);">
+                                                <th style="padding:10px 14px;text-align:left;color:var(--text-muted);font-weight:500;font-size:11px;text-transform:uppercase;">Year</th>
+                                                <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;text-transform:uppercase;">Revenue (₹ Cr)</th>
+                                                <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;text-transform:uppercase;">Rev Growth</th>
+                                                <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;text-transform:uppercase;">EBITDA Margin</th>
+                                                <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;text-transform:uppercase;">FCF (₹ Cr)</th>
+                                                <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;text-transform:uppercase;">Discount Factor</th>
+                                                <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;text-transform:uppercase;">PV of FCF (₹ Cr)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dcfTableBody">
+                                            <tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-muted);">Run analysis to see DCF projections</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Charts -->
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px;padding-bottom:24px;">
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;">
+                                    <div style="font-weight:600;font-size:12px;margin-bottom:12px;">FCF vs PV of FCF</div>
+                                    <div style="height:220px;"><canvas id="dcfBridgeChart"></canvas></div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;">
+                                    <div style="font-weight:600;font-size:12px;margin-bottom:12px;">Value Bridge (PV FCF + TV = EV)</div>
+                                    <div style="height:220px;"><canvas id="dcfWaterfallChart"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== RATIOS TAB ===== -->
+                    <div id="view-ratios" class="sheet-view hidden">
+                        <div style="padding:20px;overflow-y:auto;height:100%;">
+                            <h3 style="font-size:14px;font-weight:700;margin-bottom:16px;"><i class="fas fa-chart-pie" style="color:var(--accent-purple);margin-right:6px;"></i>Financial Ratios &amp; Analysis</h3>
+
+                            <!-- DuPont Section -->
+                            <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);overflow:hidden;margin-bottom:20px;">
+                                <div style="padding:12px 16px;border-bottom:1px solid var(--border-primary);font-size:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center;">
+                                    <span>DuPont ROE Decomposition</span>
+                                    <span style="font-size:11px;color:var(--text-muted);">ROE = Net Margin × Asset Turnover × Equity Multiplier</span>
+                                </div>
+                                <div style="padding:14px;">
+                                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px;">
+                                        <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:12px;text-align:center;border:1px solid var(--border-primary);">
+                                            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">ROE (Y5)</div>
+                                            <div id="dupontRoe" style="font-size:1.3rem;font-weight:700;color:var(--accent-green)">-</div>
+                                        </div>
+                                        <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:12px;text-align:center;border:1px solid var(--border-primary);">
+                                            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">Net Margin</div>
+                                            <div id="dupontNpm" style="font-size:1.3rem;font-weight:700;color:var(--accent-cyan)">-</div>
+                                        </div>
+                                        <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:12px;text-align:center;border:1px solid var(--border-primary);">
+                                            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">Asset Turnover</div>
+                                            <div id="dupontAt" style="font-size:1.3rem;font-weight:700;color:var(--accent-amber)">-</div>
+                                        </div>
+                                        <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:12px;text-align:center;border:1px solid var(--border-primary);">
+                                            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">Equity Multiplier</div>
+                                            <div id="dupontEm" style="font-size:1.3rem;font-weight:700;color:var(--accent-purple)">-</div>
+                                        </div>
+                                    </div>
+                                    <div style="overflow-x:auto;margin-bottom:16px;">
+                                        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                                            <thead>
+                                                <tr style="background:var(--bg-tertiary);">
+                                                    <th style="padding:8px 12px;text-align:left;color:var(--text-muted);font-weight:500;font-size:11px;">Year</th>
+                                                    <th style="padding:8px 12px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">Net Margin</th>
+                                                    <th style="padding:8px 12px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">Asset Turnover</th>
+                                                    <th style="padding:8px 12px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">Equity Mult.</th>
+                                                    <th style="padding:8px 12px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">ROE</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="dupontTableBody">
+                                                <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted);">Run analysis to see DuPont decomposition</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div style="height:200px;"><canvas id="dupontTrendChart"></canvas></div>
+                                </div>
+                            </div>
+
+                            <!-- Altman Z-Score Section -->
+                            <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);overflow:hidden;margin-bottom:20px;">
+                                <div style="padding:12px 16px;border-bottom:1px solid var(--border-primary);font-size:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                                    <span>Altman Z-Score (Bankruptcy Prediction)</span>
+                                    <div style="display:flex;gap:6px;">
+                                        <button class="altman-toggle-btn btn-active" data-model="manufacturing" onclick="setAltmanModel('manufacturing')" style="padding:4px 10px;font-size:11px;border-radius:var(--radius-sm);border:1px solid var(--accent-blue);background:var(--accent-blue);color:#fff;cursor:pointer;">Manufacturing</button>
+                                        <button class="altman-toggle-btn" data-model="non-manufacturing" onclick="setAltmanModel('non-manufacturing')" style="padding:4px 10px;font-size:11px;border-radius:var(--radius-sm);border:1px solid var(--border-primary);background:var(--bg-tertiary);color:var(--text-primary);cursor:pointer;">Non-Mfg / Emerging</button>
+                                    </div>
+                                </div>
+                                <div style="padding:14px;">
+                                    <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+                                        <div style="text-align:center;">
+                                            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;">Z-Score</div>
+                                            <div id="altmanZVal" style="font-size:2.5rem;font-weight:800;color:var(--accent-green)">-</div>
+                                        </div>
+                                        <div>
+                                            <div id="altmanZone" style="font-size:1.1rem;font-weight:700;color:var(--accent-green);margin-bottom:4px;">-</div>
+                                            <div id="altmanProb" style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">-</div>
+                                            <div id="altmanFormula" style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);">-</div>
+                                        </div>
+                                    </div>
+                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                                        <div>
+                                            <div style="font-size:11px;font-weight:600;margin-bottom:8px;color:var(--text-secondary);">Component Breakdown</div>
+                                            <table style="width:100%;border-collapse:collapse;font-size:11px;">
+                                                <thead>
+                                                    <tr style="background:var(--bg-tertiary);">
+                                                        <th style="padding:6px 10px;text-align:left;color:var(--text-muted);">Ratio</th>
+                                                        <th style="padding:6px 10px;text-align:right;color:var(--text-muted);">Raw</th>
+                                                        <th style="padding:6px 10px;text-align:right;color:var(--text-muted);">Weight</th>
+                                                        <th style="padding:6px 10px;text-align:right;color:var(--text-muted);">Contribution</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="altmanBreakdown">
+                                                    <tr><td colspan="4" style="text-align:center;padding:16px;color:var(--text-muted);">Run analysis</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div style="height:200px;"><canvas id="altmanGaugeChart"></canvas></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Key Ratios Table -->
+                            <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);overflow:hidden;margin-bottom:24px;">
+                                <div style="padding:12px 16px;border-bottom:1px solid var(--border-primary);font-size:12px;font-weight:600;">Key Financial Ratios</div>
+                                <div style="overflow-x:auto;">
+                                    <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                                        <thead>
+                                            <tr style="background:var(--bg-tertiary);">
+                                                <th style="padding:8px 14px;text-align:left;color:var(--text-muted);font-weight:500;font-size:11px;">Year</th>
+                                                <th style="padding:8px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">EBITDA Margin</th>
+                                                <th style="padding:8px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">Net Margin</th>
+                                                <th style="padding:8px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">EV/EBITDA</th>
+                                                <th style="padding:8px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">P/E</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="ratiosTableBody">
+                                            <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted);">Run analysis to see ratios</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== SENSITIVITY TAB ===== -->
+                    <div id="view-sensitivity" class="sheet-view hidden">
+                        <div style="padding:20px;overflow-y:auto;height:100%;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+                                <div>
+                                    <h3 style="font-size:14px;font-weight:700;margin-bottom:2px;"><i class="fas fa-sliders-h" style="color:var(--accent-cyan);margin-right:6px;"></i>Sensitivity Analysis</h3>
+                                    <div style="font-size:11px;color:var(--text-muted);">2-way sensitivity heat maps — darker green = higher upside</div>
+                                </div>
+                            </div>
+
+                            <!-- WACC × TGR Table -->
+                            <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);overflow:hidden;margin-bottom:20px;">
+                                <div style="padding:12px 16px;border-bottom:1px solid var(--border-primary);font-size:12px;font-weight:600;">WACC × Terminal Growth Rate — Fair Value per Share (₹)</div>
+                                <div style="padding:14px;overflow-x:auto;">
+                                    <style>
+                                        .sensitivity-table { border-collapse:collapse; font-size:11px; width:100%; }
+                                        .sensitivity-table th { padding:8px 12px; background:var(--bg-tertiary); color:var(--text-muted); font-weight:500; white-space:nowrap; border:1px solid var(--border-primary); }
+                                        .sensitivity-table td { padding:8px 12px; border:1px solid var(--border-primary); }
+                                        .sensitivity-table td:first-child { font-weight:600; color:var(--text-secondary); background:var(--bg-tertiary); }
+                                    </style>
+                                    <div id="waccTgrSensTable"><p style="text-align:center;padding:20px;color:var(--text-muted);">Run analysis to generate sensitivity table</p></div>
+                                </div>
+                            </div>
+
+                            <!-- Custom Sensitivity -->
+                            <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);overflow:hidden;margin-bottom:24px;">
+                                <div style="padding:12px 16px;border-bottom:1px solid var(--border-primary);font-size:12px;font-weight:600;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+                                    <span>Custom Sensitivity:</span>
+                                    <div style="display:flex;align-items:center;gap:6px;font-size:11px;">
+                                        <span style="color:var(--text-muted);">X-Axis:</span>
+                                        <select id="sensXAxisSel" onchange="setSensitivityAxis('x', this.value)" style="background:var(--bg-tertiary);border:1px solid var(--border-primary);color:var(--text-primary);padding:4px 8px;border-radius:var(--radius-sm);font-size:11px;">
+                                            <option value="wacc">WACC (%)</option>
+                                            <option value="tgr">Terminal Growth (%)</option>
+                                            <option value="ebitdaMargin">EBITDA Margin (%)</option>
+                                            <option value="revenueGrowth">Revenue Growth Y1 (%)</option>
+                                            <option value="taxRate">Tax Rate (%)</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex;align-items:center;gap:6px;font-size:11px;">
+                                        <span style="color:var(--text-muted);">Y-Axis:</span>
+                                        <select id="sensYAxisSel" onchange="setSensitivityAxis('y', this.value)" style="background:var(--bg-tertiary);border:1px solid var(--border-primary);color:var(--text-primary);padding:4px 8px;border-radius:var(--radius-sm);font-size:11px;">
+                                            <option value="tgr">Terminal Growth (%)</option>
+                                            <option value="wacc">WACC (%)</option>
+                                            <option value="ebitdaMargin">EBITDA Margin (%)</option>
+                                            <option value="revenueGrowth">Revenue Growth Y1 (%)</option>
+                                            <option value="taxRate">Tax Rate (%)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="padding:14px;overflow-x:auto;">
+                                    <div id="customSensTable"><p style="text-align:center;padding:20px;color:var(--text-muted);">Run analysis to generate custom sensitivity table</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== FOOTBALL FIELD TAB ===== -->
+                    <div id="view-football-field" class="sheet-view hidden">
+                        <div style="padding:20px;overflow-y:auto;height:100%;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+                                <div>
+                                    <h3 style="font-size:14px;font-weight:700;margin-bottom:2px;"><i class="fas fa-chart-bar" style="color:var(--accent-blue);margin-right:6px;"></i>Football Field Valuation</h3>
+                                    <div style="font-size:11px;color:var(--text-muted);">Investment banking standard — valuation ranges across methodologies. Click any bar to apply assumptions.</div>
+                                </div>
+                                <button onclick="renderFootballFieldTab()" style="padding:8px 16px;background:var(--accent-blue);color:#fff;border:none;border-radius:var(--radius-md);cursor:pointer;font-size:12px;display:flex;align-items:center;gap:6px;">
+                                    <i class="fas fa-sync-alt"></i> Generate Chart
+                                </button>
+                            </div>
+                            <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;margin-bottom:16px;">
+                                <div style="height:360px;"><canvas id="footballFieldCanvas"></canvas></div>
+                            </div>
+                            <div id="footballFieldSummary" style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;margin-bottom:24px;">
+                                <p style="color:var(--text-muted);font-size:12px;">Run analysis first, then click Generate Chart to see the football field.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== WACC TAB ===== -->
+                    <div id="view-wacc" class="sheet-view hidden">
+                        <div style="padding:20px;overflow-y:auto;height:100%;">
+                            <div id="waccTab">
+                                <div style="font-size:14px;font-weight:700;margin-bottom:4px;"><i class="fas fa-percentage" style="color:var(--accent-amber);margin-right:6px;"></i>WACC Calculator</div>
+                                <p style="color:var(--text-muted);margin-bottom:16px;font-size:12px;">Interactive Cost of Capital Build-Up</p>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:20px;">
+                                    <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;">
+                                        <div style="font-size:12px;font-weight:600;margin-bottom:12px;color:var(--text-secondary);">Cost of Equity (CAPM)</div>
+                                        <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Risk-Free Rate (%)</label><input type="range" id="waccRf" min="4" max="8" step="0.1" value="6.5" oninput="updateWACC()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="waccRfVal">6.5</span>%</div></div>
+                                        <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Equity Risk Premium (%)</label><input type="range" id="waccErp" min="4" max="10" step="0.1" value="7.0" oninput="updateWACC()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="waccErpVal">7.0</span>%</div></div>
+                                        <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Beta (β)</label><input type="range" id="waccBeta" min="0.3" max="2.5" step="0.05" value="1.1" oninput="updateWACC()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="waccBetaVal">1.1</span></div></div>
+                                        <div style="background:var(--bg-tertiary);padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border-primary);"><div style="font-size:10px;color:var(--text-muted);">Cost of Equity</div><div id="waccCoe" style="font-size:1.3rem;font-weight:700;color:var(--accent-blue);">14.2%</div><div style="font-size:10px;color:var(--text-muted);">= Rf + β × ERP</div></div>
+                                    </div>
+                                    <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;">
+                                        <div style="font-size:12px;font-weight:600;margin-bottom:12px;color:var(--text-secondary);">Cost of Debt</div>
+                                        <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Pre-tax Cost of Debt (%)</label><input type="range" id="waccCod" min="4" max="14" step="0.1" value="8.5" oninput="updateWACC()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="waccCodVal">8.5</span>%</div></div>
+                                        <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Tax Rate (%)</label><input type="range" id="waccTax" min="15" max="35" step="0.5" value="25.17" oninput="updateWACC()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="waccTaxVal">25.17</span>%</div></div>
+                                        <div style="background:var(--bg-tertiary);padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border-primary);"><div style="font-size:10px;color:var(--text-muted);">After-tax Cost of Debt</div><div id="waccCodAt" style="font-size:1.3rem;font-weight:700;color:var(--accent-blue);">6.4%</div><div style="font-size:10px;color:var(--text-muted);">= CoD × (1 - Tax)</div></div>
+                                    </div>
+                                    <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;">
+                                        <div style="font-size:12px;font-weight:600;margin-bottom:12px;color:var(--text-secondary);">Capital Structure</div>
+                                        <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Debt / (Debt+Equity) (%)</label><input type="range" id="waccDe" min="0" max="80" step="1" value="25" oninput="updateWACC()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="waccDeVal">25</span>%</div></div>
+                                        <div style="display:flex;gap:8px;margin-top:12px;">
+                                            <div style="flex:1;background:var(--bg-tertiary);padding:10px;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border-primary);"><div style="font-size:10px;color:var(--text-muted);">Weight of Equity</div><div id="waccWe" style="font-weight:700;color:var(--accent-blue);">75%</div></div>
+                                            <div style="flex:1;background:var(--bg-tertiary);padding:10px;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border-primary);"><div style="font-size:10px;color:var(--text-muted);">Weight of Debt</div><div id="waccWd" style="font-weight:700;color:var(--accent-blue);">25%</div></div>
+                                        </div>
+                                    </div>
+                                    <div style="background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));border-radius:var(--radius-md);padding:14px;color:white;">
+                                        <div style="font-size:12px;font-weight:600;margin-bottom:12px;">WACC</div>
+                                        <div id="waccResult" style="font-size:2.5rem;font-weight:800;text-align:center;margin:16px 0;">12.3%</div>
+                                        <div style="text-align:center;font-size:11px;opacity:0.9;margin-bottom:16px;">= We × CoE + Wd × CoD(at)</div>
+                                        <button onclick="applyWACCtoDCF()" style="width:100%;background:white;color:var(--accent-blue);border:none;padding:10px;border-radius:var(--radius-sm);font-weight:600;cursor:pointer;font-size:12px;">Apply to DCF Model</button>
+                                    </div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;margin-bottom:24px;">
+                                    <div style="font-size:12px;font-weight:600;margin-bottom:12px;">WACC Sensitivity — Debt/Equity Mix vs Beta</div>
+                                    <div style="height:280px;"><canvas id="waccSensitivityChart"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== COMPS TAB ===== -->
+                    <div id="view-comps" class="sheet-view hidden">
+                        <div style="padding:20px;overflow-y:auto;height:100%;">
+                            <div style="font-size:14px;font-weight:700;margin-bottom:4px;"><i class="fas fa-balance-scale" style="color:var(--accent-green);margin-right:6px;"></i>Comparable Companies Analysis</div>
+                            <p style="color:var(--text-muted);margin-bottom:16px;font-size:12px;">Trading multiples vs. deterministic peer set</p>
+                            <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);overflow:hidden;margin-bottom:20px;overflow-x:auto;">
+                                <table style="width:100%;border-collapse:collapse;font-size:12px;" id="compsTable">
+                                    <thead><tr style="background:var(--bg-tertiary);">
+                                        <th style="padding:10px 14px;text-align:left;color:var(--text-muted);font-weight:500;font-size:11px;">Company</th>
+                                        <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">EV / Revenue</th>
+                                        <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">EV / EBITDA</th>
+                                        <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">P / E</th>
+                                        <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">P / B</th>
+                                        <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">ROE</th>
+                                        <th style="padding:10px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">Rev Growth</th>
+                                    </tr></thead>
+                                    <tbody id="compsTableBody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-muted);">Run analysis to see comparables</td></tr></tbody>
+                                </table>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px;margin-bottom:20px;">
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;"><div style="font-size:12px;font-weight:600;margin-bottom:12px;">EV/EBITDA vs Revenue Growth</div><div style="height:280px;"><canvas id="compsScatterChart"></canvas></div></div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;"><div style="font-size:12px;font-weight:600;margin-bottom:12px;">Valuation Multiples Comparison</div><div style="height:280px;"><canvas id="compsValuationChart"></canvas></div></div>
+                            </div>
+                            <div style="background:linear-gradient(135deg,var(--accent-blue),var(--accent-purple));border-radius:var(--radius-md);padding:16px;color:white;margin-bottom:24px;">
+                                <div style="font-size:12px;font-weight:600;margin-bottom:12px;">Valuation Summary</div>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
+                                    <div style="background:rgba(255,255,255,0.15);padding:16px;border-radius:var(--radius-sm);text-align:center;"><div style="font-size:11px;opacity:0.9;">Implied EV Range</div><div id="compsEvRange" style="font-size:1.4rem;font-weight:700;margin-top:4px;">—</div></div>
+                                    <div style="background:rgba(255,255,255,0.15);padding:16px;border-radius:var(--radius-sm);text-align:center;"><div style="font-size:11px;opacity:0.9;">Premium / Discount to Peers</div><div id="compsPremium" style="font-size:1.4rem;font-weight:700;margin-top:4px;">—</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== LBO TAB ===== -->
+                    <div id="view-lbo" class="sheet-view hidden">
+                        <div style="padding:20px;overflow-y:auto;height:100%;">
+                            <div style="font-size:14px;font-weight:700;margin-bottom:4px;"><i class="fas fa-building" style="color:var(--accent-red);margin-right:6px;"></i>Leveraged Buyout (LBO) Model</div>
+                            <p style="color:var(--text-muted);margin-bottom:16px;font-size:12px;">Interactive LBO with sources &amp; uses, debt schedule, and returns</p>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:20px;">
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;">
+                                    <div style="font-size:12px;font-weight:600;margin-bottom:12px;color:var(--text-secondary);">Entry Assumptions</div>
+                                    <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Entry EV (₹ Cr)</label><input type="range" id="lboEntryEv" min="100" max="10000" step="10" value="1000" oninput="updateLBO()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;">₹<span id="lboEntryEvVal">1000</span> Cr</div></div>
+                                    <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Debt/Equity Split (%)</label><input type="range" id="lboDebtEquity" min="0" max="90" step="1" value="60" oninput="updateLBO()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="lboDebtEquityVal">60</span>%</div></div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;">
+                                    <div style="font-size:12px;font-weight:600;margin-bottom:12px;color:var(--text-secondary);">Debt Terms</div>
+                                    <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Term Loan Interest (%)</label><input type="range" id="lboTermLoanRate" min="4" max="16" step="0.1" value="8.5" oninput="updateLBO()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="lboTermLoanRateVal">8.5</span>%</div></div>
+                                    <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">High Yield Interest (%)</label><input type="range" id="lboHighYieldRate" min="6" max="20" step="0.1" value="12.5" oninput="updateLBO()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="lboHighYieldRateVal">12.5</span>%</div></div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;">
+                                    <div style="font-size:12px;font-weight:600;margin-bottom:12px;color:var(--text-secondary);">Exit Assumptions</div>
+                                    <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Exit Multiple (x)</label><input type="range" id="lboExitMultiple" min="4" max="20" step="0.1" value="8.0" oninput="updateLBO()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="lboExitMultipleVal">8.0</span>x</div></div>
+                                    <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Exit Year</label><input type="range" id="lboExitYear" min="1" max="5" step="1" value="5" oninput="updateLBO()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;">Year <span id="lboExitYearVal">5</span></div></div>
+                                </div>
+                                <div style="background:linear-gradient(135deg,var(--accent-red),var(--accent-pink));border-radius:var(--radius-md);padding:14px;color:white;">
+                                    <div style="font-size:12px;font-weight:600;margin-bottom:12px;">Returns</div>
+                                    <div style="display:flex;gap:8px;margin-bottom:8px;">
+                                        <div style="flex:1;background:rgba(255,255,255,0.15);padding:10px;border-radius:var(--radius-sm);text-align:center;"><div style="font-size:10px;opacity:0.9;">MoIC</div><div id="lboMoic" style="font-weight:700;font-size:1.3rem;">—</div></div>
+                                        <div style="flex:1;background:rgba(255,255,255,0.15);padding:10px;border-radius:var(--radius-sm);text-align:center;"><div style="font-size:10px;opacity:0.9;">IRR</div><div id="lboIrr" style="font-weight:700;font-size:1.3rem;">—</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-bottom:24px;">
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);overflow:hidden;">
+                                    <div style="padding:12px 16px;border-bottom:1px solid var(--border-primary);font-size:12px;font-weight:600;">Sources &amp; Uses</div>
+                                    <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--bg-tertiary);"><th style="padding:8px 14px;text-align:left;color:var(--text-muted);font-weight:500;font-size:11px;">Item</th><th style="padding:8px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">Amount (₹ Cr)</th></tr></thead><tbody id="lboSourcesUsesBody"><tr><td colspan="2" style="text-align:center;padding:20px;color:var(--text-muted);">Adjust sliders</td></tr></tbody></table></div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);overflow:hidden;">
+                                    <div style="padding:12px 16px;border-bottom:1px solid var(--border-primary);font-size:12px;font-weight:600;">Debt Schedule</div>
+                                    <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:var(--bg-tertiary);"><th style="padding:6px 10px;text-align:left;color:var(--text-muted);font-weight:500;">Year</th><th style="padding:6px 10px;text-align:right;color:var(--text-muted);font-weight:500;">Term Loan</th><th style="padding:6px 10px;text-align:right;color:var(--text-muted);font-weight:500;">Hi-Yield</th><th style="padding:6px 10px;text-align:right;color:var(--text-muted);font-weight:500;">Interest</th><th style="padding:6px 10px;text-align:right;color:var(--text-muted);font-weight:500;">Total Debt</th></tr></thead><tbody id="lboDebtScheduleBody"><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted);">Adjust sliders</td></tr></tbody></table></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== M&A TAB ===== -->
+                    <div id="view-ma" class="sheet-view hidden">
+                        <div style="padding:20px;overflow-y:auto;height:100%;">
+                            <div style="font-size:14px;font-weight:700;margin-bottom:4px;"><i class="fas fa-handshake" style="color:var(--accent-green);margin-right:6px;"></i>M&amp;A Accretion / Dilution Model</div>
+                            <p style="color:var(--text-muted);margin-bottom:16px;font-size:12px;">Evaluate the earnings impact of acquiring the modeled target company.</p>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:20px;">
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;">
+                                    <div style="font-size:12px;font-weight:600;margin-bottom:12px;color:var(--text-secondary);">Target Company</div>
+                                    <div style="background:var(--bg-tertiary);padding:10px;border-radius:var(--radius-sm);margin-bottom:8px;border:1px solid var(--border-primary);"><div style="font-size:10px;color:var(--text-muted);">Company</div><div id="maTargetName" style="font-weight:700;color:var(--text-primary);">—</div></div>
+                                    <div style="display:flex;gap:8px;">
+                                        <div style="flex:1;background:var(--bg-tertiary);padding:10px;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border-primary);"><div style="font-size:10px;color:var(--text-muted);">Revenue (Y5)</div><div id="maTargetRev" style="font-weight:700;color:var(--accent-blue);">—</div></div>
+                                        <div style="flex:1;background:var(--bg-tertiary);padding:10px;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border-primary);"><div style="font-size:10px;color:var(--text-muted);">Net Income (Y5)</div><div id="maTargetNi" style="font-weight:700;color:var(--accent-green);">—</div></div>
+                                    </div>
+                                    <div style="background:var(--bg-tertiary);padding:10px;border-radius:var(--radius-sm);margin-top:8px;text-align:center;border:1px solid var(--border-primary);"><div style="font-size:10px;color:var(--text-muted);">Standalone EPS</div><div id="maTargetEps" style="font-weight:700;color:var(--accent-amber);">—</div></div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;">
+                                    <div style="font-size:12px;font-weight:600;margin-bottom:12px;color:var(--text-secondary);">Deal Terms</div>
+                                    <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Acquisition Premium (%)</label><input type="range" id="maPremium" min="0" max="50" step="1" value="20" oninput="updateMA()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="maPremiumVal">20</span>%</div></div>
+                                    <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Cash Consideration (%)</label><input type="range" id="maCashPct" min="0" max="100" step="5" value="50" oninput="updateMA()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="maCashPctVal">50</span>%</div></div>
+                                    <div style="background:var(--bg-tertiary);padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border-primary);"><div style="font-size:10px;color:var(--text-muted);">Stock Consideration</div><div id="maStockPctVal" style="font-weight:700;color:var(--accent-blue);">50%</div></div>
+                                </div>
+                                <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:14px;">
+                                    <div style="font-size:12px;font-weight:600;margin-bottom:12px;color:var(--text-secondary);">Synergies &amp; Financing</div>
+                                    <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Synergies (% of Target Rev)</label><input type="range" id="maSynergyRate" min="0" max="15" step="0.5" value="3" oninput="updateMA()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="maSynergyRateVal">3.0</span>%</div></div>
+                                    <div style="margin-bottom:10px;"><label style="font-size:11px;color:var(--text-muted);">Financing Cost (%)</label><input type="range" id="maFinancingCost" min="4" max="14" step="0.1" value="8.5" oninput="updateMA()" style="width:100%;margin-top:4px;"><div style="text-align:right;font-size:11px;color:var(--accent-amber);font-weight:600;"><span id="maFinancingCostVal">8.50</span>%</div></div>
+                                    <div style="background:var(--bg-tertiary);padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border-primary);"><div style="font-size:10px;color:var(--text-muted);">Acquisition Price</div><div id="maAcquisitionPrice" style="font-weight:700;color:var(--accent-purple);">—</div></div>
+                                </div>
+                                <div style="background:linear-gradient(135deg,var(--accent-green),var(--accent-cyan));border-radius:var(--radius-md);padding:14px;color:white;">
+                                    <div style="font-size:12px;font-weight:600;margin-bottom:12px;">Key Metrics</div>
+                                    <div style="display:flex;gap:8px;margin-bottom:8px;">
+                                        <div style="flex:1;background:rgba(255,255,255,0.15);padding:10px;border-radius:var(--radius-sm);text-align:center;"><div style="font-size:10px;opacity:0.9;">Pro Forma EPS</div><div id="maPfEps" style="font-weight:700;font-size:1.1rem;">—</div></div>
+                                        <div style="flex:1;background:rgba(255,255,255,0.15);padding:10px;border-radius:var(--radius-sm);text-align:center;"><div style="font-size:10px;opacity:0.9;">Accretion %</div><div id="maAccretion" style="font-weight:700;font-size:1.1rem;">—</div></div>
+                                    </div>
+                                    <div style="background:rgba(255,255,255,0.15);padding:10px;border-radius:var(--radius-sm);text-align:center;"><div style="font-size:10px;opacity:0.9;">Break-even Synergies</div><div id="maBreakEven" style="font-weight:700;font-size:1.1rem;">—</div></div>
+                                </div>
+                            </div>
+                            <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);overflow:hidden;margin-bottom:20px;">
+                                <div style="padding:12px 16px;border-bottom:1px solid var(--border-primary);font-size:12px;font-weight:600;">Pro Forma Summary</div>
+                                <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--bg-tertiary);"><th style="padding:8px 14px;text-align:left;color:var(--text-muted);font-weight:500;font-size:11px;">Metric</th><th style="padding:8px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">Acquirer</th><th style="padding:8px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">Target</th><th style="padding:8px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">Pro Forma</th><th style="padding:8px 14px;text-align:right;color:var(--text-muted);font-weight:500;font-size:11px;">Accretion/(Dilution)</th></tr></thead><tbody id="maSummaryBody"><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted);">Run analysis to populate results.</td></tr></tbody></table></div>
+                            </div>
+                            <div style="background:var(--bg-secondary);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:16px;margin-bottom:24px;">
+                                <div style="font-size:12px;font-weight:600;margin-bottom:12px;">EPS Accretion Analysis — 5 Year Outlook</div>
+                                <div style="height:260px;"><canvas id="maAccretionChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== PLACEHOLDER VIEWS ===== -->
+                    <!-- ===== SCREENER VIEW ===== -->
+                    <div id="view-screener" class="sheet-view hidden"></div>
+
+                    <div id="view-assumptions" class="sheet-view hidden">
+                        <div style="padding:20px;color:var(--text-muted);text-align:center;padding-top:80px;"><i class="fas fa-sliders-h" style="font-size:2rem;margin-bottom:12px;display:block;"></i><p>Use the input panel to set assumptions, then click <strong>Run Analysis</strong>.</p></div>
+                    </div>
+                    <div id="view-income" class="sheet-view hidden">
+                        <div style="padding:20px;color:var(--text-muted);text-align:center;padding-top:80px;"><i class="fas fa-chart-line" style="font-size:2rem;margin-bottom:12px;display:block;"></i><p>Income Statement view — coming soon. Run analysis to populate data.</p></div>
+                    </div>
+                    <div id="view-balance" class="sheet-view hidden">
+                        <div style="padding:20px;color:var(--text-muted);text-align:center;padding-top:80px;"><i class="fas fa-balance-scale" style="font-size:2rem;margin-bottom:12px;display:block;"></i><p>Balance Sheet view — coming soon.</p></div>
+                    </div>
+                    <div id="view-cashflow" class="sheet-view hidden">
+                        <div style="padding:20px;color:var(--text-muted);text-align:center;padding-top:80px;"><i class="fas fa-money-bill-wave" style="font-size:2rem;margin-bottom:12px;display:block;"></i><p>Cash Flow Statement — coming soon.</p></div>
+                    </div>
+                    <div id="view-scenarios" class="sheet-view hidden">
+                        <div style="padding:20px;color:var(--text-muted);text-align:center;padding-top:80px;"><i class="fas fa-copy" style="font-size:2rem;margin-bottom:12px;display:block;"></i><p>Scenario Analysis — coming soon.</p></div>
+                    </div>
+                    <div id="view-montecarlo" class="sheet-view hidden">
+                        <div style="padding:20px;color:var(--text-muted);text-align:center;padding-top:80px;"><i class="fas fa-dice" style="font-size:2rem;margin-bottom:12px;display:block;"></i><p>Monte Carlo Simulation — coming soon.</p></div>
+                    </div>
+                    <div id="view-waterfall" class="sheet-view hidden">
+                        <div style="padding:20px;color:var(--text-muted);text-align:center;padding-top:80px;"><i class="fas fa-stream" style="font-size:2rem;margin-bottom:12px;display:block;"></i><p>Waterfall Chart — coming soon.</p></div>
+                    </div>
+                    <div id="view-tornado" class="sheet-view hidden">
+                        <div style="padding:20px;color:var(--text-muted);text-align:center;padding-top:80px;"><i class="fas fa-wind" style="font-size:2rem;margin-bottom:12px;display:block;"></i><p>Tornado Chart — coming soon.</p></div>
+                    </div>
+                    <div id="view-market" class="sheet-view hidden">
+                        <div style="padding:20px;color:var(--text-muted);text-align:center;padding-top:80px;"><i class="fas fa-chart-line" style="font-size:2rem;margin-bottom:12px;display:block;"></i><p>Market Data — coming soon.</p></div>
+                    </div>
+                    <div id="view-benchmarks" class="sheet-view hidden">
+                        <div style="padding:20px;color:var(--text-muted);text-align:center;padding-top:80px;"><i class="fas fa-industry" style="font-size:2rem;margin-bottom:12px;display:block;"></i><p>Industry Benchmarks — coming soon.</p></div>
+                    </div>
+
+                </div><!-- /#sheetContainer -->
+            </div><!-- /.workspace -->
+        </div><!-- /.main-content -->
+
+        <!-- Right Panel -->
+        <div class="sidebar-right" id="sidebarRight">
+            <div class="panel-header">
+                <span>Properties</span>
+                <button class="sidebar-toggle-btn" onclick="toggleRightPanel()"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="panel-tabs">
+                <button class="panel-tab active" onclick="switchPanelTab('properties')">Properties</button>
+                <button class="panel-tab" onclick="switchPanelTab('ai')">AI</button>
+                <button class="panel-tab" onclick="switchPanelTab('charts')">Charts</button>
+            </div>
+            <div class="panel-content" id="panelContent">
+                <!-- Properties Panel -->
+                <div id="panel-properties">
+                    <div style="margin-bottom:16px;">
+                        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:8px;">Cell Properties</div>
+                        <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:12px;border:1px solid var(--border-primary);">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;">
+                                <span style="color:var(--text-muted);">Reference</span>
+                                <span id="propRef" style="font-family:var(--font-mono);">C12</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;">
+                                <span style="color:var(--text-muted);">Type</span>
+                                <span id="propType">Formula</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;">
+                                <span style="color:var(--text-muted);">Value</span>
+                                <span id="propValue" style="font-family:var(--font-mono);color:var(--accent-green);">₹1,847.32</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;font-size:12px;">
+                                <span style="color:var(--text-muted);">Format</span>
+                                <span id="propFormat">Currency</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:8px;">Model Summary</div>
+                        <div class="metric-row">
+                            <div class="metric-card">
+                                <div class="metric-label">EV</div>
+                                <div class="metric-value" style="font-size:16px;">₹14.2L Cr</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Equity Value</div>
+                                <div class="metric-value" style="font-size:16px;">₹12.8L Cr</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Per Share</div>
+                                <div class="metric-value" style="font-size:16px;color:var(--accent-green);">₹1,847</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:8px;">Quick Actions</div>
+                        <div style="display:flex;flex-direction:column;gap:6px;">
+                            <button class="ribbon-btn" style="justify-content:flex-start;width:100%;padding:8px 12px;" onclick="runAnalysis()"><i class="fas fa-rocket"></i><span>Run Analysis</span></button>
+                            <button class="ribbon-btn" style="justify-content:flex-start;width:100%;padding:8px 12px;" onclick="exportExcel()"><i class="fas fa-file-excel"></i><span>Export to Excel</span></button>
+                            <button class="ribbon-btn" style="justify-content:flex-start;width:100%;padding:8px 12px;" onclick="generateMemo()"><i class="fas fa-file-alt"></i><span>Generate Memo</span></button>
+                            <button class="ribbon-btn" style="justify-content:flex-start;width:100%;padding:8px 12px;" onclick="showNLPQuery()"><i class="fas fa-comments"></i><span>Ask Your Model</span></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- AI Panel (hidden by default) -->
+                <div id="panel-ai" class="hidden">
+                    <div style="display:flex;flex-direction:column;height:100%;">
+                        <div style="flex:1;overflow-y:auto;padding:8px;background:var(--bg-primary);border-radius:var(--radius-sm);border:1px solid var(--border-primary);margin-bottom:8px;">
+                            <div style="padding:8px;background:var(--bg-elevated);border-radius:var(--radius-sm);margin-bottom:8px;font-size:12px;">
+                                <strong style="color:var(--accent-cyan);">AI Analyst</strong><br>
+                                <span style="color:var(--text-secondary);">Ask me anything about this model.</span>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:6px;">
+                            <input type="text" placeholder="Ask AI..." style="flex:1;padding:8px 10px;background:var(--bg-input);border:1px solid var(--border-primary);border-radius:var(--radius-sm);color:var(--text-primary);font-size:12px;outline:none;" onkeydown="if(event.key==='Enter')sendAIChat(this.value)">
+                            <button style="padding:8px 12px;background:var(--accent-blue);color:white;border:none;border-radius:var(--radius-sm);cursor:pointer;" onclick="sendAIChat(document.querySelector('#panel-ai input').value)"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Charts Panel (hidden by default) -->
+                <div id="panel-charts" class="hidden">
+                    <div style="display:flex;flex-direction:column;gap:10px;">
+                        <div class="chart-container" style="height:180px;">
+                            <canvas id="miniChart1"></canvas>
+                        </div>
+                        <div class="chart-container" style="height:180px;">
+                            <canvas id="miniChart2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== STATUS BAR ===== -->
+    <div class="status-bar">
+        <div class="status-item" onclick="showCalcMode()">
+            <div class="status-indicator"></div>
+            <span>Ready</span>
+        </div>
+        <div class="status-divider"></div>
+        <div class="status-item">
+            <i class="fas fa-table"></i>
+            <span id="statusCells">12,456 cells</span>
+        </div>
+        <div class="status-item">
+            <i class="fas fa-clock"></i>
+            <span id="statusCalcTime">Calc: 0.12s</span>
+        </div>
+        <div class="status-item" onclick="showAnomalies()">
+            <i class="fas fa-check-circle" style="color:var(--accent-green)"></i>
+            <span>No errors</span>
+        </div>
+        <div class="status-right">
+            <div class="status-item" data-tooltip="Auto-save enabled">
+                <i class="fas fa-cloud-upload-alt" style="color:var(--accent-green)"></i>
+                <span>Saved</span>
+            </div>
+            <div class="status-item" onclick="zoomOut()">
+                <i class="fas fa-minus"></i>
+            </div>
+            <div class="status-item" style="font-family:var(--font-mono);" id="zoomLevel">
+                100%
+            </div>
+            <div class="status-item" onclick="zoomIn()">
+                <i class="fas fa-plus"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== COMMAND PALETTE ===== -->
+    <div class="command-palette-overlay" id="commandPaletteOverlay" onclick="if(event.target===this)toggleCommandPalette()">
+        <div class="command-palette">
+            <div class="command-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" class="command-input" id="commandInput" placeholder="Type a command or search..." oninput="filterCommands(this.value)" onkeydown="handleCommandKey(event)">
+                <span class="command-shortcut-hint">ESC</span>
+            </div>
+            <div class="command-list" id="commandList"></div>
+        </div>
+    </div>
+
+    <!-- ===== CONTEXT MENU ===== -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-item" onclick="contextAction('copy')"><i class="fas fa-copy"></i>Copy<span class="shortcut">Ctrl+C</span></div>
+        <div class="context-item" onclick="contextAction('paste')"><i class="fas fa-paste"></i>Paste<span class="shortcut">Ctrl+V</span></div>
+        <div class="context-item" onclick="contextAction('cut')"><i class="fas fa-cut"></i>Cut<span class="shortcut">Ctrl+X</span></div>
+        <div class="context-divider"></div>
+        <div class="context-item" onclick="contextAction('insert-row')"><i class="fas fa-plus"></i>Insert Row</div>
+        <div class="context-item" onclick="contextAction('insert-col')"><i class="fas fa-plus"></i>Insert Column</div>
+        <div class="context-divider"></div>
+        <div class="context-item" onclick="contextAction('format')"><i class="fas fa-paint-brush"></i>Format Cells...</div>
+        <div class="context-item" onclick="contextAction('explain')"><i class="fas fa-info-circle"></i>Explain with AI</div>
+        <div class="context-divider"></div>
+        <div class="context-item" onclick="contextAction('delete')"><i class="fas fa-trash" style="color:var(--accent-red)"></i>Delete<span class="shortcut">Del</span></div>
+    </div>
+
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Core state & extracted functions -->
+    <script src="extracted_functions.js"></script>
+
+    <!-- Tab modules -->
+    <script src="tab_dcf.js"></script>
+    <script src="tab_ratios.js"></script>
+    <script src="tab_sensitivity.js"></script>
+    <script src="tab_footballfield.js"></script>
+    <script src="tab_comps.js"></script>
+    <script src="tab_lbo.js"></script>
+    <script src="tab_screener.js"></script>
+
+    <!-- ===== ROUTER & INTEGRATION ===== -->
+    <script>
+    // ── View Router ──────────────────────────────────────────────────────────
+    window.__activeView = 'summary';
+
+    const VIEW_INIT_MAP = {
+        'dcf':           () => { if (typeof generateDCFAnalysis === 'function') generateDCFAnalysis(); },
+        'ratios':        () => { if (typeof generateRatiosAnalysis === 'function') generateRatiosAnalysis(); },
+        'sensitivity':   () => { if (typeof generateSensitivityAnalysis === 'function') generateSensitivityAnalysis(); },
+        'football-field':() => { if (typeof buildFootballFieldChart === 'function') buildFootballFieldChart(); },
+        'wacc':          () => { if (typeof updateWACC === 'function') updateWACC(); },
+        'comps':         () => { if (typeof generateCompsAnalysis === 'function') generateCompsAnalysis(); },
+        'lbo':           () => { if (typeof updateLBO === 'function') updateLBO(); },
+        'ma':            () => { if (typeof updateMA === 'function') updateMA(); },
+        'screener':      () => { if (typeof initScreenerTab === 'function') initScreenerTab(); }
+    };
+
+    function switchView(viewId) {
+        // Hide all sheet views
+        document.querySelectorAll('.sheet-view').forEach(el => el.classList.add('hidden'));
+
+        // Show target view
+        const target = document.getElementById('view-' + viewId);
+        if (target) target.classList.remove('hidden');
+
+        // Update active state on sidebar items (onclick contains the viewId)
+        document.querySelectorAll('.sidebar-item').forEach(el => {
+            el.classList.remove('active');
+            const oc = el.getAttribute('onclick') || '';
+            if (oc.includes("'" + viewId + "'") || oc.includes('"' + viewId + '"')) {
+                el.classList.add('active');
+            }
+        });
+
+        window.__activeView = viewId;
+
+        // Views that must init regardless of modelData (data-source tabs, not model consumers)
+        const ALWAYS_INIT = ['screener', 'wacc', 'comps', 'lbo', 'ma'];
+
+        // Run initializer — screener always runs; others only when model data ready
+        if (VIEW_INIT_MAP[viewId]) {
+            if (ALWAYS_INIT.includes(viewId) || window.modelData) {
+                try { VIEW_INIT_MAP[viewId](); } catch(e) { console.warn('View init error:', e); }
+            }
+        }
+    }
+
+    // ── Sheet tab clicks in bottom tab bar ───────────────────────────────────
+    document.querySelectorAll('.sheet-tab[data-view]').forEach(btn => {
+        btn.addEventListener('click', () => switchView(btn.dataset.view));
+    });
+
+    // ── Nav item clicks in left sidebar ──────────────────────────────────────
+    document.querySelectorAll('.nav-item[data-view]').forEach(btn => {
+        btn.addEventListener('click', () => switchView(btn.dataset.view));
+    });
+
+    // ── WACC Calculator helpers ───────────────────────────────────────────────
+    function updateWACC() {
+        const rf   = parseFloat(document.getElementById('waccRf')?.value   || 6.5);
+        const erp  = parseFloat(document.getElementById('waccErp')?.value  || 7.0);
+        const beta = parseFloat(document.getElementById('waccBeta')?.value || 1.1);
+        const cod  = parseFloat(document.getElementById('waccCod')?.value  || 8.5);
+        const tax  = parseFloat(document.getElementById('waccTax')?.value  || 25.17);
+        const de   = parseFloat(document.getElementById('waccDe')?.value   || 25);
+
+        const coe  = rf + beta * erp;
+        const codAt= cod * (1 - tax / 100);
+        const wd   = de / 100;
+        const we   = 1 - wd;
+        const wacc = we * coe + wd * codAt;
+
+        // Update display spans
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        set('waccRfVal',   rf.toFixed(1));
+        set('waccErpVal',  erp.toFixed(1));
+        set('waccBetaVal', beta.toFixed(2));
+        set('waccCodVal',  cod.toFixed(1));
+        set('waccTaxVal',  tax.toFixed(2));
+        set('waccDeVal',   de.toFixed(0));
+        set('waccCoe',     coe.toFixed(2) + '%');
+        set('waccCodAt',   codAt.toFixed(2) + '%');
+        set('waccWe',      (we * 100).toFixed(0) + '%');
+        set('waccWd',      (wd * 100).toFixed(0) + '%');
+        set('waccResult',  wacc.toFixed(2) + '%');
+    }
+
+    function applyWACCtoDCF() {
+        const waccEl = document.getElementById('waccResult');
+        if (!waccEl) return;
+        const val = parseFloat(waccEl.textContent);
+        if (isNaN(val)) return;
+        const dcfWaccEl = document.getElementById('wacc');
+        if (dcfWaccEl) { dcfWaccEl.value = val.toFixed(2); }
+        if (window.modelData) window.modelData.wacc = val;
+        if (typeof showToast === 'function') showToast('WACC applied: ' + val.toFixed(2) + '%', 'success');
+        if (typeof runAnalysis === 'function') runAnalysis();
+    }
+
+    // ── Mid-year convention toggle ────────────────────────────────────────────
+    function toggleMidYearConvention() {
+        if (window.__model?.dcf) {
+            window.__model.dcf.midYearConvention = !(window.__model.dcf.midYearConvention);
+        }
+        const btn = document.getElementById('dcfMidYearBtn');
+        const lbl = document.getElementById('dcfConvention');
+        const on  = window.__model?.dcf?.midYearConvention;
+        if (btn) btn.textContent = on ? 'Mid-Year ON' : 'Mid-Year OFF';
+        if (btn) btn.style.background = on ? 'var(--accent-blue)' : 'var(--bg-tertiary)';
+        if (btn) btn.style.color      = on ? '#fff' : 'var(--text-primary)';
+        if (lbl) lbl.textContent = on ? 'Mid-Year' : 'Year-End';
+        if (typeof generateDCFAnalysis === 'function') generateDCFAnalysis();
+    }
+
+    // ── LBO helpers (slider display sync) ────────────────────────────────────
+    function updateLBO() {
+        const sliders = {
+            lboEntryEv:      { display: 'lboEntryEvVal',       fmt: v => v },
+            lboDebtEquity:   { display: 'lboDebtEquityVal',    fmt: v => v },
+            lboTermLoanRate: { display: 'lboTermLoanRateVal',  fmt: v => parseFloat(v).toFixed(1) },
+            lboHighYieldRate:{ display: 'lboHighYieldRateVal', fmt: v => parseFloat(v).toFixed(1) },
+            lboExitMultiple: { display: 'lboExitMultipleVal',  fmt: v => parseFloat(v).toFixed(1) },
+            lboExitYear:     { display: 'lboExitYearVal',      fmt: v => v }
+        };
+        for (const [id, cfg] of Object.entries(sliders)) {
+            const el = document.getElementById(id);
+            const disp = document.getElementById(cfg.display);
+            if (el && disp) disp.textContent = cfg.fmt(el.value);
+        }
+
+        // Simplified LBO math
+        const ev     = parseFloat(document.getElementById('lboEntryEv')?.value   || 1000);
+        const debtPct= parseFloat(document.getElementById('lboDebtEquity')?.value|| 60) / 100;
+        const tlRate = parseFloat(document.getElementById('lboTermLoanRate')?.value || 8.5) / 100;
+        const hyRate = parseFloat(document.getElementById('lboHighYieldRate')?.value || 12.5) / 100;
+        const exitMx = parseFloat(document.getElementById('lboExitMultiple')?.value || 8.0);
+        const exitYr = parseInt(document.getElementById('lboExitYear')?.value || 5);
+
+        const debt   = ev * debtPct;
+        const equity = ev - debt;
+        const termLoan = debt * 0.65;
+        const hiYield  = debt * 0.35;
+
+        // Annual EBITDA growth proxy: assume entry at ~9x EBITDA, 8% EBITDA CAGR
+        const entryEbitda = ev / 9;
+        const exitEbitda  = entryEbitda * Math.pow(1.08, exitYr);
+        const exitEV      = exitEbitda * exitMx;
+
+        // Debt paydown: 20% of free cash flow annually
+        let remainingDebt = debt;
+        const schedule = [];
+        let tl = termLoan, hy = hiYield;
+        for (let yr = 1; yr <= exitYr; yr++) {
+            const ebitda = entryEbitda * Math.pow(1.08, yr);
+            const interest = tl * tlRate + hy * hyRate;
+            const repay = (ebitda - interest) * 0.5 * 0.3;
+            tl = Math.max(0, tl - repay * 0.7);
+            hy = Math.max(0, hy - repay * 0.3);
+            schedule.push({ yr, tl: tl.toFixed(0), hy: hy.toFixed(0), interest: interest.toFixed(0), total: (tl + hy).toFixed(0) });
+        }
+        const exitEquity = exitEV - (tl + hy);
+        const moic = equity > 0 ? (exitEquity / equity) : 0;
+        const irr  = equity > 0 ? (Math.pow(moic, 1 / exitYr) - 1) * 100 : 0;
+
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        set('lboMoic', moic.toFixed(2) + 'x');
+        set('lboIrr',  irr.toFixed(1) + '%');
+
+        const srcBody = document.getElementById('lboSourcesUsesBody');
+        if (srcBody) srcBody.innerHTML = `
+            <tr><td style="padding:8px 14px;border-bottom:1px solid var(--border-primary)">Term Loan</td><td style="text-align:right;padding:8px 14px;border-bottom:1px solid var(--border-primary)">₹${termLoan.toFixed(0)}</td></tr>
+            <tr><td style="padding:8px 14px;border-bottom:1px solid var(--border-primary)">High Yield Notes</td><td style="text-align:right;padding:8px 14px;border-bottom:1px solid var(--border-primary)">₹${hiYield.toFixed(0)}</td></tr>
+            <tr><td style="padding:8px 14px;border-bottom:1px solid var(--border-primary);font-weight:600">Total Sources (Debt)</td><td style="text-align:right;padding:8px 14px;border-bottom:1px solid var(--border-primary);font-weight:600">₹${debt.toFixed(0)}</td></tr>
+            <tr><td style="padding:8px 14px;border-bottom:1px solid var(--border-primary)">Equity</td><td style="text-align:right;padding:8px 14px;border-bottom:1px solid var(--border-primary)">₹${equity.toFixed(0)}</td></tr>
+            <tr style="background:var(--bg-tertiary);"><td style="padding:8px 14px;font-weight:600">Acquisition EV</td><td style="text-align:right;padding:8px 14px;font-weight:600;color:var(--accent-blue)">₹${ev.toFixed(0)}</td></tr>`;
+
+        const schBody = document.getElementById('lboDebtScheduleBody');
+        if (schBody) schBody.innerHTML = schedule.map(r => `
+            <tr style="border-bottom:1px solid var(--border-primary)">
+                <td style="padding:6px 10px">Y${r.yr}</td>
+                <td style="text-align:right;padding:6px 10px">₹${r.tl}</td>
+                <td style="text-align:right;padding:6px 10px">₹${r.hy}</td>
+                <td style="text-align:right;padding:6px 10px;color:var(--accent-red)">₹${r.interest}</td>
+                <td style="text-align:right;padding:6px 10px;font-weight:600">₹${r.total}</td>
+            </tr>`).join('');
+    }
+
+    // ── M&A helpers ───────────────────────────────────────────────────────────
+    function updateMA() {
+        const sliders = {
+            maPremium:      { display: 'maPremiumVal',      fmt: v => v },
+            maCashPct:      { display: 'maCashPctVal',      fmt: v => v },
+            maSynergyRate:  { display: 'maSynergyRateVal',  fmt: v => parseFloat(v).toFixed(1) },
+            maFinancingCost:{ display: 'maFinancingCostVal',fmt: v => parseFloat(v).toFixed(2) }
+        };
+        for (const [id, cfg] of Object.entries(sliders)) {
+            const el = document.getElementById(id);
+            const disp = document.getElementById(cfg.display);
+            if (el && disp) disp.textContent = cfg.fmt(el.value);
+        }
+        const cashPct = parseFloat(document.getElementById('maCashPct')?.value || 50);
+        const stockEl = document.getElementById('maStockPctVal');
+        if (stockEl) stockEl.textContent = (100 - cashPct) + '%';
+
+        if (!window.modelData || !window.modelData.rev) return;
+
+        const rev  = window.modelData.rev;
+        const ni   = window.modelData.ni || rev.map(r => r * 0.12);
+        const prem = parseFloat(document.getElementById('maPremium')?.value   || 20) / 100;
+        const cash = parseFloat(document.getElementById('maCashPct')?.value   || 50) / 100;
+        const syn  = parseFloat(document.getElementById('maSynergyRate')?.value || 3) / 100;
+        const fc   = parseFloat(document.getElementById('maFinancingCost')?.value || 8.5) / 100;
+
+        const targetRev = rev[4];
+        const targetNI  = ni[4];
+        const shares    = window.modelData.shares || 1;
+        const stdlEps   = targetNI / shares;
+        const acqPrice  = window.modelData.price * (1 + prem);
+        const synergies = targetRev * syn;
+        const finCost   = acqPrice * shares * cash * fc;
+        const newShares = acqPrice * shares * (1 - cash) / (window.modelData.price || 100);
+        const pfNI      = targetNI * 2 + synergies - finCost;
+        const pfShares  = shares + newShares;
+        const pfEps     = pfNI / pfShares;
+        const accretion = ((pfEps - stdlEps) / stdlEps * 100).toFixed(1);
+        const breakeven = (finCost / targetRev * 100).toFixed(1);
+
+        document.getElementById('maTargetName')     && (document.getElementById('maTargetName').textContent     = window.__model?.company?.name || '(Current Model)');
+        document.getElementById('maTargetRev')      && (document.getElementById('maTargetRev').textContent      = '₹' + targetRev.toFixed(0) + ' Cr');
+        document.getElementById('maTargetNi')       && (document.getElementById('maTargetNi').textContent       = '₹' + targetNI.toFixed(0) + ' Cr');
+        document.getElementById('maTargetEps')      && (document.getElementById('maTargetEps').textContent      = '₹' + stdlEps.toFixed(2));
+        document.getElementById('maAcquisitionPrice')&& (document.getElementById('maAcquisitionPrice').textContent = '₹' + acqPrice.toFixed(2) + ' / share');
+        document.getElementById('maPfEps')          && (document.getElementById('maPfEps').textContent          = '₹' + pfEps.toFixed(2));
+        document.getElementById('maAccretion')      && (document.getElementById('maAccretion').textContent      = (parseFloat(accretion) >= 0 ? '+' : '') + accretion + '%');
+        document.getElementById('maBreakEven')      && (document.getElementById('maBreakEven').textContent      = breakeven + '% of Rev');
+    }
+
+    // ── Dashboard summary update after analysis ────────────────────────────────
+    function updateDashboard() {
+        if (!window.modelData) return;
+        const md = window.modelData;
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+        set('dashPrice',    md.price    ? '₹' + md.price.toFixed(0) : '-');
+        set('dashFairValue', md.dcfPrice ? '₹' + md.dcfPrice.toFixed(0) : '-');
+        set('dashEV',       md.ev       ? '₹' + (md.ev / 100).toFixed(0) + ' Cr' : '-');
+        set('dashEqValue',  md.equityValue ? '₹' + (md.equityValue / 100).toFixed(0) + ' Cr' : '-');
+
+        if (md.dcfPrice && md.price) {
+            const upside = ((md.dcfPrice - md.price) / md.price * 100).toFixed(1);
+            const el = document.getElementById('dashUpside');
+            if (el) {
+                el.textContent = (parseFloat(upside) >= 0 ? '+' : '') + upside + '%';
+                el.style.color = parseFloat(upside) >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+            }
+            const rating = parseFloat(upside) >= 20 ? 'STRONG BUY' : parseFloat(upside) >= 5 ? 'BUY' : parseFloat(upside) >= -5 ? 'HOLD' : 'SELL';
+            set('dashRating', rating);
+        }
+
+        // Mini sensitivity in dashboard
+        if (typeof renderWACCxTGRTable === 'function') {
+            const orig = document.getElementById('waccTgrSensTable');
+            const dash = document.getElementById('dashHeatmap');
+            if (orig && dash) {
+                renderWACCxTGRTable();
+                setTimeout(() => { dash.innerHTML = orig.innerHTML; }, 50);
+            }
+        }
+    }
+
+    // ── runAnalysis: orchestrates all modules ─────────────────────────────────
+    // Wrap existing runAnalysis to also update new tabs
+    const _origRunAnalysis = window.runAnalysis;
+    window.runAnalysis = function() {
+        if (typeof _origRunAnalysis === 'function') _origRunAnalysis();
+
+        // Give extracted_functions.js time to populate modelData
+        setTimeout(() => {
+            updateDashboard();
+            const v = window.__activeView;
+            if (VIEW_INIT_MAP[v]) {
+                try { VIEW_INIT_MAP[v](); } catch(e) {}
+            }
+        }, 100);
+    };
+
+    // ── Startup ───────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        // Default view
+        switchView('summary');
+        // Initialize WACC sliders
+        updateWACC();
+        // Initialize LBO sliders
+        updateLBO();
+    });
+    </script>
+
+</body>
+</html>
