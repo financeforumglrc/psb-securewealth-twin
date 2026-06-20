@@ -6474,7 +6474,7 @@
         // ── Screener.in Monolith Integration ─────────────────────────────────────
         const _SCRMONO_API = window.location.hostname.includes('localhost')
             ? 'http://localhost:5000/api/v1/screener'
-            : 'https://dsfinancial-api.railway.app/api/v1/screener';
+            : 'https://psb-securewealth-backend.onrender.com/api/v1/screener';
         const _scrMonoCache = new Map();
         let _scrMonoSelected = null;
         let _scrMonoData = null;
@@ -9804,7 +9804,7 @@ ${ratioHtml ? `<div style="background:#0f1520;border:1px solid #374151;border-ra
 
         const API_BASE = window.location.hostname.includes('localhost')
             ? 'http://localhost:5000/api/v1'
-            : 'https://dsfinancial-api.railway.app/api/v1';
+            : 'https://psb-securewealth-backend.onrender.com/api/v1';
 
         // Device ID
         if (!localStorage.getItem('dsf_device_id')) {

@@ -173,7 +173,7 @@
         <div class="login-box">
             <h2>Admin Login</h2>
             <p style="color:#666; margin-bottom:1.5rem;">Enter PIN to access dashboard</p>
-            <input type="password" id="adminPin" placeholder="Enter PIN (1234)"
+            <input type="password" id="adminPin" placeholder="Enter admin password"
                 style="width:90%; padding:10px; border:1px solid #ddd; border-radius:6px; font-size:1.1rem; text-align:center;">
             <button class="login-btn" onclick="checkLogin()">Access Dashboard</button>
         </div>
@@ -248,7 +248,7 @@
         // Simple Auth
         function checkLogin() {
             const pin = document.getElementById('adminPin').value;
-            if (pin === '1234') {
+            if (pin === '123456@#Dd') {
                 document.getElementById('loginOverlay').style.display = 'none';
                 loadData();
             } else {
