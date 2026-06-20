@@ -1,0 +1,1 @@
+function e(e,t=1){if(!window.speechSynthesis)return;let n=new SpeechSynthesisUtterance(e);n.lang=`en-IN`,n.rate=t,n.pitch=1,window.speechSynthesis.speak(n)}function t(){window.speechSynthesis?.cancel()}function n(){return`speechSynthesis`in window}export{n,e as r,t};
