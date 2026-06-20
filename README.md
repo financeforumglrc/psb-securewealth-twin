@@ -82,3 +82,5 @@ dsfinancial/
 ## License
 
 MIT
+
+Deployed frontend via GitHub Pages; backend on Render.
