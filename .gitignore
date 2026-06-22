@@ -54,5 +54,4 @@ temp/
 backend/
 
 # Optional: legacy deploy bundles
-# surge_deploy/
 surge_deploy/

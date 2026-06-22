@@ -519,24 +519,67 @@ function extractJDKeywords(jdText) {
 
 // --- UI Functions ---
 
+function ensureModal(id, html) {
+    let el = document.getElementById(id);
+    if (!el) {
+        el = document.createElement('div');
+        el.id = id;
+        el.innerHTML = html;
+        document.body.appendChild(el);
+    }
+    return el;
+}
+
+function createAISettingsModal() {
+    const html = `
+        <div id="aiSettingsModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:10002;">
+            <div style="background:var(--bg-card,#fff);border-radius:16px;padding:2rem;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;">
+                <h3 style="margin-bottom:1rem;">AI Settings</h3>
+                <label>Provider</label>
+                <select id="aiProviderSelect" style="width:100%;padding:0.75rem;margin-bottom:1rem;border:1px solid var(--rb-border);border-radius:8px;"></select>
+                <label>API Key</label>
+                <input id="aiApiKeyInput" type="password" style="width:100%;padding:0.75rem;margin-bottom:1rem;border:1px solid var(--rb-border);border-radius:8px;" />
+                <label>Model</label>
+                <select id="aiModelSelect" style="width:100%;padding:0.75rem;margin-bottom:1.5rem;border:1px solid var(--rb-border);border-radius:8px;"></select>
+                <div style="display:flex;gap:1rem;justify-content:flex-end;">
+                    <button onclick="closeAISettings()" style="padding:0.75rem 1.5rem;border-radius:8px;border:1px solid var(--rb-border);background:transparent;cursor:pointer;">Cancel</button>
+                    <button onclick="saveAISettings()" style="padding:0.75rem 1.5rem;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;cursor:pointer;">Save</button>
+                </div>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function ensureScoreModal() {
+    return ensureModal('aiScoreModal', `
+        <div id="aiScoreModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:10002;">
+            <div style="background:var(--bg-card,#fff);border-radius:16px;padding:2rem;max-width:800px;width:95%;max-height:90vh;overflow-y:auto;position:relative;">
+                <button onclick="closeAIScoreDashboard()" style="position:absolute;top:1rem;right:1rem;width:36px;height:36px;border:none;border-radius:50%;background:var(--bg-secondary);cursor:pointer;font-size:1.2rem;">&times;</button>
+                <div id="aiScoreContent"></div>
+            </div>
+        </div>`);
+}
+
 // Open AI Settings Modal
 function openAISettings() {
     loadAIConfig();
 
-    const modal = document.getElementById('aiSettingsModal');
+    let modal = document.getElementById('aiSettingsModal');
     if (!modal) {
         createAISettingsModal();
+        modal = document.getElementById('aiSettingsModal');
     }
 
     // Populate current values
     document.getElementById('aiProviderSelect').value = aiConfig.activeProvider;
     updateProviderUI();
 
-    document.getElementById('aiSettingsModal').style.display = 'block';
+    if (modal) modal.style.display = 'flex';
 }
 
 function closeAISettings() {
-    document.getElementById('aiSettingsModal').style.display = 'none';
+    const modal = document.getElementById('aiSettingsModal');
+    if (modal) modal.style.display = 'none';
 }
 
 function updateProviderUI() {
@@ -580,11 +623,13 @@ function openAIScoreDashboard() {
     const scoreResult = calculateResumeScore(data, jdKeywords);
 
     renderScoreDashboard(scoreResult, jdKeywords);
-    document.getElementById('aiScoreModal').style.display = 'block';
+    const modal = ensureScoreModal();
+    modal.style.display = 'flex';
 }
 
 function closeAIScoreDashboard() {
-    document.getElementById('aiScoreModal').style.display = 'none';
+    const modal = document.getElementById('aiScoreModal');
+    if (modal) modal.style.display = 'none';
 }
 
 function renderScoreDashboard(result, jdKeywords) {
@@ -1249,7 +1294,8 @@ function openHeatmapView() {
 
     const container = document.getElementById('aiScoreContent');
     container.innerHTML = renderHeatmap(analysis);
-    document.getElementById('aiScoreModal').style.display = 'block';
+    const modal = ensureScoreModal();
+    modal.style.display = 'flex';
 }
 
 // ============================================================
@@ -1823,7 +1869,8 @@ function openIndustryTargeting(industryKey = 'tech') {
         </div>
         ${renderIndustryTargeting(analysis)}
     `;
-    document.getElementById('aiScoreModal').style.display = 'block';
+    const modal = ensureScoreModal();
+    modal.style.display = 'flex';
 }
 
 // Initialize AI on page load

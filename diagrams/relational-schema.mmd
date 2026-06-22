@@ -1,0 +1,305 @@
+erDiagram
+    users {
+        text id PK
+        text email UK
+        text password
+        text name
+        text phone
+        text role
+        text tier
+        text pan_number
+        text gstin
+        text created_at
+        text last_login
+        integer api_usage_total
+        integer api_usage_month
+        integer is_active
+    }
+    calculations {
+        integer id PK
+        text user_id
+        text type
+        text input_data
+        text result_data
+        text created_at
+    }
+    sessions {
+        integer id PK
+        text user_id
+        text refresh_token
+        text expires_at
+        text created_at
+    }
+    ai_runs {
+        integer id PK
+        text device_id
+        text task
+        text provider
+        text model
+        integer input_tokens
+        integer output_tokens
+        integer latency_ms
+        real cost_usd_estimate
+        integer success
+        text error_message
+        text created_at
+    }
+    server_quota {
+        integer id PK
+        text date
+        integer extract_used
+        integer chat_used
+        integer explain_used
+        integer memo_used
+        text updated_at
+    }
+    extractions {
+        integer id PK
+        text device_id
+        text pdf_hash UK
+        text storage_path
+        text filename
+        integer size_bytes
+        text company_name
+        text ticker
+        text result_json
+        real overall_confidence
+        text created_at
+    }
+    device_ids {
+        text device_id PK
+        text first_seen
+        text last_seen
+        integer extract_count_today
+        integer chat_count_today
+        integer explain_count_today
+        text quota_date
+    }
+    financial_models {
+        integer id PK
+        text device_id
+        text slug UK
+        text company_name
+        text ticker
+        text exchange
+        integer is_public
+        text model_json
+        text created_at
+        text updated_at
+    }
+    model_versions {
+        integer id PK
+        integer model_id
+        integer version_number
+        text model_json
+        text change_summary
+        text created_by
+        text created_at
+    }
+    model_comments {
+        integer id PK
+        integer model_id
+        text cell_id
+        text comment
+        text author
+        text created_at
+    }
+    saved_scenarios {
+        integer id PK
+        text device_id
+        integer model_id
+        text name
+        text scenario_key
+        text assumptions_json
+        real intrinsic_value
+        integer is_public
+        text created_at
+    }
+    bank_accounts {
+        integer id PK
+        text user_id
+        text account_number UK
+        text account_type
+        real balance
+        text ifsc
+        text branch
+        text status
+        text opened_at
+    }
+    transactions {
+        integer id PK
+        text user_id
+        text from_account
+        text to_account
+        text type
+        real amount
+        text description
+        text status
+        text reference_id UK
+        text created_at
+    }
+    beneficiaries {
+        integer id PK
+        text user_id
+        text name
+        text account_number
+        text ifsc
+        text bank_name
+        text upi_id
+        integer verified
+        text created_at
+    }
+    cards {
+        integer id PK
+        text user_id
+        text card_number_masked
+        text expiry
+        text cvv_masked
+        text card_type
+        text status
+        real limit_daily
+        real limit_monthly
+        text created_at
+    }
+    bills {
+        integer id PK
+        text user_id
+        text name
+        text category
+        real amount
+        text due_date
+        text status
+        integer is_recurring
+        text frequency
+        text created_at
+    }
+    subscriptions {
+        integer id PK
+        text user_id
+        text name
+        real amount
+        text billing_cycle
+        text next_billing
+        text status
+        text created_at
+    }
+    kyc_records {
+        integer id PK
+        text user_id UK
+        text pan_number
+        text aadhaar_masked
+        text kyc_status
+        text verified_at
+        text ekyc_reference
+        text created_at
+    }
+    aa_consents {
+        integer id PK
+        text user_id
+        text bank_name
+        text account_mask
+        text consent_id UK
+        text status
+        text scopes
+        text linked_at
+        text created_at
+    }
+    goals {
+        integer id PK
+        text user_id
+        text name
+        real target_amount
+        real current_amount
+        text deadline
+        text goal_type
+        text status
+        text created_at
+    }
+    user_assets {
+        integer id PK
+        text user_id
+        text name
+        text asset_type
+        real value
+        text liquidity
+        real returns
+        text created_at
+    }
+    loans {
+        integer id PK
+        text user_id
+        text loan_type
+        real principal_amount
+        real interest_rate
+        integer tenure_months
+        real emi_amount
+        real total_payable
+        real amount_paid
+        text next_due_date
+        text status
+        text purpose
+        text created_at
+    }
+    recurring_payments {
+        integer id PK
+        text user_id
+        text name
+        real amount
+        text frequency
+        text category
+        integer account_id
+        integer beneficiary_id
+        text start_date
+        text end_date
+        text next_execution
+        text status
+        text created_at
+    }
+    audit_logs {
+        integer id PK
+        text user_id
+        text action
+        text entity_type
+        integer entity_id
+        text old_value
+        text new_value
+        text ip_address
+        text user_agent
+        text created_at
+    }
+    device_fingerprints {
+        integer id PK
+        text user_id
+        text visitor_id
+        text fingerprint_hash
+        text first_seen
+        text last_seen
+        integer is_trusted
+        text created_at
+    }
+    otp_attempts {
+        integer id PK
+        text recipient
+        text otp_hash
+        text purpose
+        integer attempts
+        text expires_at
+        integer verified
+        text created_at
+    }
+    users ||--o{ calculations : "user_id"
+    users ||--o{ sessions : "user_id"
+    financial_models ||--o{ model_versions : "model_id"
+    financial_models ||--o{ model_comments : "model_id"
+    users ||--o{ bank_accounts : "user_id"
+    users ||--o{ transactions : "user_id"
+    users ||--o{ beneficiaries : "user_id"
+    users ||--o{ cards : "user_id"
+    users ||--o{ bills : "user_id"
+    users ||--o{ subscriptions : "user_id"
+    users ||--o{ kyc_records : "user_id"
+    users ||--o{ goals : "user_id"
+    users ||--o{ user_assets : "user_id"
+    users ||--o{ loans : "user_id"
+    users ||--o{ recurring_payments : "user_id"
+    users ||--o{ device_fingerprints : "user_id"

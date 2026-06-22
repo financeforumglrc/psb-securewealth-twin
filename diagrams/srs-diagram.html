@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PSB SecureWealth - SRS Feature Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { margin: 0; padding: 40px; background: #ffffff; font-family: system-ui, sans-serif; }
+        h1 { text-align: center; color: #064e3b; margin-bottom: 30px; }
+        .mermaid { display: flex; justify-content: center; }
+    </style>
+</head>
+<body>
+    <h1>PSB SecureWealth Twin - SRS / Feature Architecture Diagram</h1>
+    <div class="mermaid">
+graph TB
+    subgraph Users["👤 User Personas"]
+        U1[Retail Customer]
+        U2[NRI User]
+        U3[Senior Citizen]
+        U4[Business Owner]
+        U5[Admin / Bank Staff]
+    end
+
+    subgraph Portal["🌐 Frontend Portal"]
+        P1[Auth & onboarding]
+        P2[Dashboard & Wealth Twin]
+        P3[Banking & Payments]
+        P4[Investments & Goals]
+        P5[Tax, GST & Compliance]
+        P6[AI Financial Tools]
+        P7[Admin Control Center]
+    end
+
+    subgraph Security["🛡️ Security Layer"]
+        S1[Face Biometric Auth]
+        S2[Email / OTP Verification]
+        S3[Device Fingerprinting]
+        S4[Cooling Vault / Fraud Pause]
+        S5[Duress / Panic Mode]
+        S6[Audit Logs & Compliance]
+    end
+
+    subgraph Backend["⚙️ Backend Services"]
+        B1[Auth API]
+        B2[Banking API]
+        B3[Payments API]
+        B4[AI Orchestrator]
+        B5[Tax & GST API]
+        B6[SETU Account Aggregator]
+        B7[KYC & eKYC]
+        B8[Admin API]
+    end
+
+    subgraph Data["🗄️ Data Stores"]
+        D1[(SQLite / PostgreSQL)]
+        D2[Redis Cache]
+        D3[File Uploads]
+    end
+
+    U1 --> P1 --> B1 --> D1
+    U1 --> P2 --> B4 --> D1
+    U1 --> P3 --> B2 & B3 --> D1
+    U1 --> P4 --> B4 --> D1
+    U1 --> P5 --> B5 --> D1
+    U1 --> P6 --> B4 --> D1
+    U5 --> P7 --> B8 --> D1
+
+    U2 --> P2
+    U3 --> P2
+    U4 --> P3 & P5
+
+    P1 --> S1 & S2
+    P3 --> S4 & S5
+    P7 --> S6
+
+    B6 --> D1
+    B7 --> D1
+    B4 --> D2
+    B2 --> D2
+    B3 --> D3
+    B5 --> D3
+    </div>
+    <script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+</body>
+</html>
