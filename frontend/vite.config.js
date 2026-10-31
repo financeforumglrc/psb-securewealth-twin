@@ -11,6 +11,11 @@ const siteRoot = path.resolve(__dirname, '..');
 // global functions. Vite does not bundle or copy classic script dependencies.
 function publicToolAssets() {
   const vendors = {
+    'vendor/tesseract.min.js': path.join(siteRoot, 'node_modules/tesseract.js/dist/tesseract.min.js'),
+    'vendor/tesseract-worker.min.js': path.join(siteRoot, 'node_modules/tesseract.js/dist/worker.min.js'),
+    'vendor/ocr-lang/eng.traineddata.gz': path.join(siteRoot, 'node_modules/@tesseract.js-data/eng/4.0.0/eng.traineddata.gz'),
+    'vendor/pdf.min.mjs': path.join(siteRoot, 'node_modules/pdfjs-dist/build/pdf.min.mjs'),
+    'vendor/pdf.worker.min.mjs': path.join(siteRoot, 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs'),
     'vendor/exceljs.min.js': path.join(siteRoot, 'node_modules/exceljs/dist/exceljs.min.js'),
     'vendor/jspdf.umd.min.js': path.join(siteRoot, 'node_modules/jspdf/dist/jspdf.umd.min.js'),
     'vendor/jspdf.plugin.autotable.min.js': path.join(siteRoot, 'node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.min.js'),
@@ -18,6 +23,7 @@ function publicToolAssets() {
     'vendor/qpdf.wasm': path.join(siteRoot, 'node_modules/@neslinesli93/qpdf-wasm/dist/qpdf.wasm'),
     'vendor/purify.min.js': path.join(siteRoot, 'node_modules/dompurify/dist/purify.min.js')
   };
+  for (const name of fs.readdirSync(path.join(siteRoot,'node_modules/tesseract.js-core')).filter(name=>/\.wasm(?:\.js)?$/.test(name))) vendors['vendor/ocr-core/'+name]=path.join(siteRoot,'node_modules/tesseract.js-core',name);
   return {
     name: 'public-tool-assets',
     writeBundle(options) {
