@@ -34,7 +34,7 @@
   $('clearBaseline').onclick=()=>{state.baseline=null;$('saveStatus').textContent='Unsaved changes';render();};
   $('pinBaseline').onclick=()=>{try{state.baseline=baseline(current(),$('baselineLabel').value,$('reportingScope').value);$('saveStatus').textContent='Unsaved changes';render();}catch(e){$('reviewError').textContent=e.message;}};
   $('downloadMemo').onclick=()=>{try{const p=current();if(p.company==='Untitled company')throw Error('Set the legal company name before exporting the committee memo.');const r=win.getModelResearch(),comparison=state.baseline?compare(state.baseline,p,$('reportingScope').value):null,decision=win.DecisionLab.analyze(p,win.DecisionLab.getSettings()),content=memo(p,r,getState().notes,comparison,decision),url=URL.createObjectURL(new Blob([content],{type:'text/markdown;charset=utf-8'})),a=el('a');a.href=url;a.download=p.company.replace(/[^a-z0-9_-]/gi,'_')+'_committee-memo.md';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('reviewError').textContent='Working memo created. Open in a Markdown editor to review and develop the conclusions.';}catch(e){$('reviewError').textContent=e.message;}};
-  for(const k of ['decision','catalysts','diligence'])$('memo_'+k).oninput=()=>{$('saveStatus').textContent='Unsaved changes';};win.addEventListener('financial-model-state',render);render();
+  for(const k of ['decision','catalysts','diligence'])$('memo_'+k).oninput=()=>{$('saveStatus').textContent='Unsaved changes';};$('reportingScope').addEventListener('change',render);win.addEventListener('financial-model-state',render);render();
  }
  return {baseline,validate,compare,memo,getState,restore,appendWorkbook,mount};
 });
