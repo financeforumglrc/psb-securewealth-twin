@@ -12,7 +12,7 @@
  async function readFiles(){
   if(busy)return;const files=[...$('statementFiles').files];if(!files.length){status('Select statement files first.');return;}
   busy=true;$('readStatements').disabled=true;$('applyStatements').disabled=true;$('statementResults').replaceChildren();base=null;
-  let worker=null,pdfDoc=null;const found=[],docs=[],warnings=[];
+  let worker=null,pdfDoc=null,pdfTask=null;const found=[],docs=[],warnings=[];
   try{
    const unit=$('statementUnit').value;if(!unit)throw Error('Confirm the original reporting unit before extraction.');
    const fiscalYears=years();E().parse('',fiscalYears,unit);
@@ -29,14 +29,14 @@
      for(const sheet of book.worksheets){const rows=[];sheet.eachRow(row=>{if(++count>10000)throw Error('Workbook exceeds the 10,000-row reading limit.');rows.push(row.values.slice(1).map(v=>typeof v==='object'&&v!==null?(v.result??v.text??''):v??'').join('\t'));});collect(rows.join('\n'),file.name+' / '+sheet.name);}
     }else if(/\.pdf$/i.test(file.name)){
      const pdfjs=await import(new URL('vendor/pdf.min.mjs',location.href).href);pdfjs.GlobalWorkerOptions.workerSrc=new URL('vendor/pdf.worker.min.mjs',location.href).href;
-     pdfDoc=await pdfjs.getDocument({data:bytes,isEvalSupported:false}).promise;
+     pdfTask=pdfjs.getDocument({data:bytes,isEvalSupported:false});pdfDoc=await pdfTask.promise;
      for(const number of pages($('statementPages').value,pdfDoc.numPages)){
       status(file.name+' · page '+number);const page=await pdfDoc.getPage(number),content=await page.getTextContent(),lines=[];
       for(const item of content.items.filter(x=>x.str).sort((a,b)=>b.transform[5]-a.transform[5]||a.transform[4]-b.transform[4])){let line=lines.find(l=>Math.abs(l.y-item.transform[5])<3);if(!line){line={y:item.transform[5],items:[]};lines.push(line);}line.items.push(item);}
       let text=lines.map(l=>l.items.sort((a,b)=>a.transform[4]-b.transform[4]).map(x=>x.str).join(' ')).join('\n');
       if($('forceStatementOCR').checked||text.replace(/\s/g,'').length<40){const viewport=page.getViewport({scale:1.8});if(viewport.width*viewport.height>12000000)throw Error('Page resolution is too large for this reader.');const canvas=el('canvas');canvas.width=viewport.width;canvas.height=viewport.height;await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;text=await ocr(canvas);canvas.width=canvas.height=0;}
       collect(text,file.name+' / page '+number);page.cleanup();
-     }await pdfDoc.destroy();pdfDoc=null;
+     }await pdfTask.destroy();pdfTask=null;pdfDoc=null;
     }else if(/\.(png|jpe?g|webp)$/i.test(file.name)){
      const image=await createImageBitmap(file);try{if(image.width*image.height>12000000)throw Error('Use an image under 12 megapixels.');const canvas=el('canvas');canvas.width=image.width;canvas.height=image.height;canvas.getContext('2d').drawImage(image,0,0);collect(await ocr(canvas),file.name);canvas.width=canvas.height=0;}finally{image.close();}
     }else throw Error('Use PDF, PNG, JPG, WebP, XLSX, CSV or TXT files.');
@@ -46,7 +46,7 @@
    for(const row of periods.values())for(const key of Object.keys(E().metrics)){const list=row.evidence?.[key]||[],unique=[...new Set(list.map(c=>c.value))];row[key]=unique.length===1?(key==='capex'?Math.abs(unique[0]):unique[0]):null;if(unique.length>1)warnings.push(`${row.period} ${E().metrics[key]}: conflicting values; choose the correct source manually.`);}
    draft=[...periods.values()];sources=docs;renderGrid();$('statementWarnings').textContent=[...new Set(warnings)].join(' ');status(`${found.length} candidate figures mapped. All values are provisional. Review every cell and source before applying.`);
   }catch(error){status(error.message);draft=[];sources=[];$('statementReview').replaceChildren();}
-  finally{if(worker)await worker.terminate();if(pdfDoc)await pdfDoc.destroy();busy=false;$('readStatements').disabled=false;$('applyStatements').disabled=!draft.length;}
+  finally{if(worker)await worker.terminate();if(pdfTask)await pdfTask.destroy();busy=false;$('readStatements').disabled=false;$('applyStatements').disabled=!draft.length;}
  }
  function renderGrid(){const table=el('table'),header=el('tr');header.append(el('th','INR crore · review all figures'));for(const r of draft)header.append(el('th',r.period));const head=el('thead');head.append(header);table.append(head);const body=el('tbody');
   for(const [key,label] of Object.entries(E().metrics)){const row=el('tr');row.append(el('th',label));for(const data of draft){const cell=el('td'),input=el('input');input.type='number';input.step='any';input.value=Number.isFinite(data[key])?data[key]:'';input.setAttribute('aria-label',label+' '+data.period);input.title=(data.evidence?.[key]||[]).map(c=>c.document+', line '+c.line+': '+c.raw).join('\n')||'Not extracted: enter a sourced value manually';input.oninput=()=>{data[key]=input.value.trim()===''?null:Number(input.value);base=null;$('statementResults').replaceChildren();};const detail=el('details'),summary=el('summary','Source');detail.append(summary,el('small',input.title));cell.append(input,detail);row.append(cell);}body.append(row);}table.append(body);$('statementReview').replaceChildren(table);$('statementConfirmed').checked=false;
