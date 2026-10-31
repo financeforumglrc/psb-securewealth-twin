@@ -49,7 +49,7 @@ async function companyResearch(symbol, options = {}) {
         entity, accessedAt, needsEntitySelection: false,
         quote: quote ? { ...quote, role: 'market-reference', sourceUrl: 'https://finance.yahoo.com/quote/' + encodeURIComponent(entity.yahooTicker), independentlyVerified: false } : null,
         fundamentals: fundamentals ? { ...fundamentals, role: 'secondary-financial-data', independentlyVerified: false, warning: 'Cross-check every material input against the company filing; secondary data is not a substitute for audited statements.' } : null,
-        primarySources: entity.sources.map(source => ({ ...source, accessedAt, financialValuesExtracted: false })),
+        primarySources: [...entity.sources,...(fundamentals?.filings||[])].map(source => ({ ...source, accessedAt, financialValuesExtracted: false })),
         availability: { quote: quote ? 'available' : 'unavailable', fundamentals: fundamentals ? 'available' : options.includeFundamentals ? 'unavailable' : 'not-requested', primaryFinancials: 'requires-extraction-and-reconciliation' },
         warnings: [entity.corporateAction, !quote ? 'No quote was returned; enter a dated market reference manually.' : null, !entity.sources.length ? 'No curated primary filings are attached to this issuer yet. Add official company or exchange filings to the research record.' : null].filter(Boolean)
     };

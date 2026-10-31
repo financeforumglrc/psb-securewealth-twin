@@ -257,7 +257,12 @@ async function scrapeCompany(ticker) {
         promoterHolding:    last(sh.promoters)
     };
 
+    const $ = require('cheerio').load(html);
+    const filings = $('#documents a[href]').map((_,a)=>({title:$(a).text().replace(/\s+/g,' ').trim(),url:$(a).attr('href')})).get().filter(item=>{
+        try { const u=new URL(item.url);return /^Annual Report 20\d{2}$/.test(item.title)&&u.protocol==='https:'&&['www.bseindia.com','archives.nseindia.com','nsearchives.nseindia.com'].includes(u.hostname); } catch { return false; }
+    }).slice(0,10).map((item,index)=>({...item,id:`${clean}-annual-${index}`,period:'FY'+item.title.match(/20\d{2}/)[0],publisher:'Exchange filing link discovered via Screener',kind:'exchange-filing'}));
     const result = {
+        filings,
         info:     extractInfo(html, clean),
         topRatios:extractTopRatios(html),
         years:    { pl: plYears, bs: bsRows ? bsRows[0].slice(1) : [], cf: cfRows ? cfRows[0].slice(1) : [], ratios: ratYears, sh: shYears },
