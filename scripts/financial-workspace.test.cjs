@@ -25,7 +25,7 @@ test('WACC build preserves weights and applies the debt tax shield',()=>{
 });
 async function browser(){
  const dom=new JSDOM(fs.readFileSync(path.join(root,'financial-modelling.html'),'utf8'),{url:'https://local.example/financial-modelling.html',runScripts:'outside-only',pretendToBeVisual:true});
- for(const file of ['financial-core.js','report-research.js','research-report.js','modelling-exports.js','financial-workspace.js','report-research-workspace.js','company-sources.js'])dom.window.eval(fs.readFileSync(path.join(root,'js',file),'utf8'));
+ for(const file of ['financial-core.js','report-research.js','research-report.js','modelling-exports.js','financial-workspace.js','report-research-workspace.js','company-sources.js','decision-lab.js'])dom.window.eval(fs.readFileSync(path.join(root,'js',file),'utf8'));
  await new Promise(resolve=>dom.window.setTimeout(resolve,10));return dom;
 }
 function set(dom,id,value){const el=dom.window.document.getElementById(id);el.value=value;el.dispatchEvent(new dom.window.Event('input',{bubbles:true}));}
@@ -54,5 +54,34 @@ test('Historical periods require reconciled statements and preserve the filing l
   for(const [key,value]of Object.entries({period:'FY2025',revenue:90,ebitda:18,netIncome:8,operatingCashFlow:12,totalAssets:100,totalLiabilities:40,equity:10}))set(dom,'history_'+key,String(value));
   set(dom,'historySource','Official annual report');set(dom,'historyUrl','https://issuer.example/annual-report.pdf');set(dom,'historyLocator','Page 121');d.getElementById('historicalForm').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));
   assert.match(d.getElementById('historyError').textContent,/does not reconcile/);record=dom.window.getModelResearch();assert.equal(record.historical.length,1);
+ }finally{dom.window.close();}
+});
+
+const lab=require('../js/decision-lab');
+test('Reverse DCF recovers known growth and margin and reports unavailable solutions',()=>{
+ const p={...inputs(),growth1:9,growth2:9};p.price=core.calculate(p).dcfPrice;
+ const g=lab.reverse(p,'growth'),m=lab.reverse(p,'margin');
+ assert.equal(g.status,'solved');assert.ok(g.roots.some(x=>Math.abs(x-9)<1e-6));assert.ok(m.roots.some(x=>Math.abs(x-p.ebitdaMargin)<1e-6));
+ assert.equal(lab.reverse({...p,price:0},'growth').status,'missing-price');assert.equal(lab.reverse({...p,price:1e15},'growth').status,'outside-range');
+});
+test('Decision weights, entry ceiling and driver ranking are consistent without invented probabilities',async()=>{
+ const p=inputs(),s={weights:[0,100,0],marginOfSafety:0,thesis:'test',invalidation:'test'},a=lab.analyze(p,s);
+ assert.equal(a.weightedValue,a.model.dcfPrice);assert.equal(a.entryValue,a.model.dcfPrice);assert.equal(a.flags.length,0);
+ assert.ok(a.drivers.every((d,i)=>i===0||d.swing<=a.drivers[i-1].swing));
+ assert.throws(()=>lab.analyze(p,{weights:[25,25,25]}),/total 100/);assert.throws(()=>lab.analyze(p,{marginOfSafety:100}));
+ const wb=await exportsAPI.workbook(exportsAPI.snapshot(core.calculate(p),p),require('exceljs'));lab.appendWorkbook(wb,p,s);
+ assert.equal(wb.getWorksheet('DecisionLab').getCell('B7').value,a.weightedValue);
+ const restored=new (require('exceljs').Workbook)();await restored.xlsx.load(await wb.xlsx.writeBuffer());assert.equal(restored.getWorksheet('DecisionLab').getCell('B8').value,'test');
+});
+test('Decision lab rejects stale models, preserves zero weights and restores project notes',async()=>{
+ const dom=await browser(),d=dom.window.document;
+ try {
+  d.getElementById('calculateModel').click();assert.equal(d.querySelectorAll('.driver-row').length,6);
+  set(dom,'weightDownside',0);set(dom,'weightBase',100);set(dom,'weightUpside',0);set(dom,'safetyMargin',0);set(dom,'investmentThesis','Evidence-led thesis');
+  assert.equal(d.getElementById('decisionError').textContent,'');d.getElementById('saveProject').click();
+  const project=JSON.parse(dom.window.localStorage.getItem('ds-financial-project-v2'));assert.equal(project.decisionSettings.thesis,'Evidence-led thesis');assert.equal(project.decisionSettings.weights[0],0);
+  set(dom,'growth1',15);assert.match(d.getElementById('decisionResults').textContent,/Calculate the current/);assert.equal(dom.window.DecisionLab.getAnalysis(),null);
+  d.getElementById('calculateModel').click();assert.equal(d.querySelectorAll('.driver-row').length,6);
+  set(dom,'weightBase',90);assert.match(d.getElementById('decisionError').textContent,/total 100/);assert.equal(d.querySelectorAll('.driver-row').length,0);
  }finally{dom.window.close();}
 });
