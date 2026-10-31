@@ -26,7 +26,7 @@ test('WACC build preserves weights and applies the debt tax shield',()=>{
 async function browser(project){
  const dom=new JSDOM(fs.readFileSync(path.join(root,'financial-modelling.html'),'utf8'),{url:'https://local.example/financial-modelling.html',runScripts:'outside-only',pretendToBeVisual:true});
  if(project)dom.window.localStorage.setItem('ds-financial-project-v2',JSON.stringify(project));
- for(const file of ['financial-core.js','report-research.js','research-report.js','modelling-exports.js','financial-workspace.js','report-research-workspace.js','company-sources.js','decision-lab.js','statement-engine.js','financial-intake.js','statement-upload.js','market-link.js','intake-workspace.js'])dom.window.eval(fs.readFileSync(path.join(root,'js',file),'utf8'));
+ for(const file of ['financial-core.js','report-research.js','research-report.js','modelling-exports.js','financial-workspace.js','report-research-workspace.js','company-sources.js','decision-lab.js','statement-engine.js','financial-intake.js','statement-upload.js','market-link.js','intake-workspace.js','model-review.js'])dom.window.eval(fs.readFileSync(path.join(root,'js',file),'utf8'));
  await new Promise(resolve=>dom.window.setTimeout(resolve,10));return dom;
 }
 function set(dom,id,value){const el=dom.window.document.getElementById(id);el.value=value;el.dispatchEvent(new dom.window.Event('input',{bubbles:true}));}
@@ -146,4 +146,19 @@ test('Public data pack aligns annual statement periods and never uses total liab
 test('Manual route opens a blank grid and reviewed manual actuals produce the linked forecast',async()=>{
  const dom=await browser(),d=dom.window.document;
  try{set(dom,'intakeCompany','Manual Company');d.getElementById('statementYears').value='2026';d.getElementById('manualSource').value='Signed annual statements, pages 1-3';d.getElementById('manualStatements').click();assert.equal(d.querySelectorAll('#statementReview input').length,11);for(const [key,label]of Object.entries(statements.metrics)){const input=d.querySelector('[aria-label="'+label+' FY2026"]');assert.equal(input.value,'');input.value=actual[key];input.dispatchEvent(new dom.window.Event('input',{bubbles:true}));}d.getElementById('statementConfirmed').checked=true;d.getElementById('applyStatements').click();assert.equal(dom.window.modelData.baseRev,100);assert.match(d.getElementById('statementResults').textContent,/Linked three-statement/);assert.equal(dom.window.getModelResearch().sources[0].document,'Signed annual statements, pages 1-3');}finally{dom.window.close();}
+});
+
+const review=require('../js/model-review');
+test('Pinned-baseline bridge reconciles multi-driver revisions including crossed rate ranges',()=>{
+ const p=inputs(),b=review.baseline(p,'Original','consolidated'),revised={...p,baseRev:130,growth1:18,ebitdaMargin:25,netDebt:-5,wacc:2.5,tgr:1};const c=review.compare(b,revised,'consolidated');assert.ok(Math.abs(c.residual)<1e-8);assert.equal(c.after.dcfPrice,core.calculate(revised).dcfPrice);assert.ok(c.steps.some(s=>s.driver==='WACC & terminal growth'));assert.throws(()=>review.compare(b,{...p,company:'Other'},'consolidated'));assert.throws(()=>review.compare(b,p,'standalone'));assert.throws(()=>review.validate({...b,createdAt:'bad'}));
+ const price=review.compare(b,{...p,price:200},'consolidated');assert.equal(price.change,0);assert.equal(price.steps[0].delta,0);
+});
+test('Working memo is tied to calculated assumptions and leaves missing research explicit',()=>{
+ const p={...inputs(),company:'<Company>'},research={scope:'consolidated',historical:[],sources:[]},notes={decision:'Research further',catalysts:'Annual results',diligence:'Reconcile cash'},decision=lab.analyze(p,{thesis:'Margin recovery',invalidation:'Loss of contracts'}),output=review.memo(p,research,notes,null,decision);
+ assert.match(output,/&lt;Company&gt;/);assert.ok(!output.includes('<Company>'));assert.match(output,/Reconcile cash/);assert.match(output,/Historical periods recorded: none/);assert.match(output,/not a completed company research report/);assert.match(output,/not estimated probabilities/);
+});
+test('Baseline, memo notes and stale guard survive a saved project',async()=>{
+ const dom=await browser(),d=dom.window.document;let project;
+ try{d.getElementById('pinBaseline').click();assert.match(d.getElementById('reviewError').textContent,/Calculate current/);d.getElementById('calculateModel').click();d.getElementById('pinBaseline').click();set(dom,'growth1',20);assert.match(d.getElementById('reviewError').textContent,/Calculate current/);d.getElementById('calculateModel').click();assert.match(d.getElementById('comparisonResults').textContent,/Early growth/);set(dom,'memo_diligence','Check leases');d.getElementById('saveProject').click();project=JSON.parse(dom.window.localStorage.getItem('ds-financial-project-v2'));assert.equal(project.reviewState.notes.diligence,'Check leases');assert.equal(project.reviewState.baseline.inputs.growth1,10);const wb=await exportsAPI.workbook(exportsAPI.snapshot(dom.window.modelData,dom.window.getCurrentParams()),require('exceljs'));dom.window.ModelReview.appendWorkbook(wb,dom.window.getCurrentParams(),'consolidated');assert.ok(wb.getWorksheet('VersionComparison'));}finally{dom.window.close();}
+ const reopened=await browser(project);try{assert.equal(reopened.window.document.getElementById('memo_diligence').value,'Check leases');assert.match(reopened.window.document.getElementById('baselineStatus').textContent,/Initial investment case/);reopened.window.document.getElementById('clearBaseline').click();assert.equal(reopened.window.ModelReview.getState().baseline,null);}finally{reopened.window.close();}
 });

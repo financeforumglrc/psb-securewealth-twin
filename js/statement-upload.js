@@ -3,7 +3,7 @@
  const $=id=>document.getElementById(id),E=()=>window.StatementEngine;
  const el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
  let draft=[],sources=[],busy=false,base=null,draftScope=null,loadPromises=new Map();
- const fmt=n=>Number.isFinite(n)?n.toLocaleString('en-IN',{maximumFractionDigits:2}):'—';
+ const fmt=n=>Number.isFinite(n)?(Math.abs(n)<1e-8?0:n).toLocaleString('en-IN',{maximumFractionDigits:2}):'—';
  function status(text){$('statementStatus').textContent=text;}
  function load(src){if(!loadPromises.has(src))loadPromises.set(src,new Promise((resolve,reject)=>{const s=el('script');s.src=src;s.onload=resolve;s.onerror=()=>{loadPromises.delete(src);reject(Error('Could not load document reader. Check your connection and retry.'));};document.head.append(s);}));return loadPromises.get(src);}
  function years(){return $('statementYears').value.split(',').map(x=>'FY'+x.trim().replace(/^FY/i,''));}
