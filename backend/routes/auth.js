@@ -567,6 +567,9 @@ router.post('/face-verify', authLimiter, (req, res) => {
  * @access  Public
  */
 router.post('/demo-login', authLimiter, async (req, res) => {
+    if (process.env.NODE_ENV === 'production' || process.env.DEMO_MODE === 'false') {
+        return res.status(403).json({ success: false, error: 'Demo login is disabled. Use your account password.', code: 'DEMO_DISABLED' });
+    }
     try {
         const { email, name } = req.body;
         const fingerprint = req.body.fingerprint || {};
