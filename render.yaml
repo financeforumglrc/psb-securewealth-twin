@@ -26,6 +26,10 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
+      - key: ADMIN_ID
+        value: owner
+      - key: ADMIN_PASSWORD
+        generateValue: true
       - key: DEMO_MODE
         value: "false"
       - key: TRUST_PROXY
