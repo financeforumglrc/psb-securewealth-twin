@@ -1,0 +1,74 @@
+{
+  "name": "ds-financial",
+  "version": "2.0.0",
+  "private": true,
+  "description": "AI-powered financial platform - India's first patent-protected financial intelligence suite",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev -w backend",
+    "dev:frontend": "npm run dev -w frontend",
+    "build": "npm run build -w frontend",
+    "start": "npm run start -w backend",
+    "test": "npm run test -w backend",
+    "test:tools": "node --test scripts/tools-regression.test.cjs scripts/modelling-exports.test.cjs scripts/report-research.test.cjs scripts/financial-workspace.test.cjs",
+    "check:tools": "node scripts/check-tools.cjs",
+    "test:watch": "npm run test:watch -w backend",
+    "test:coverage": "npm run test:coverage -w backend",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --ignore-pattern node_modules --ignore-pattern dist --ignore-pattern coverage",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --ignore-pattern node_modules --ignore-pattern dist --ignore-pattern coverage",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,html,md}\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,html,md}\" --ignore-path .gitignore",
+    "typecheck": "tsc --noEmit -p backend/tsconfig.json && tsc --noEmit -p frontend/tsconfig.json",
+    "prepare": "husky",
+    "security:audit": "npm audit",
+    "clean": "node -e \"const fs=require('fs');['node_modules','dist','coverage','.turbo'].forEach(d=>fs.rmSync(d,{recursive:true,force:true}))\"",
+    "docker:build": "docker-compose -f backend/docker-compose.yml build",
+    "docker:up": "docker-compose -f backend/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f backend/docker-compose.yml down"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "concurrently": "^9.0.1",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.0",
+    "eslint-plugin-security": "^3.0.1",
+    "husky": "^9.1.0",
+    "jsdom": "^26.1.0",
+    "lint-staged": "^15.2.0",
+    "pdf-lib": "^1.17.1",
+    "prettier": "^3.4.0",
+    "terser": "^5.49.0",
+    "typescript": "^5.7.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,html,md}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "financial",
+    "tax",
+    "gst",
+    "india",
+    "ai",
+    "patent",
+    "fintech",
+    "securewealth"
+  ],
+  "author": "DS Financial Solutions",
+  "license": "PROPRIETARY"
+}

@@ -1,0 +1,459 @@
+/**
+ * DS Financial Solutions - Backend Server
+ * Patent-Protected AI-Powered Financial Intelligence Platform
+ * Version: 2.0.0
+ */
+
+const path = require('path');
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
+const compression = require('compression');
+const winston = require('winston');
+require('dotenv').config();
+
+// Import routes
+const authRoutes = require('./routes/auth');
+const taxRoutes = require('./routes/tax');
+const gstRoutes = require('./routes/gst');
+const aiRoutes = require('./routes/ai');
+const documentRoutes = require('./routes/documents');
+const financialModelRoutes = require('./routes/financial-model');
+const analyticsRoutes = require('./routes/analytics');
+const extractRoutes = require('./routes/extract');
+const galleryRoutes = require('./routes/gallery');
+const exportRoutes = require('./routes/export');
+const adminRoutes = require('./routes/admin');
+const chartRoutes = require('./routes/charts');
+const marketDataRoutes = require('./routes/market-data');
+const scenarioRoutes = require('./routes/scenarios');
+const nlpQueryRoutes = require('./routes/nlp-query');
+const screenerRoutes = require('./routes/screener');
+const bankingRoutes = require('./routes/banking');
+const kycRoutes = require('./routes/kyc');
+const aaRoutes = require('./routes/aa');
+const protectionRoutes = require('./routes/protection');
+const otpRoutes = require('./routes/otp');
+
+// Import middleware
+const { errorHandler } = require('./middleware/errorHandler');
+const { authMiddleware, requireRole, ensureJwtSecret } = require('./middleware/auth');
+const { metricsMiddleware, getMetrics, getDbMetrics } = require('./middleware/metrics');
+
+// Import OpenAPI documentation
+const swaggerDocumentation = require('./config/swagger');
+
+// Validate JWT secret before accepting traffic
+ensureJwtSecret();
+
+// Initialize logger
+const logger = winston.createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.errors({ stack: true }),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console({
+            format: process.env.NODE_ENV !== 'production'
+                ? winston.format.combine(winston.format.colorize(), winston.format.simple())
+                : winston.format.json()
+        }),
+        new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'logs/combined.log' }),
+        new winston.transports.File({ filename: 'logs/metrics.log', level: 'info' })
+    ]
+});
+
+// Initialize Express app
+const app = express();
+app.set('trust proxy', process.env.TRUST_PROXY ? parseInt(process.env.TRUST_PROXY, 10) : 1);
+const PORT = process.env.PORT || 5000;
+
+// Performance: Compression
+app.use(compression({
+    level: 6,
+    threshold: 1024,
+    filter: (req, res) => {
+        if (req.headers['x-no-compression']) return false;
+        return compression.filter(req, res);
+    }
+}));
+app.use('/api', require('./middleware/persistence')(require('./services/database')));
+
+// Security middleware
+app.use(cookieParser());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'", "https://checkout.razorpay.com", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net", "https://unpkg.com"],
+            workerSrc: ["'self'", "blob:", "https://cdnjs.cloudflare.com"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+            imgSrc: ["'self'", "data:", "https:", "blob:"],
+            connectSrc: ["'self'", "https://api.gst.gov.in", "https://openrouter.ai", "https://api.groq.com", "https://api-inference.huggingface.co", "https://api.anthropic.com", "https://generativelanguage.googleapis.com", "https://api.openai.com", "wss://*"],
+            frameSrc: ["'self'", "https://checkout.razorpay.com"],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: []
+        }
+    },
+    hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true
+    },
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    noSniff: true,
+    xssFilter: true,
+    hidePoweredBy: true,
+    frameguard: { action: 'deny' }
+}));
+
+// Metrics middleware
+app.use(metricsMiddleware);
+
+const envOrigins = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map(o => o.trim())
+    .filter(Boolean);
+
+const defaultOrigins = process.env.NODE_ENV === 'production'
+    ? ['https://dsfinancial.in', 'https://www.dsfinancial.in', 'https://dsfinancial-47556.surge.sh', 'https://psb-securewealth-2026-new.surge.sh', 'https://psb-securewealth-frontend.onrender.com', 'https://psb-securewealth-backend.onrender.com']
+    : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5174', 'http://127.0.0.1:5175', 'http://127.0.0.1:5500', 'https://dsfinancial-47556.surge.sh', 'https://psb-securewealth-2026-new.surge.sh', 'https://psb-securewealth-frontend.onrender.com'];
+
+const allowedOrigins = Array.from(new Set([...defaultOrigins, ...envOrigins, process.env.RENDER_EXTERNAL_URL].filter(Boolean)));
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (process.env.NODE_ENV !== 'production' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+            return callback(null, true);
+        }
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-BYOK-Key', 'X-Device-Id']
+}));
+
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
+    message: {
+        success: false,
+        error: 'Too many requests, please try again later.'
+    },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+app.use('/api', limiter);
+
+// Stricter rate limiting for AI endpoints
+const aiLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 10,
+    message: {
+        success: false,
+        error: 'AI request limit exceeded. Please try again in a minute.'
+    }
+});
+
+// Raw body parser for Razorpay webhook signature verification (must be before express.json)
+app.use('/api/v1/banking/payments/webhook', express.raw({ type: 'application/json' }));
+
+// Body parsing
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Request logging
+app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
+
+// Frontend routes - serve HTML directly
+if (process.env.SERVE_FRONTEND === 'true') {
+    const frontendDir = path.join(__dirname, '..', 'dist');
+    if (!require('fs').existsSync(path.join(frontendDir, 'index.html'))) {
+        throw new Error('Frontend build missing: run npm run build before starting');
+    }
+    app.use(express.static(frontendDir, { index: 'index.html', dotfiles: 'deny' }));
+    app.get('/financial-modelling', (req, res) => res.sendFile(path.join(frontendDir, 'financial-modelling.html')));
+}
+
+app.get('/api/v1/ready', async (req, res) => {
+    try {
+        const persistence = require('./services/database');
+        await persistence.ready;
+        if (persistence.pgAdapter.isEnabled()) await persistence.pgAdapter.getPool().query('SELECT 1');
+        res.json({ success: true, database: persistence.pgAdapter.isEnabled() ? 'postgresql' : 'sqlite' });
+    } catch (_) {
+        res.status(503).json({ success: false, error: 'Database unavailable' });
+    }
+});
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+    res.send('<html><body><h1>DS Financial API</h1><p>API is running. Open api-demo.html directly in browser.</p></body></html>');
+});
+
+app.get('/demo', (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+    res.send('<html><body><h1>API Demo</h1><p>Please open api-demo.html directly in your browser.</p></body></html>');
+});
+
+app.get('/financial-modelling', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'financial-modelling.html'));
+});
+
+app.get('/financial-modelling-v2', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'financial-modelling-v2.html'));
+});
+
+// Serve any .js tab module requested directly (tab_screener.js etc.)
+app.get('/tab_:name.js', (req, res) => {
+    const allowed = new Set(['screener', 'charts', 'portfolio', 'tax', 'gst']);
+    if (!allowed.has(req.params.name)) {
+        return res.status(400).send('Invalid tab module');
+    }
+    const filePath = path.resolve(__dirname, '..', `tab_${req.params.name}.js`);
+    if (!filePath.startsWith(path.resolve(__dirname, '..'))) {
+        return res.status(400).send('Invalid path');
+    }
+    res.sendFile(filePath);
+});
+app.get('/extracted_functions.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'extracted_functions.js'));
+});
+
+// Health check endpoint
+app.get('/api/v1/health', (req, res) => {
+    res.json({
+        success: true,
+        message: 'DS Financial API is running',
+        version: '2.0.0',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV === 'production' ? 'production' : 'non-production',
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        patents: {
+            total: 47,
+            phase1: 7,
+            phase2: 12,
+            phase3: 18,
+            phase4: 10
+        }
+    });
+});
+
+// Metrics & Observability endpoints
+app.get('/api/v1/metrics', getMetrics);
+app.get('/api/v1/metrics/db', getDbMetrics);
+
+// OpenAPI documentation
+app.get('/api/v1/docs.json', (req, res) => {
+    res.json(swaggerDocumentation);
+});
+
+// OpenAPI documentation viewer (serves the raw JSON for Swagger UI)
+app.get('/api/v1/docs', (req, res) => {
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DS Financial API Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.min.css">
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-bundle.min.js"></script>
+    <script>
+        SwaggerUIBundle({
+            url: '/api/v1/docs.json',
+            dom_id: '#swagger-ui',
+            deepLinking: true,
+            presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],
+            layout: 'BaseLayout',
+            docExpansion: 'list',
+            defaultModelExpandDepth: 3,
+            defaultModelsExpandDepth: 3
+        });
+    </script>
+    <style>
+        body { margin: 0; background: #fafafa; }
+        .swagger-ui .topbar { display: none; }
+    </style>
+</body>
+</html>`;
+    res.setHeader('Content-Type', 'text/html');
+    res.send(html);
+});
+
+// Auth rate limiter (stricter than general limiter)
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: {
+        success: false,
+        error: 'Too many authentication attempts, please try again later.',
+        code: 'RATE_LIMIT_EXCEEDED'
+    },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+// API routes (Phase 2 v2 + Phase 3 + Phase 4)
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/tax', authMiddleware, taxRoutes);
+app.use('/api/v1/gst', authMiddleware, gstRoutes);
+// AI/extract/export require authenticated users (quota/cost/security)
+app.use('/api/v1/ai', authMiddleware, aiLimiter, aiRoutes);
+app.use('/api/v1/extract', authMiddleware, aiLimiter, extractRoutes);
+app.use('/api/v1/export', authMiddleware, exportRoutes);
+app.use('/api/v1/gallery', galleryRoutes);
+// Admin routes handle their own auth (login is public; users/stats require admin JWT cookie)
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/documents', authMiddleware, documentRoutes);
+app.use('/api/v1/analytics', authMiddleware, requireRole('admin'), analyticsRoutes);
+app.use('/api/v1/financial-model', authMiddleware, financialModelRoutes);
+// Phase 4: World-class features
+app.use('/api/v1/charts', chartRoutes);
+app.use('/api/v1/market', marketDataRoutes);
+app.use('/api/v1/research', require('./routes/research'));
+app.use('/api/v1/scenarios', scenarioRoutes);
+app.use('/api/v1/query', nlpQueryRoutes);
+app.use('/api/v1/screener', screenerRoutes);
+app.use('/api/v1/banking', bankingRoutes);
+app.use('/api/v1/kyc', authMiddleware, kycRoutes);
+// Account Aggregator mock endpoints (guest-friendly for demo; production uses authMiddleware)
+function aaGuestAuth(req, res, next) {
+    if (req.user && req.user.id) return next();
+    const guestId = req.headers['x-device-id'] || req.body?.userId || 'anonymous';
+    req.user = { id: String(guestId).slice(0, 64) };
+    next();
+}
+app.use('/api/v1/aa', aaGuestAuth, aaRoutes);
+
+// Patent information endpoint
+app.get('/api/v1/patents', (req, res) => {
+    res.json({
+        success: true,
+        data: {
+            portfolio: [
+                {
+                    id: 'PAT-001',
+                    title: 'GSTIN Risk Intelligence Validator',
+                    status: 'provisional_filed',
+                    priority: 'critical',
+                    file: 'gst-black-mirror-enhanced.js'
+                },
+                {
+                    id: 'PAT-002',
+                    title: 'ITC Risk Scanner',
+                    status: 'provisional_filed',
+                    priority: 'critical',
+                    file: 'gst-black-mirror-enhanced.js'
+                },
+                {
+                    id: 'PAT-003',
+                    title: 'Shell Company Detector',
+                    status: 'provisional_filed',
+                    priority: 'high',
+                    file: 'gst-black-mirror-enhanced.js'
+                },
+                {
+                    id: 'PAT-004',
+                    title: 'Multi-Regime Tax Optimizer',
+                    status: 'provisional_filed',
+                    priority: 'critical',
+                    file: 'smart-tax-optimizer.js'
+                },
+                {
+                    id: 'PAT-005',
+                    title: 'Tax Rate Error Detector',
+                    status: 'provisional_filed',
+                    priority: 'high',
+                    file: 'gst-black-mirror-enhanced.js'
+                },
+                {
+                    id: 'PAT-006',
+                    title: 'Missing ITC Recovery Predictor',
+                    status: 'provisional_filed',
+                    priority: 'high',
+                    file: 'gst-black-mirror-enhanced.js'
+                },
+                {
+                    id: 'PAT-007',
+                    title: 'Multi-Provider AI Orchestrator',
+                    status: 'provisional_filed',
+                    priority: 'medium-high',
+                    file: 'ai-engine.js'
+                }
+            ]
+        }
+    });
+});
+
+// SecureWealth Twin protection API (mirrors the FastAPI microservice)
+app.use('/', protectionRoutes);
+
+// OTP API (email-based one-time passwords)
+app.use('/api/v1/otp', otpRoutes);
+
+// Static file serving - ONLY serve from public directory, never parent dirs
+app.use(express.static(path.join(__dirname, '..', 'public'), {
+    index: ['index.html', 'api-demo.html']
+}));
+
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        error: 'Endpoint not found',
+        path: req.path,
+        method: req.method
+    });
+});
+
+// Global error handler
+app.use(errorHandler);
+
+const database = require('./services/database');
+
+// Start server only when run directly (not when imported by tests)
+if (require.main === module) {
+    database.ready
+        .then(() => {
+            const server = app.listen(PORT, () => {
+                logger.info(`DS Financial API Server running on port ${PORT}`);
+                logger.info(`Environment: ${process.env.NODE_ENV}`);
+                logger.info(`Patent Portfolio: 47 innovations ready`);
+            });
+
+            const gracefulShutdown = async (signal) => {
+                logger.info(`Received ${signal}, flushing Postgres sync queue...`);
+                await new Promise(resolve => server.close(resolve));
+                try {
+                    await database.pgAdapter.flushAndShutdown(database.db);
+                } catch (err) {
+                    logger.error('Error during shutdown flush:', err.message);
+                }
+                logger.info('Server closed.');
+                process.exit(0);
+            };
+
+            process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+            process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+        })
+        .catch((err) => {
+            logger.error('Database adapter failed to initialize:', err.message);
+            process.exit(1);
+        });
+}
+
+module.exports = app;

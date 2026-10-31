@@ -1,0 +1,82 @@
+{
+  "name": "DS Financial — AI-Powered Financial Intelligence",
+  "short_name": "DS Financial",
+  "description": "India's first patent-protected AI-powered financial platform. GST compliance, tax optimization, financial modeling, and wealth management.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#3b82f6",
+  "categories": ["finance", "business", "productivity", "utilities"],
+  "lang": "en-IN",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "192x192",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "512x512",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/demo-page-live.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "DS Financial Dashboard"
+    },
+    {
+      "src": "/psb-homepage.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile Financial Tools"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "GST Tools",
+      "short_name": "GST",
+      "description": "GSTIN validation, ITC analysis, compliance tools",
+      "url": "/gst-tools.html"
+    },
+    {
+      "name": "Tax Calculator",
+      "short_name": "Tax",
+      "description": "Income tax calculator and optimizer",
+      "url": "/tax-portal.html"
+    },
+    {
+      "name": "Financial Modeling",
+      "short_name": "Models",
+      "description": "DCF, Comps, LBO, and financial modeling",
+      "url": "/financial-modelling.html"
+    },
+    {
+      "name": "Model Gallery",
+      "short_name": "Gallery",
+      "description": "Pre-built financial models",
+      "url": "/gallery.html"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  }
+}
