@@ -260,7 +260,10 @@ async function scrapeCompany(ticker) {
     const result = {
         info:     extractInfo(html, clean),
         topRatios:extractTopRatios(html),
-        years:    { pl: plYears, ratios: ratYears, sh: shYears },
+        years:    { pl: plYears, bs: bsRows ? bsRows[0].slice(1) : [], cf: cfRows ? cfRows[0].slice(1) : [], ratios: ratYears, sh: shYears },
+        scope: 'standalone',
+        unit: 'INR crore',
+        sourceUrl: url,
         pl, bs, cf, ratios, sh, derived,
         fetchedAt: new Date().toISOString()
     };

@@ -26,7 +26,7 @@ test('WACC build preserves weights and applies the debt tax shield',()=>{
 async function browser(project){
  const dom=new JSDOM(fs.readFileSync(path.join(root,'financial-modelling.html'),'utf8'),{url:'https://local.example/financial-modelling.html',runScripts:'outside-only',pretendToBeVisual:true});
  if(project)dom.window.localStorage.setItem('ds-financial-project-v2',JSON.stringify(project));
- for(const file of ['financial-core.js','report-research.js','research-report.js','modelling-exports.js','financial-workspace.js','report-research-workspace.js','company-sources.js','decision-lab.js','statement-engine.js','statement-upload.js','market-link.js'])dom.window.eval(fs.readFileSync(path.join(root,'js',file),'utf8'));
+ for(const file of ['financial-core.js','report-research.js','research-report.js','modelling-exports.js','financial-workspace.js','report-research-workspace.js','company-sources.js','decision-lab.js','statement-engine.js','financial-intake.js','statement-upload.js','market-link.js','intake-workspace.js'])dom.window.eval(fs.readFileSync(path.join(root,'js',file),'utf8'));
  await new Promise(resolve=>dom.window.setTimeout(resolve,10));return dom;
 }
 function set(dom,id,value){const el=dom.window.document.getElementById(id);el.value=value;el.dispatchEvent(new dom.window.Event('input',{bubbles:true}));}
@@ -132,4 +132,18 @@ test('Dated quote links only after entity confirmation and never replaces the re
  try{set(dom,'companyName','Selected Entity');d.getElementById('linkedTicker').value='TCS';dom.window.fetch=async()=>({ok:true,json:async()=>({success:true,data:{entity:{name:'Test Listed Entity'},accessedAt:'2026-10-31T00:00:00Z',quote:{price:123,currency:'INR',ticker:'TCS.NS',sourceUrl:'https://finance.yahoo.com/quote/TCS.NS',market_time:'2026-10-30T10:00:00Z'}}})});
  await d.getElementById('refreshLinkedPrice').onclick();d.getElementById('useLinkedPrice').click();assert.match(d.getElementById('linkedPriceStatus').textContent,/Confirm/);assert.equal(d.getElementById('price').value,'0');d.getElementById('linkedEntityConfirmed').checked=true;d.getElementById('useLinkedPrice').click();assert.equal(dom.window.modelData.price,123);assert.equal(dom.window.modelData.shares,10);assert.equal(dom.window.getModelResearch().marketReference.ticker,'TCS.NS');
  }finally{dom.window.close();}
+});
+
+const intake=require('../js/financial-intake');
+test('Excel intake template round trips metadata, blanks and typed financial figures',async()=>{
+ const ExcelJS=require('exceljs'),wb=intake.template(ExcelJS,{company:'Template Company',years:['FY2026'],scope:'standalone',unit:'lakh'});let r=intake.readTemplate(wb);assert.equal(r.rows[0].cash,null);assert.equal(r.company,'Template Company');assert.equal(r.scope,'standalone');
+ wb.getWorksheet('Statements').getCell('B2').value=1000;const reopened=new ExcelJS.Workbook();await reopened.xlsx.load(await wb.xlsx.writeBuffer());r=intake.readTemplate(reopened);assert.equal(r.rows[0].revenue,10);assert.equal(r.rows[0].cash,null);reopened.getWorksheet('Statements').getCell('B2').value={formula:'1+1',result:2};assert.throws(()=>intake.readTemplate(reopened),/not a formula/);
+});
+test('Public data pack aligns annual statement periods and never uses total liabilities including equity',()=>{
+ const data={entity:{name:'Public Test',ticker:'TEST'},fundamentals:{years:{pl:['Mar 2025','Mar 2026'],bs:['Mar 2025','Mar 2026','Sep 2026'],cf:['Mar 2025','Mar 2026']},pl:{revenue:[90,100],ebitda:[18,20],netProfit:[9,10],depreciation:[3,3]},bs:{equity:[10,11,12],reserves:[50,59,80],totalAssets:[100,120,150],totalLiab:[100,120,150],longTermDebt:[25,30,40]},cf:{cfo:[14,15]},scope:'standalone',sourceUrl:'https://www.screener.in/company/TEST/'}};
+ const pack=intake.companyPack(data),r=pack.rows[0];assert.equal(r.period,'FY2026');assert.equal(r.equity,70);assert.equal(r.totalLiabilities,50);assert.equal(r.operatingCashFlow,15);assert.equal(r.cash,null);assert.equal(r.capex,null);assert.ok(pack.missing.some(s=>s.includes('Capital expenditure')));assert.equal(intake.companyPack({entity:data.entity}).rows.length,0);
+});
+test('Manual route opens a blank grid and reviewed manual actuals produce the linked forecast',async()=>{
+ const dom=await browser(),d=dom.window.document;
+ try{set(dom,'intakeCompany','Manual Company');d.getElementById('statementYears').value='2026';d.getElementById('manualSource').value='Signed annual statements, pages 1-3';d.getElementById('manualStatements').click();assert.equal(d.querySelectorAll('#statementReview input').length,11);for(const [key,label]of Object.entries(statements.metrics)){const input=d.querySelector('[aria-label="'+label+' FY2026"]');assert.equal(input.value,'');input.value=actual[key];input.dispatchEvent(new dom.window.Event('input',{bubbles:true}));}d.getElementById('statementConfirmed').checked=true;d.getElementById('applyStatements').click();assert.equal(dom.window.modelData.baseRev,100);assert.match(d.getElementById('statementResults').textContent,/Linked three-statement/);assert.equal(dom.window.getModelResearch().sources[0].document,'Signed annual statements, pages 1-3');}finally{dom.window.close();}
 });
