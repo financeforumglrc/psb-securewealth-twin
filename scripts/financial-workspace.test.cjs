@@ -23,8 +23,9 @@ test('WACC build preserves weights and applies the debt tax shield',()=>{
  const c=core.costOfCapital(p);assert.equal(c.costOfEquity,12);assert.equal(c.afterTaxDebt,6.375);assert.equal(c.wacc,10.875);assert.equal(c.debtWeight,20);
  assert.equal(core.costOfCapital({...p,equityWeight:100}).wacc,12);assert.throws(()=>core.costOfCapital({...p,equityWeight:101}));assert.throws(()=>core.costOfCapital({...p,beta:NaN}));
 });
-async function browser(){
+async function browser(project){
  const dom=new JSDOM(fs.readFileSync(path.join(root,'financial-modelling.html'),'utf8'),{url:'https://local.example/financial-modelling.html',runScripts:'outside-only',pretendToBeVisual:true});
+ if(project)dom.window.localStorage.setItem('ds-financial-project-v2',JSON.stringify(project));
  for(const file of ['financial-core.js','report-research.js','research-report.js','modelling-exports.js','financial-workspace.js','report-research-workspace.js','company-sources.js','decision-lab.js'])dom.window.eval(fs.readFileSync(path.join(root,'js',file),'utf8'));
  await new Promise(resolve=>dom.window.setTimeout(resolve,10));return dom;
 }
@@ -84,4 +85,12 @@ test('Decision lab rejects stale models, preserves zero weights and restores pro
   d.getElementById('calculateModel').click();assert.equal(d.querySelectorAll('.driver-row').length,6);
   set(dom,'weightBase',90);assert.match(d.getElementById('decisionError').textContent,/total 100/);assert.equal(d.querySelectorAll('.driver-row').length,0);
  }finally{dom.window.close();}
+});
+
+test('Saved decision settings survive page reload and older projects get valid defaults',async()=>{
+ const research=require('../js/report-research').empty('Test Company');
+ const project={version:2,inputs:inputs(),research,listingType:'listed',scope:'consolidated',decisionSettings:{weights:[0,100,0],marginOfSafety:18,thesis:'Persisted thesis',invalidation:'Margin deterioration'}};
+ const dom=await browser(project);
+ try{const d=dom.window.document;assert.equal(d.getElementById('investmentThesis').value,'Persisted thesis');assert.equal(d.getElementById('weightDownside').value,'0');assert.equal(d.getElementById('safetyMargin').value,'18');d.getElementById('calculateModel').click();assert.equal(d.querySelectorAll('.driver-row').length,6);}finally{dom.window.close();}
+ delete project.decisionSettings;const old=await browser(project);try{assert.equal(old.window.document.getElementById('weightBase').value,'50');}finally{old.window.close();}
 });
