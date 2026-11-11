@@ -35,24 +35,34 @@ Added `defer` to non-critical CDN scripts and app scripts on the three tool page
 | `gst-tools.html` | `defer` on Chart.js, jsPDF, jsPDF-autotable, `gst-tools.js` |
 | `tax-portal.html` | `defer` on Chart.js, jsPDF, jsPDF-autotable, `tax-portal.js` |
 | `specialized-tools.html` | `defer` on Chart.js, jsPDF, jsPDF-autotable, `specialized-tools.js` |
+| `resume-builder.html` | `defer` on jsPDF, html2canvas, html2pdf, Sortable, Cropper, `ai-engine.js`, `resume-builder.js`, `global-features.js`, `enhanced-features.js` |
+| `pdf-ultra.html` | `defer` on pdf-lib, jsPDF, pdf.js, mammoth, xlsx, Sortable, jszip, html2canvas, purify, `pdf-ultra.js` |
 
 **Why `defer` is safe here:** the CDN vendors are only referenced inside event handlers/functions in the bottom-loaded app scripts (verified: no top-level `Chart`/`jsPDF` usage in the first 25 lines of each app script; the only inline matches in HTML were the `<script src>` tags themselves). `defer` scripts execute in document order after HTML parsing, preserving Chart.js → jsPDF → app-script dependency order.
 
+> **`pdf-ultra.js` exception:** it references `pdfjsLib` at parse time, so `pdf-ultra.js` was also given `defer`. Because `defer` preserves document order, `pdf.js` still loads and runs before `pdf-ultra.js` executes — verified working.
+>
+> **`investment-tools.html` left unchanged:** it has 16 inline vendor usages in the body; deferring its Chart.js risks breaking those. Requires a deeper refactor.
+
 ## 4. Verification
 
-- **Build:** `npm run build` → exit 0 (1.3s), changes present in `dist/`.
-- **Browser render:** `file://.../dist/gst-tools.html` loads all 11 calculators + navigation + quick-reference table. Console errors are only from external SEBI/NSE iframe widgets — **no** `Chart is not defined` / `jsPDF is not defined`.
-- **Functional test:** entered ₹1,000 @ 18% → **Total GST ₹180, CGST ₹90, SGST ₹90, Total ₹1,180**. Deferred script initialized and computes correctly.
+- **Build:** `npm run build` → exit 0 (~1.0s), changes present in `dist/`.
+- **Browser render (file://):** `gst-tools.html`, `pdf-ultra.html`, `resume-builder.html` all load fully.
+- **Console:** errors are only from external SEBI/NSE iframe widgets — **no** `Chart is not defined`, `jsPDF is not defined`, or `pdfjsLib is not defined`.
+- **Functional test (gst-tools):** entered ₹1,000 @ 18% → **Total GST ₹180, CGST ₹90, SGST ₹90, Total ₹1,180**. Deferred script computes correctly.
+- **Resume Builder:** full editor (Content/Design/AI tabs, Personal Info, Experience, Education, Skills, live preview, Download PDF) renders.
+- **PDF Tools:** full suite renders.
 
-## 5. Commit
+## 5. Commits
 
-- `0e537c9` — `perf: defer non-critical CDN scripts on tool pages` (3 files, 12 insertions/12 deletions).
+- `0e537c9` — `perf: defer non-critical CDN scripts on tool pages` (gst-tools, tax-portal, specialized-tools).
+- `ca76c9a` — `perf: defer heavy CDN libs on resume-builder and pdf-ultra`.
 
 ## 6. Remaining / Recommended
 
 1. **Split monolithic pages** — `gst-black-mirror.html` (1.51 MB) and `financial-modelling-advanced.html` (0.69 MB) are giant single HTML files. Extract shared logic into `js/` modules (already done for `financial-modelling.html`). This is a larger refactor.
-2. **Trim duplicate OCR variants** — the build emits 6 `tesseract-core-*` variants (~50 MB total), but only one is used per browser. Consider emitting only the variants actually requested (verify via `tesseract.js` feature detection first).
-3. **`defer` on remaining pages** — `resume-builder.html`, `pdf-ultra.html`, `investment-tools.html` also load heavy CDN scripts; apply the same pattern after verifying no parse-time vendor usage.
+2. **Trim duplicate OCR variants** — the build emits 6 `tesseract-core-*` variants (~50 MB total). **Risk:** `getCore.js` selects the variant at runtime by browser SIMD support (`relaxedsimd`, `simd`, or none), and each `.wasm.js` wrapper loads its matching `.wasm` from the same dir (verified: `wasmBinary` + `locateFile`, no inline embed). Trimming requires cross-browser runtime testing to confirm the selected variant is always present. **Leave as-is until verified.**
+3. **`defer` on `investment-tools.html`** — requires refactoring its 16 inline vendor usages first.
 4. **Remove stale `deploy/` folder** if confirmed unused (GitHub Pages uses `dist`).
 
 ---
