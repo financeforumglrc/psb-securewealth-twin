@@ -69,26 +69,30 @@ The real problems are **structural hygiene and repository risk**, not a non-func
 
 ## 4. Cleanup Applied (Phase 1)
 
-The following safe, reversible cleanup was applied:
-
-- [ ] (Pending) Moved stale `.playwright-mcp/` test artifacts to `.cleanup-backup/` — not referenced by the app.
-- [ ] (Pending) Removed root-level scratch `.log`/`.txt` files that are untracked and unreferenced.
+- [x] Moved **1,389 stale test artifacts (28.4 MB)** from `.playwright-mcp/` → `.cleanup-backup/playwright-mcp/` (reversible, nothing deleted).
+- [x] Added `.playwright-mcp/` and `.cleanup-backup/` to `.gitignore`.
+- [x] **Baseline commit created:** `9898bc8` — 140 files changed (45,868 insertions / 16,687 deletions), committing the previously-untracked codebase.
 - [x] **Not deleted:** `_dev/` legacy backups (intentionally preserved per `REPORT_DEVELOPMENT.md`).
+- [x] Rebuild verified after cleanup (`npm run build` → exit 0, ~1.1s).
 
-> Deletions are staged as moves to a `.cleanup-backup/` folder to keep them **reversible** until the user confirms.
+> The lint-staged backup stash (`stash@{0}`, commit fd7d830) is retained as an extra safety net. Drop it with `git stash drop stash@{0}` once you have confirmed the baseline.
 
 ---
 
 ## 5. Recommended Actions
 
 ### Immediate (protect the code)
-1. **Commit the working tree** — run `git add -A && git commit -m "chore: baseline snapshot"` so the real codebase is version-controlled.
-2. Push to `origin/main` (confirm with repo owner).
+1. ✅ **Baseline committed** (`9898bc8`).
+2. **Push to `origin/main`** (confirm with repo owner) — the baseline is local-only right now.
+3. Drop the leftover lint-staged backup stash once confirmed: `git stash drop stash@{0}`.
 
 ### Phase 1 continued
-3. Add `.playwright-mcp/` and `.cleanup-backup/` to `.gitignore`.
-4. Run `cd backend && npm test` outside the sandbox to confirm the 130+ backend tests pass.
-5. Resolve or remove the stale `ds-financial.onrender.com` reference in docs/config.
+4. **Fix the pre-commit hook** (currently `git commit` fails because `lint-staged` → `eslint` reports hard errors):
+   - `no-undef` — `Chart` is not defined in `_dev/dashboard_grid_js.js` and similar legacy files.
+   - `no-var` — `var` used where `const`/`let` is required.
+   - Thousands of `prettier/prettier` warnings from **CRLF line endings** (the repo uses CRLF; prettier expects LF). Consider a `.editorconfig` or `endOfLine: auto` in `.prettierrc` to stop the noise.
+5. Run `cd backend && npm test` outside the sandbox to confirm the 130+ backend tests pass.
+6. Resolve or remove the stale `ds-financial.onrender.com` reference in docs/config.
 
 ### Phase 2+ (from the phased plan)
 6. Performance: split monolithic pages, code-split heavy vendors, lazy-load Tesseract/PDF WASM.
