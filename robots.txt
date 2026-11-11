@@ -1,5 +1,5 @@
 # DS Financial Tax Tools - robots.txt
-# https://excel-lentminds.github.io/Tax-tools/
+# https://dsfinancial-47556.surge.sh/
 
 # Allow all crawlers
 User-agent: *
@@ -9,8 +9,8 @@ Allow: /
 Disallow: /admin.html
 Disallow: /admin-dashboard.html
 
-# Sitemap location (update this to your production domain)
-Sitemap: https://dsfinancial.in/sitemap.xml
+# Sitemap location (live production domain)
+Sitemap: https://dsfinancial-47556.surge.sh/sitemap.xml
 
 # Crawl-delay for polite crawling
 Crawl-delay: 1
