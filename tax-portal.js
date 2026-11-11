@@ -829,6 +829,15 @@ function resetCalculator() {
 document.addEventListener('DOMContentLoaded', function() {
     initNavigation();
     
+    // Deep-link support: open the panel referenced by #panel-<toolId>
+    const hash = (location.hash || '').replace(/^#/, '');
+    const hashMatch = hash.match(/^panel-(.+)$/);
+    if (hashMatch) {
+        switchTool(hashMatch[1]);
+    } else if (hash && document.querySelector(`[data-tool="${hash}"]`)) {
+        switchTool(hash);
+    }
+    
     // Initial calculations
     calculateRegimeComparison();
     update80CTotal();
