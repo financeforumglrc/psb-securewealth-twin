@@ -7,9 +7,10 @@ Allow: /
 
 # Disallow admin and private areas
 Disallow: /admin.html
+Disallow: /admin-dashboard.html
 
-# Sitemap location
-Sitemap: https://excel-lentminds.github.io/Tax-tools/sitemap.xml
+# Sitemap location (update this to your production domain)
+Sitemap: https://dsfinancial.in/sitemap.xml
 
 # Crawl-delay for polite crawling
 Crawl-delay: 1
@@ -18,6 +19,7 @@ Crawl-delay: 1
 User-agent: Googlebot
 Allow: /
 Disallow: /admin.html
+Disallow: /admin-dashboard.html
 
 User-agent: Bingbot
 Allow: /

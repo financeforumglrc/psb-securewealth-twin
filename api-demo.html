@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DS Financial API Demo - Connected to Backend</title>
+    <meta name="description" content="DS Financial API Demo - Test backend endpoints for tax calculation, GST validation, and patent analytics.">
+    <meta name="theme-color" content="#0f172a">
     <link rel="stylesheet" href="design-system.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -131,6 +133,7 @@
         }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
     </style>
+<link rel="stylesheet" href="experience.css">
 </head>
 <body>
     <div class="container">
@@ -144,7 +147,7 @@
             <div id="userInfo" class="hidden">
                 <span class="badge" id="userBadge">Free Tier</span>
                 <span style="margin-left: 10px;" id="userEmail"></span>
-                <button class="btn btn-secondary" style="margin-left: 15px; padding: 6px 12px;" onclick="logout()">Logout</button>
+                <button class="btn btn-secondary" style="margin-left: 15px; padding: 6px 12px;" data-click="logout()">Logout</button>
             </div>
         </div>
 
@@ -152,8 +155,8 @@
             <div class="card">
                 <h2><i class="fas fa-user-plus"></i> Register / Login</h2>
                 <div class="tabs">
-                    <button class="tab active" onclick="showTab('login')">Login</button>
-                    <button class="tab" onclick="showTab('register')">Register</button>
+                    <button class="tab active" data-click="showTab('login')">Login</button>
+                    <button class="tab" data-click="showTab('register')">Register</button>
                 </div>
                 <div id="loginForm">
                     <div class="form-group">
@@ -164,7 +167,7 @@
                         <label>Password</label>
                         <input type="password" id="loginPassword" placeholder="Enter your password">
                     </div>
-                    <button class="btn btn-primary" onclick="login()">Login</button>
+                    <button class="btn btn-primary" data-click="login()">Login</button>
                 </div>
                 <div id="registerForm" class="hidden">
                     <div class="form-group">
@@ -179,7 +182,7 @@
                         <label>Name</label>
                         <input type="text" id="regName" placeholder="Your Name">
                     </div>
-                    <button class="btn btn-primary" onclick="register()">Register</button>
+                    <button class="btn btn-primary" data-click="register()">Register</button>
                 </div>
             </div>
         </div>
@@ -196,7 +199,7 @@
                         <label>Age</label>
                         <input type="number" id="age" value="35">
                     </div>
-                    <button class="btn btn-primary" onclick="calculateTax()">Calculate Tax</button>
+                    <button class="btn btn-primary" data-click="calculateTax()">Calculate Tax</button>
                 </div>
 
                 <div class="card">
@@ -205,17 +208,17 @@
                         <label>GSTIN</label>
                         <input type="text" id="gstin" value="27AAPFU0931F1ZV" placeholder="15-digit GSTIN">
                     </div>
-                    <button class="btn btn-primary" onclick="validateGST()">Validate GSTIN</button>
+                    <button class="btn btn-primary" data-click="validateGST()">Validate GSTIN</button>
                 </div>
 
                 <div class="card">
                     <h2><i class="fas fa-chart-pie"></i> Dashboard</h2>
-                    <button class="btn btn-primary" onclick="getDashboard()">Get Analytics</button>
+                    <button class="btn btn-primary" data-click="getDashboard()">Get Analytics</button>
                 </div>
 
                 <div class="card">
                     <h2><i class="fas fa-lightbulb"></i> Patents</h2>
-                    <button class="btn btn-primary" onclick="getPatents()">View Patents</button>
+                    <button class="btn btn-primary" data-click="getPatents()">View Patents</button>
                 </div>
             </div>
 
@@ -350,5 +353,17 @@
 
         init();
     </script>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
 </body>
 </html>

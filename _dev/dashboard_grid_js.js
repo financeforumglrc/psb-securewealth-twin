@@ -1,6 +1,23 @@
         // ═══════════════════════════════════════════════════════════════
         //  DASHBOARD & MODEL GRID ENGINE
+        //  Intentionally global: toggleDarkMode, initDarkMode, renderDashboard,
+        //  renderModelGrid, switchGridSheet, safeCreateChart (via chartRegistry)
         // ═══════════════════════════════════════════════════════════════
+
+        // ── Chart Registry (fallback if not defined in HTML) ──
+        if (typeof chartRegistry === 'undefined') {
+            var chartRegistry = {};
+            window.safeCreateChart = function(key, ctx, config) {
+                if (chartRegistry[key]) {
+                    chartRegistry[key].destroy();
+                    delete chartRegistry[key];
+                }
+                if (!ctx) return null;
+                const chart = new Chart(ctx, config);
+                chartRegistry[key] = chart;
+                return chart;
+            };
+        }
 
         // ── Dark Mode ──
         function toggleDarkMode() {
@@ -538,9 +555,11 @@
         }
 
         // ── Enhance updateAllOutputs to call dashboard ──
-        const _originalUpdateAllOutputs = updateAllOutputs;
-        updateAllOutputs = function() {
-            _originalUpdateAllOutputs();
-            renderDashboard();
-            renderModelGrid();
-        };
+        if (typeof updateAllOutputs === 'function') {
+            const _originalUpdateAllOutputs = updateAllOutputs;
+            updateAllOutputs = function() {
+                _originalUpdateAllOutputs();
+                renderDashboard();
+                renderModelGrid();
+            };
+        }

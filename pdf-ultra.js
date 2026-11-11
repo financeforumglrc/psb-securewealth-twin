@@ -1,7 +1,13 @@
 ﻿// PDF Ultra - Full Working Implementation
 // DS Financial - Beats SmallPDF & ILovePDF
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
 
 // ===================== UTILITIES =====================
 function formatBytes(b) {
@@ -14,7 +20,7 @@ function showToast(msg, type = 'success') {
   const wrap = document.getElementById('toastWrap');
   const t = document.createElement('div');
   t.className = 'toast ' + type;
-  t.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'}"></i> ${msg}`;
+  t.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'}"></i> ${escapeHtml(msg)}`;
   wrap.appendChild(t);
   setTimeout(() => t.remove(), 4000);
 }
@@ -109,9 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-function filterCat(cat) {
+function filterCat(cat, trigger) {
   document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-  event.target.closest('.cat-pill').classList.add('active');
+  const pill = trigger?.closest('.cat-pill') || Array.from(document.querySelectorAll('.cat-pill')).find(p => p.getAttribute('data-click')?.includes("'" + cat + "'"));
+  if (pill) pill.classList.add('active');
   document.querySelectorAll('.tool-group').forEach(g => {
     if (cat === 'all') { g.style.display = ''; return; }
     g.style.display = g.dataset.cat === cat ? '' : 'none';
@@ -150,6 +157,20 @@ function getToolUI(id) {
       <div class="ctrl-row" style="margin-top:20px;">
         <button class="btn-primary" onclick="doMerge()"><i class="fas fa-object-group"></i> Merge PDFs</button>
       </div>
+      ${progressHTML()}${resultBoxHTML()}`;
+
+    case 'reorder': return `
+      ${dropZoneHTML('.pdf', false)}
+      <div class="ctrl-group"><label>Page order (include every page once)</label>
+        <input id="pageOrder" placeholder="e.g. 3, 1, 2"></div>
+      <div id="pageThumbsWrap" style="display:flex;flex-wrap:wrap;gap:12px;margin:16px 0"></div>
+      <button class="btn-primary" onclick="doReorder()">Download reordered PDF</button>
+      ${progressHTML()}${resultBoxHTML()}`;
+
+    case 'ppt-to-pdf': return `
+      ${dropZoneHTML('.pptx', false, 'pptInput')}
+      <p>Exports slide text to PDF. Artwork, charts and animations require PowerPoint export.</p>
+      <button class="btn-primary" onclick="doPptToPdf()">Convert slides to PDF</button>
       ${progressHTML()}${resultBoxHTML()}`;
 
     case 'split': return `
@@ -243,7 +264,7 @@ function getToolUI(id) {
       ${progressHTML()}${resultBoxHTML()}`;
 
     case 'word-to-pdf': return `
-      ${dropZoneHTML('.docx,.doc', false, 'wordInput')}
+      ${dropZoneHTML('.docx', false, 'wordInput')}
       <p style="color:var(--text3);font-size:0.82rem;margin-top:8px;"><i class="fas fa-info-circle"></i> Supports .docx format. Formatting, headings & lists are preserved.</p>
       <div class="ctrl-row">
         <button class="btn-primary" onclick="doWordToPdf()"><i class="fas fa-file-pdf"></i> Convert to PDF</button>
@@ -498,16 +519,26 @@ function getToolUI(id) {
 let _files = {};
 
 function handleDrop(input) {
-  const files = Array.from(input.files);
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  const accept = (input.accept || '').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+  if (files.some(file => accept.length && !accept.some(type => type.startsWith('.') ? file.name.toLowerCase().endsWith(type) : type.endsWith('/*') ? file.type.startsWith(type.slice(0, -1)) : file.type === type))) {
+    showToast('Choose a supported file type: ' + input.accept, 'error');
+    input.value = '';
+    return;
+  }
   const id = input.id;
-  if (!_files[id]) _files[id] = [];
-  files.forEach(f => _files[id].push(f));
+  if (input.multiple) _files[id] = [...(_files[id] || []), ...files];
+  else _files[id] = [files[0]];
   renderFileList(id);
+  input.value = '';
+  _qaText = '';
+  if (currentTool === 'ai-qa') initAiQA(files[0]).catch(error => { showProgress(false); showToast(error.message, 'error'); });
   // Trigger auto-actions for info/metadata
   if (id === 'fileInput') {
     if (currentTool === 'pdf-info') showPdfInfo(files[0]);
     if (currentTool === 'metadata') loadMetadata(files[0]);
-    if (currentTool === 'delete-pages') renderPageThumbs(files[0]);
+    if (currentTool === 'delete-pages' || currentTool === 'reorder') renderPageThumbs(files[0]).catch(error => showToast(error.message, 'error'));
   }
 }
 
@@ -537,12 +568,12 @@ function renderFileList(inputId) {
     div.draggable = true;
     div.dataset.index = i;
     div.innerHTML = `<i class="fas fa-file-pdf file-chip-icon"></i>
-      <span class="file-chip-name">${f.name}</span>
+      <span class="file-chip-name">${escapeHtml(f.name)}</span>
       <span class="file-chip-size">${formatBytes(f.size)}</span>
       <button class="file-chip-del" onclick="removeFile(${i},'${inputId}')"><i class="fas fa-times"></i></button>`;
     container.appendChild(div);
   });
-  if (inputId === 'mergeInput' && files.length > 1) {
+  if (inputId === 'mergeInput' && files.length > 1 && typeof Sortable !== 'undefined') {
     new Sortable(container, { animation: 150, onEnd: e => {
       const arr = _files[inputId];
       arr.splice(e.newIndex, 0, arr.splice(e.oldIndex, 1)[0]);
@@ -556,10 +587,60 @@ function removeImg(i, id) { _files[id].splice(i,1); renderFileList(id); }
 function getFile(id='fileInput') { return (_files[id]||[])[0] || null; }
 function getFiles(id='mergeInput') { return _files[id] || []; }
 
+function parsePageRanges(value, total) {
+  if (!value.trim()) throw new Error('Enter at least one page number.');
+  return value.split(',').map(part => {
+    const match = part.trim().match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+    if (!match) throw new Error('Use page numbers or ranges, such as 1-3, 5.');
+    const first = Number(match[1]), last = Number(match[2] || match[1]);
+    if (first < 1 || last < first || last > total) throw new Error('Page numbers must be between 1 and ' + total + ', in ascending ranges.');
+    return [first - 1, last - 1];
+  });
+}
+
+async function renderPageThumbs(file) {
+  const wrap = document.getElementById('pageThumbsWrap');
+  if (!wrap) return;
+  const pdf = await pdfjsLib.getDocument({data: new Uint8Array(await file.arrayBuffer())}).promise;
+  try {
+    if (currentTool === 'reorder') document.getElementById('pageOrder').value = Array.from({length: pdf.numPages}, (_, i) => i + 1).join(', ');
+    for (let number = 1; number <= pdf.numPages; number++) {
+      const page = await pdf.getPage(number), viewport = page.getViewport({scale: .2});
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width; canvas.height = viewport.height;
+      await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
+      const tile = document.createElement('div');
+      tile.dataset.page = number;
+      tile.style.cssText = 'display:inline-flex;flex-direction:column;align-items:center;padding:8px;border:1px solid var(--border);cursor:grab';
+      tile.append(canvas, document.createTextNode('Page ' + number));
+      wrap.appendChild(tile);
+    }
+    if (currentTool === 'reorder' && typeof Sortable !== 'undefined') new Sortable(wrap, {animation: 150, onEnd: () => {
+      document.getElementById('pageOrder').value = Array.from(wrap.children, tile => tile.dataset.page).join(', ');
+    }});
+  } finally { await pdf.destroy(); }
+}
+
+function runPdfSecurity(file, action, password, ownerPassword) {
+  return new Promise(async (resolve, reject) => {
+    let worker, timer;
+    const finish = (error, bytes) => { clearTimeout(timer); worker?.terminate(); error ? reject(error) : resolve(bytes); };
+    try {
+      worker = new Worker(new URL('js/pdf-worker.js', document.baseURI));
+      timer = setTimeout(() => finish(new Error('PDF processing timed out. Try a smaller document.')), 90000);
+      worker.onmessage = ({data}) => data.error ? finish(new Error(data.error)) : finish(null, data.bytes);
+      worker.onerror = () => finish(new Error('PDF engine could not load. Refresh the page and try again.'));
+      const bytes = await file.arrayBuffer();
+      worker.postMessage({action, bytes, password, ownerPassword}, [bytes]);
+    } catch (error) { finish(error); }
+  });
+}
+
 let currentTool = '';
 function initTool(id) {
   currentTool = id;
   _files = {};
+  _qaText = '';
   if (id === 'esign') setTimeout(initSignCanvas, 100);
   // setup drag & drop zones
   setTimeout(() => {
@@ -641,13 +722,7 @@ async function doSplit() {
     let ranges = [];
     if (!rangeStr) { for (let i=0;i<total;i++) ranges.push([i,i]); }
     else {
-      rangeStr.split(',').forEach(part => {
-        part = part.trim();
-        if (part.includes('-')) {
-          let [a,b] = part.split('-').map(x=>parseInt(x.trim())-1);
-          ranges.push([a,b]);
-        } else { let p=parseInt(part)-1; ranges.push([p,p]); }
-      });
+      ranges = parsePageRanges(rangeStr, total);
     }
     const zip = new JSZip();
     for (let i=0; i<ranges.length; i++) {
@@ -815,7 +890,7 @@ async function doWordToPdf() {
     const doc = new jsPDF('p','pt','a4');
     const container = document.createElement('div');
     container.style.cssText = 'position:fixed;left:-9999px;top:0;width:595px;padding:40px;font-family:sans-serif;font-size:11pt;line-height:1.6;color:#111;background:white;';
-    container.innerHTML = html;
+    container.innerHTML = DOMPurify.sanitize(html);
     document.body.appendChild(container);
     setProgress(75,'Generating PDF...');
     await doc.html(container, {
@@ -904,7 +979,7 @@ async function doHtmlToPdf() {
   const doc = new jsPDF(orient,'pt',size);
   const container = document.createElement('div');
   container.style.cssText = 'position:fixed;left:-9999px;top:0;width:595px;padding:40px;font-family:sans-serif;font-size:11pt;line-height:1.6;background:white;color:#111;';
-  container.innerHTML = html;
+  container.innerHTML = DOMPurify.sanitize(html);
   document.body.appendChild(container);
   await doc.html(container, {
     callback: d => {
@@ -920,7 +995,7 @@ async function doMdToPdf() {
   const md = document.getElementById('mdInput').value.trim();
   if (!md) { showToast('Please enter Markdown', 'error'); return; }
   // Simple MD to HTML converter
-  let html = md
+  let html = escapeHtml(md)
     .replace(/^# (.+)/gm,'<h1 style="font-size:22pt;margin-top:16px;">$1</h1>')
     .replace(/^## (.+)/gm,'<h2 style="font-size:16pt;margin-top:12px;color:#333;">$1</h2>')
     .replace(/^### (.+)/gm,'<h3 style="font-size:13pt;margin-top:10px;">$1</h3>')
@@ -934,7 +1009,7 @@ async function doMdToPdf() {
   const doc = new jsPDF('p','pt','a4');
   const container = document.createElement('div');
   container.style.cssText = 'position:fixed;left:-9999px;top:0;width:595px;padding:48px;font-family:sans-serif;font-size:11pt;line-height:1.7;background:white;color:#111;';
-  container.innerHTML = html;
+  container.innerHTML = DOMPurify.sanitize(html);
   document.body.appendChild(container);
   await doc.html(container, {
     callback: d => {
@@ -953,7 +1028,8 @@ async function doCsvToPdf() {
     if (!file) { showToast('Please upload CSV or paste data', 'error'); return; }
     csv = await file.text();
   }
-  const rows = csv.split('\n').map(r => r.split(',').map(c=>c.trim().replace(/^"|"$/g,'')));
+  const workbook = XLSX.read(csv, {type:'string', raw:true});
+  const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1, defval:''});
   const {jsPDF} = window.jspdf;
   const doc = new jsPDF('l','pt','a4');
   const container = document.createElement('div');
@@ -961,7 +1037,7 @@ async function doCsvToPdf() {
   let tbl = '<table style="border-collapse:collapse;width:100%;font-size:9pt;">';
   rows.forEach((row, ri) => {
     const bg = ri===0 ? 'background:#1a1a2e;color:white;font-weight:600;' : ri%2===0 ? 'background:#f8fafc;' : '';
-    tbl += `<tr>${row.map(c=>`<td style="border:1px solid #e2e8f0;padding:6px 10px;${bg}">${c}</td>`).join('')}</tr>`;
+    tbl += `<tr>${row.map(c=>`<td style="border:1px solid #e2e8f0;padding:6px 10px;${bg}">${escapeHtml(c)}</td>`).join('')}</tr>`;
   });
   tbl += '</table>';
   container.innerHTML = tbl;
@@ -1064,13 +1140,7 @@ async function doDeletePages() {
     const srcDoc = await PDFDocument.load(buf);
     const total = srcDoc.getPageCount();
     const toDelete = new Set();
-    input.split(',').forEach(part => {
-      part = part.trim();
-      if (part.includes('-')) {
-        let [a,b] = part.split('-').map(x=>parseInt(x.trim())-1);
-        for (let i=a;i<=b;i++) toDelete.add(i);
-      } else { toDelete.add(parseInt(part)-1); }
-    });
+    parsePageRanges(input, total).forEach(([first, last]) => { for (let i = first; i <= last; i++) toDelete.add(i); });
     const keep = [];
     for (let i=0;i<total;i++) if (!toDelete.has(i)) keep.push(i);
     if (!keep.length) { showToast('Cannot delete all pages','error'); showProgress(false); return; }
@@ -1179,7 +1249,7 @@ async function showPdfInfo(file) {
         </div>
         <table style="width:100%;font-size:0.85rem;border-collapse:collapse;margin-top:12px;">
           ${[['Title',doc.getTitle()],['Author',doc.getAuthor()],['Subject',doc.getSubject()],['Creator',doc.getCreator()],['Producer',doc.getProducer()]]
-            .map(([k,v])=>`<tr><td style="color:var(--text3);padding:6px 0;width:100px;">${k}</td><td style="color:var(--text);padding:6px 0;">${v||'—'}</td></tr>`).join('')}
+            .map(([k,v])=>`<tr><td style="color:var(--text3);padding:6px 0;width:100px;">${k}</td><td style="color:var(--text);padding:6px 0;">${escapeHtml(v||'—')}</td></tr>`).join('')}
         </table>
       </div>`;
   } catch(e) { document.getElementById('pdfInfoResult').innerHTML = `<p style="color:var(--red)">Error reading PDF: ${e.message}</p>`; }
@@ -1193,17 +1263,12 @@ async function doProtect() {
   if (!pass) { showToast('Please enter a password','error'); return; }
   showProgress();
   try {
-    const { PDFDocument } = PDFLib;
-    const buf = await file.arrayBuffer();
-    const doc = await PDFDocument.load(buf);
-    setProgress(50,'Encrypting...');
-    const ownerPass = document.getElementById('ownerPass').value || pass + '_owner';
-    // pdf-lib doesn't support native encryption, use workaround: add metadata note
-    doc.setKeywords(['protected']);
-    const bytes = await doc.save();
+    setProgress(30,'Encrypting locally with AES-256...');
+    const ownerPass = document.getElementById('ownerPass').value || Array.from(crypto.getRandomValues(new Uint8Array(32)), n => n.toString(16).padStart(2, '0')).join('');
+    const bytes = await runPdfSecurity(file, 'encrypt', pass, ownerPass);
     setProgress(100,'Done!');
     downloadBlob(new Blob([bytes],{type:'application/pdf'}),'protected.pdf');
-    showResultBox(`<h4><i class="fas fa-check-circle"></i> PDF saved. Note: Full AES encryption requires a server-side tool. Metadata marked as protected.</h4>`);
+    showResultBox(`<h4><i class="fas fa-check-circle"></i> PDF protected with AES-256 encryption. Your password is required to open it.</h4>`);
   } catch(e) { showToast('Failed: '+e.message,'error'); }
   showProgress(false);
 }
@@ -1214,13 +1279,9 @@ async function doUnlock() {
   if (!file) { showToast('Please select a PDF','error'); return; }
   showProgress();
   try {
-    const { PDFDocument } = PDFLib;
     const pass = document.getElementById('unlockPass').value;
-    const buf = await file.arrayBuffer();
-    setProgress(40,'Attempting to load...');
-    const doc = await PDFDocument.load(buf,{ignoreEncryption:true,password:pass});
-    setProgress(80,'Saving without encryption...');
-    const bytes = await doc.save();
+    setProgress(40,'Checking password and decrypting locally...');
+    const bytes = await runPdfSecurity(file, 'decrypt', pass);
     setProgress(100,'Done!');
     downloadBlob(new Blob([bytes],{type:'application/pdf'}),'unlocked.pdf');
     showResultBox(`<h4><i class="fas fa-check-circle"></i> PDF unlocked and saved</h4>`);
@@ -1426,8 +1487,8 @@ async function doAiSummarize() {
     setProgress(100,'Done!');
     showResultBox(`<h4><i class="fas fa-check-circle"></i> AI Summary</h4>
       <p style="color:var(--text3);font-size:0.8rem;margin-bottom:12px;">Document: ${pdf.numPages} pages • ~${wordCount} words</p>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:0.9rem;line-height:1.7;color:var(--text);">${summary}</div>
-      <div style="margin-top:12px;"><strong style="color:var(--text3);font-size:0.8rem;">TOP KEYWORDS:</strong> ${topWords.slice(0,10).map(w=>`<span style="display:inline-block;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);color:var(--violet);padding:2px 10px;border-radius:20px;font-size:0.75rem;margin:2px;">${w}</span>`).join('')}</div>`);
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:0.9rem;line-height:1.7;color:var(--text);">${escapeHtml(summary || 'No extractable text found. Use OCR for scanned documents.')}</div>
+      <div style="margin-top:12px;"><strong style="color:var(--text3);font-size:0.8rem;">TOP KEYWORDS:</strong> ${topWords.slice(0,10).map(w=>`<span style="display:inline-block;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);color:var(--violet);padding:2px 10px;border-radius:20px;font-size:0.75rem;margin:2px;">${escapeHtml(w)}</span>`).join('')}</div>`);
   } catch(e) { showToast('Failed: '+e.message,'error'); }
   showProgress(false);
 }
@@ -1457,105 +1518,60 @@ async function initAiQA(file) {
 async function doAiQA() {
   const q = document.getElementById('qaQuestion').value.trim();
   if (!q) { showToast('Please enter a question','error'); return; }
-  if (!_qaText) { const f=getFile(); if(f) { await initAiQA(f); } return; }
+  if (!_qaText) { const f=getFile(); if(f) await initAiQA(f); else { showToast('Please select a PDF', 'error'); return; } }
   // Keyword-based answer extraction
   const keywords = q.toLowerCase().replace(/[?.,!]/g,'').split(' ').filter(w=>w.length>3);
   const sentences = _qaText.match(/[^.!?]+[.!?]+/g)||[];
   const scored = sentences.map(s => ({ s, score: keywords.filter(k=>s.toLowerCase().includes(k)).length }));
   scored.sort((a,b)=>b.score-a.score);
-  const answer = scored.slice(0,3).map(x=>x.s.trim()).join(' ') || 'Could not find relevant content for this question.';
+  const answer = scored.filter(x => x.score > 0).slice(0,3).map(x=>x.s.trim()).join(' ') || 'Could not find relevant content for this question.';
   document.getElementById('qaAnswer').innerHTML = `
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;">
       <p style="color:var(--text3);font-size:0.78rem;margin-bottom:8px;"><i class="fas fa-robot"></i> AI Answer:</p>
-      <p style="color:var(--text);font-size:0.9rem;line-height:1.7;">${answer}</p>
+      <p style="color:var(--text);font-size:0.9rem;line-height:1.7;">${escapeHtml(answer)}</p>
     </div>`;
 }
 
 // Auto-init Q&A when file selected
-const _origHandleDrop = handleDrop;
-function handleDrop(input) {
-  _origHandleDrop(input);
-  if (currentTool === 'ai-qa' && input.files[0]) { initAiQA(input.files[0]); }
-}
+// File selection is handled once above. Redeclaring handleDrop here made its
+// saved reference point back to itself because function declarations hoist.
 
 // ===================== PPT TO PDF =====================
 async function doPptToPdf() {
-  showResultBox(`<h4><i class="fas fa-info-circle" style="color:var(--orange)"></i> PPT to PDF</h4>
-    <p style="color:var(--text2);line-height:1.6;">Full PowerPoint conversion requires a server-side engine (LibreOffice/unoconv) due to browser sandbox limitations.<br><br>
-    <strong>Quick workaround:</strong> In PowerPoint, go to <strong>File → Export → Create PDF/XPS</strong> to create a PDF directly.</p>`);
-  document.getElementById('resultBox').classList.add('show');
+  const file=getFile('pptInput'); if(!file)return showToast('Please select a PPTX file','error');
+  showProgress();
+  try {
+    const zip=await JSZip.loadAsync(await file.arrayBuffer());
+    const slides=Object.keys(zip.files).filter(name=>/^ppt\/slides\/slide\d+\.xml$/.test(name)).sort((a,b)=>Number(a.match(/slide(\d+)\.xml/)[1])-Number(b.match(/slide(\d+)\.xml/)[1]));
+    if(!slides.length)throw new Error('No slides found in this presentation.');
+    const {jsPDF}=window.jspdf, doc=new jsPDF({orientation:'landscape',unit:'pt',format:[960,540]});
+    for(let i=0;i<slides.length;i++){
+      setProgress(Math.round((i+1)/slides.length*90),'Exporting slide '+(i+1));
+      if(i)doc.addPage([960,540],'landscape');
+      const xml=new DOMParser().parseFromString(await zip.file(slides[i]).async('string'),'application/xml');
+      const text=Array.from(xml.getElementsByTagNameNS('*','p')).map(p=>Array.from(p.getElementsByTagNameNS('*','t')).map(t=>t.textContent).join('')).filter(Boolean).join('\n');
+      doc.setFontSize(18); const lines=doc.splitTextToSize(text||'Slide '+(i+1),860);
+      for(let line=0;line<lines.length;line+=19){if(line)doc.addPage([960,540],'landscape');doc.text(lines.slice(line,line+19),50,55);}
+    }
+    downloadBlob(doc.output('blob'),file.name.replace(/\.pptx$/i,'.pdf'));
+    showResultBox('<h4>Exported '+slides.length+' slides</h4><p>Text export completed. For exact artwork, charts and animations, export to PDF from PowerPoint.</p>');
+  }catch(error){showToast(error.message,'error');}finally{showProgress(false);}
 }
 
 // ===================== REORDER PAGES =====================
 async function doReorder() {
-  const file = getFile();
-  if (!file) { showToast('Please select a PDF','error'); return; }
+  const file = getFile(); if (!file) return showToast('Please select a PDF', 'error');
   showProgress();
-  showToast('Reorder: Drag page thumbnails in the list to reorder, then click Download');
+  try {
+    const original = await PDFLib.PDFDocument.load(await file.arrayBuffer());
+    const order = parsePageRanges(document.getElementById('pageOrder').value, original.getPageCount()).flatMap(([first, last]) => Array.from({length: last-first+1}, (_, i) => first+i));
+    if (order.length !== original.getPageCount() || new Set(order).size !== order.length) throw new Error('Include every page exactly once.');
+    const output = await PDFLib.PDFDocument.create();
+    (await output.copyPages(original, order)).forEach(page => output.addPage(page));
+    downloadBlob(new Blob([await output.save()], {type:'application/pdf'}), 'reordered.pdf');
+    showResultBox('<h4>Pages reordered successfully</h4>');
+  } catch(error) { showToast(error.message, 'error'); } finally { showProgress(false); }
 }
-
-
-// ===================== FIX: Redefine handleDrop to include Q&A init =====================
-// Override was causing issues - patch here at end of file
-(function() {
-  const _orig = window.handleDrop;
-  window.handleDrop = function(input) {
-    // Reset files tracking per tool
-    if (!_files[input.id]) _files[input.id] = [];
-    Array.from(input.files).forEach(f => _files[input.id].push(f));
-    renderFileList(input.id);
-    if (input.id === 'fileInput') {
-      const f = input.files[0];
-      if (currentTool === 'pdf-info' && f) showPdfInfo(f);
-      if (currentTool === 'metadata' && f) loadMetadata(f);
-      if (currentTool === 'ai-qa' && f) initAiQA(f);
-    }
-  };
-})();
-
-
-// ===================== COMPLETE FIX — Override all event handlers =====================
-// This runs after all previous code to ensure clean state
-
-// Fix 1: Proper handleDrop - completely replace window-level function
-window.handleDrop = function(input) {
-  const id = input.id;
-  if (!window._pdfFiles) window._pdfFiles = {};
-  if (!window._pdfFiles[id]) window._pdfFiles[id] = [];
-  Array.from(input.files).forEach(f => window._pdfFiles[id].push(f));
-  // Update _files reference too
-  _files[id] = window._pdfFiles[id];
-  renderFileList(id);
-  if (id === 'fileInput') {
-    const f = input.files[0];
-    if (currentTool === 'pdf-info' && f) showPdfInfo(f);
-    if (currentTool === 'metadata' && f) loadMetadata(f);
-    if (currentTool === 'ai-qa' && f) initAiQA(f);
-  }
-};
-
-// Fix 2: Wire up all tool cards via event delegation (fallback for onclick)
-document.addEventListener('DOMContentLoaded', function() {
-  document.body.addEventListener('click', function(e) {
-    const card = e.target.closest('[onclick]');
-    if (!card) return;
-    const attr = card.getAttribute('onclick');
-    if (attr && attr.startsWith('openTool(')) {
-      const id = attr.match(/openTool\('([^']+)'\)/)[1];
-      if (id) openTool(id);
-    }
-  });
-});
-
-// Fix 3: Also run immediately in case DOMContentLoaded already fired
-(function() {
-  if (document.readyState !== 'loading') {
-    // Already loaded, wire up click delegation immediately
-    document.body.addEventListener('click', function(e) {
-      // Handled by the DOMContentLoaded listener above
-    });
-  }
-})();
 
 
 // ===================== FINANCE & TAX TOOLS =====================
@@ -1664,53 +1680,46 @@ async function doBankToExcel() {
 }
 
 async function doAutoRedact() {
-  const file = getFile();
-  if (!file) { showToast('Please select a PDF', 'error'); return; }
-  showProgress();
+  const file = getFile(); if (!file) return showToast('Please select a PDF', 'error');
+  showProgress(); let pdf;
   try {
-    setProgress(20, 'Scanning for sensitive data...');
-    const url = URL.createObjectURL(file);
-    const pdf = await pdfjsLib.getDocument(url).promise;
-    
-    let foundCount = 0;
-    const { PDFDocument, rgb } = PDFLib;
-    const buf = await file.arrayBuffer();
-    const doc = await PDFDocument.load(buf);
-    const pages = doc.getPages();
-    
-    for(let i=1; i<=pdf.numPages; i++) {
-      setProgress(20 + Math.round((i/pdf.numPages)*50), `Scanning page ${i}...`);
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      
-      const text = content.items.map(s=>s.str).join(' ');
-      const checkPAN = document.getElementById('redactPAN').checked && /[A-Z]{5}[0-9]{4}[A-Z]{1}/i.test(text);
-      const checkAadhar = document.getElementById('redactAadhaar').checked && /\b\d{4}\s?\d{4}\s?\d{4}\b/.test(text);
-      const checkAcc = document.getElementById('redactAccount').checked && /\b\d{9,18}\b/.test(text);
-      
-      if(checkPAN || checkAadhar || checkAcc) {
-        foundCount++;
-        const p = pages[i-1];
-        const { width, height } = p.getSize();
-        // Draw black overlay box as secure redaction mock for the demo
-        p.drawRectangle({ x: 40, y: height/2 - 30, width: width-80, height: 60, color: rgb(0,0,0), opacity: 0.95 });
-        p.drawText("REDACTED SECURELY BY DS FINANCIAL", { x: width/2 - 130, y: height/2 - 5, size: 12, color: rgb(1,1,1) });
+    const patterns = [];
+    if (document.getElementById('redactPAN').checked) patterns.push(/\b[A-Z]{5}\s*\d{4}\s*[A-Z]\b/gi);
+    if (document.getElementById('redactAadhaar').checked) patterns.push(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/g);
+    if (document.getElementById('redactAccount').checked) patterns.push(/\b\d{9,18}\b/g);
+    if (!patterns.length) throw new Error('Select at least one type of data to redact.');
+    pdf = await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+    const output = await PDFLib.PDFDocument.create(); let matches = 0;
+    for (let number=1; number<=pdf.numPages; number++) {
+      setProgress(Math.round(number/pdf.numPages*90), 'Redacting page ' + number + '...');
+      const page = await pdf.getPage(number), viewport = page.getViewport({scale:2});
+      const canvas = document.createElement('canvas'); canvas.width=viewport.width; canvas.height=viewport.height;
+      const context = canvas.getContext('2d');
+      await page.render({canvasContext:context, viewport}).promise;
+      const content = await page.getTextContent(); let text='', offsets=[];
+      for (const item of content.items) { offsets.push({item,start:text.length,end:text.length+item.str.length}); text += item.str+' '; }
+      const boxes = new Set();
+      for (const pattern of patterns) for (const match of text.matchAll(pattern)) {
+        matches++;
+        offsets.forEach((entry,index) => { if(entry.start<match.index+match[0].length && entry.end>match.index) boxes.add(index); });
       }
+      context.fillStyle='#000';
+      for (const index of boxes) {
+        const item=offsets[index].item, t=pdfjsLib.Util.transform(viewport.transform,item.transform);
+        const h=Math.hypot(t[2],t[3]), w=item.width*viewport.scale, angle=Math.atan2(t[1],t[0]);
+        const corners=[[0,0],[w,0],[0,-h],[w,-h]].map(([x,y])=>[t[4]+x*Math.cos(angle)-y*Math.sin(angle),t[5]+x*Math.sin(angle)+y*Math.cos(angle)]);
+        const xs=corners.map(p=>p[0]),ys=corners.map(p=>p[1]);
+        context.fillRect(Math.min(...xs)-3,Math.min(...ys)-3,Math.max(...xs)-Math.min(...xs)+6,Math.max(...ys)-Math.min(...ys)+6);
+      }
+      const image=await output.embedPng(canvas.toDataURL('image/png'));
+      const flat=output.addPage([viewport.width/2,viewport.height/2]);
+      flat.drawImage(image,{x:0,y:0,width:viewport.width/2,height:viewport.height/2});
+      canvas.width=canvas.height=0;
     }
-    
-    if(foundCount === 0) {
-      showToast('No selected sensitive patterns found.', 'info');
-      showProgress(false); return;
-    }
-    
-    setProgress(80, 'Applying secure redactions...');
-    const bytes = await doc.save();
-    setProgress(100, 'Done!');
-    downloadBlob(new Blob([bytes], {type:'application/pdf'}), 'redacted-document.pdf');
-    showResultBox(`<h4><i class="fas fa-shield-alt"></i> Redaction Complete</h4>
-      <p style="font-size:0.85rem;color:var(--text2);margin-top:8px;">Detected and securely redacted sensitive information on ${foundCount} pages.</p>`);
-  } catch(e) { showToast('Redaction failed: ' + e.message, 'error'); }
-  showProgress(false);
+    if (!matches) throw new Error('No selected text patterns found. Scanned documents need OCR and manual review.');
+    downloadBlob(new Blob([await output.save()],{type:'application/pdf'}),'redacted-document.pdf');
+    showResultBox('<h4>Redacted '+matches+' detected matches</h4><p>Pages were flattened to images so hidden original text cannot be recovered. Review every page for missed or split identifiers before sharing.</p>');
+  } catch(error) {showToast(error.message,'error');} finally {if(pdf)await pdf.destroy();showProgress(false);}
 }
 
 async function doInvoiceExtractor() {

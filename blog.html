@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Blog | DS Financial Solutions</title>
     <meta name="description" content="Expert financial articles on tax planning, GST filing, investment strategies, and personal finance tips for India. Stay updated with DS Financial.">
+    <meta name="theme-color" content="#0f172a">
 
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -166,6 +167,7 @@
             margin-bottom: 0.5rem;
         }
     </style>
+<link rel="stylesheet" href="experience.css">
 </head>
 
 <body>
@@ -190,14 +192,14 @@
     </div>
 
     <div class="blog-filters">
-        <button class="filter-btn active" onclick="filter('all')">All</button>
-        <button class="filter-btn" onclick="filter('tax')">Income Tax</button>
-        <button class="filter-btn" onclick="filter('gst')">GST</button>
+        <button class="filter-btn active" data-click="filter('all')">All</button>
+        <button class="filter-btn" data-click="filter('tax')">Income Tax</button>
+        <button class="filter-btn" data-click="filter('gst')">GST</button>
     </div>
 
     <div class="blog-grid">
         <!-- Article 1 -->
-        <div class="blog-card" onclick="openArticle('regime')">
+        <div class="blog-card" data-click="openArticle('regime')">
             <div class="blog-img"><i class="fas fa-balance-scale"></i></div>
             <div class="blog-content">
                 <div><span class="tag">Income Tax</span> <span class="read-time">5 min read</span></div>
@@ -208,7 +210,7 @@
         </div>
 
         <!-- Article 2 -->
-        <div class="blog-card" onclick="openArticle('gst-mistakes')">
+        <div class="blog-card" data-click="openArticle('gst-mistakes')">
             <div class="blog-img"><i class="fas fa-exclamation-triangle"></i></div>
             <div class="blog-content">
                 <div><span class="tag">GST</span> <span class="read-time">4 min read</span></div>
@@ -219,7 +221,7 @@
         </div>
 
         <!-- Article 3 -->
-        <div class="blog-card" onclick="openArticle('salary')">
+        <div class="blog-card" data-click="openArticle('salary')">
             <div class="blog-img"><i class="fas fa-rupee-sign"></i></div>
             <div class="blog-content">
                 <div><span class="tag">Tax Saving</span> <span class="read-time">6 min read</span></div>
@@ -234,7 +236,7 @@
     <div class="article-modal" id="articleModal">
         <div class="article-content">
             <span class="close-article"
-                onclick="document.getElementById('articleModal').style.display='none'">&times;</span>
+                data-click="document.getElementById('articleModal').style.display='none'">&times;</span>
             <div class="article-body" id="articleBody"></div>
         </div>
     </div>
@@ -297,6 +299,18 @@
             document.body.style.overflow = 'auto';
         };
     </script>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
 </body>
 
 </html>

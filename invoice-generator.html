@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Invoice Generator | DS Financial</title>
     <meta name="description" content="Create professional invoices instantly. Free invoice generator with customizable templates, PDF export, logo upload, and multi-currency support.">
+    <meta name="theme-color" content="#0f172a">
 
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -208,6 +209,7 @@
             }
         }
     </style>
+<link rel="stylesheet" href="experience.css">
 </head>
 
 <body>
@@ -230,12 +232,12 @@
         <!-- Invoice Paper -->
         <div class="invoice-paper" id="invoice">
             <div class="inv-header">
-                <div class="inv-logo-box" onclick="document.getElementById('logoInput').click()">
+                <div class="inv-logo-box" data-click="document.getElementById('logoInput').click()">
                     <input type="file" id="logoInput" hidden accept="image/*" onchange="loadLogo(event)">
                     <span id="logoPlaceholder" style="color:#9ca3af; text-align:center;">
                         <i class="fas fa-image fa-2x"></i><br>+ Add Logo
                     </span>
-                    <img id="logoImg" style="display:none;">
+                    <img id="logoImg" src="" alt="Company Logo" style="display:none;">
                 </div>
                 <div class="inv-title">
                     <h1 contenteditable="true">INVOICE</h1>
@@ -287,7 +289,7 @@
                 </tbody>
             </table>
 
-            <button class="btn-add-item" onclick="addItem()">+ Add Item</button>
+            <button class="btn-add-item" data-click="addItem()">+ Add Item</button>
 
             <div class="inv-totals">
                 <div class="total-row">
@@ -322,15 +324,15 @@
                 <div class="form-group">
                     <label>Colors</label>
                     <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-                        <button onclick="setTheme('#1A237E')"
+                        <button data-click="setTheme('#1A237E')"
                             style="width:30px; height:30px; border-radius:50%; background:#1A237E; border:none; cursor:pointer;"></button>
-                        <button onclick="setTheme('#10b981')"
+                        <button data-click="setTheme('#10b981')"
                             style="width:30px; height:30px; border-radius:50%; background:#10b981; border:none; cursor:pointer;"></button>
-                        <button onclick="setTheme('#ef4444')"
+                        <button data-click="setTheme('#ef4444')"
                             style="width:30px; height:30px; border-radius:50%; background:#ef4444; border:none; cursor:pointer;"></button>
-                        <button onclick="setTheme('#f59e0b')"
+                        <button data-click="setTheme('#f59e0b')"
                             style="width:30px; height:30px; border-radius:50%; background:#f59e0b; border:none; cursor:pointer;"></button>
-                        <button onclick="setTheme('#1f2937')"
+                        <button data-click="setTheme('#1f2937')"
                             style="width:30px; height:30px; border-radius:50%; background:#1f2937; border:none; cursor:pointer;"></button>
                     </div>
                 </div>
@@ -343,10 +345,10 @@
                     </select>
                 </div>
                 <div style="margin-top: 2rem;">
-                    <button class="btn-download" onclick="downloadPDF()">
+                    <button class="btn-download" data-click="downloadPDF()">
                         <i class="fas fa-download"></i> Download PDF
                     </button>
-                    <button onclick="window.print()"
+                    <button data-click="window.print()"
                         style="width:100%; margin-top:1rem; padding:0.75rem; background:var(--bg-secondary); border:none; border-radius:8px; font-weight:600; cursor:pointer;">
                         <i class="fas fa-print"></i> Print
                     </button>
@@ -432,6 +434,18 @@
             });
         }
     </script>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
 </body>
 
 </html>

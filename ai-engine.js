@@ -3,14 +3,17 @@
 // ============================================================
 
 // Security utility: escape HTML to prevent XSS
-function escapeHtml(text) {
-    if (text == null) return '';
-    return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+// Defined in global-features.js; fallback for standalone use
+if (typeof escapeHtml === 'undefined') {
+    function escapeHtml(text) {
+        if (text == null) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
 }
 
 // --- AI Provider Configuration ---
@@ -1065,7 +1068,8 @@ function openJDAnalyzer() {
 }
 
 function closeJDAnalyzer() {
-    document.getElementById('jdAnalyzerModal').style.display = 'none';
+    const el = document.getElementById('jdAnalyzerModal');
+    if (el) el.style.display = 'none';
 }
 
 function runJDAnalysis() {
@@ -1142,23 +1146,24 @@ function renderJDAnalysisResults(analysis, comparison) {
     container.style.display = 'block';
 }
 
-// Show toast notification
-function showToast(message) {
-    // Check if toast container exists
-    let toast = document.getElementById('aiToast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'aiToast';
-        toast.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #1F2937; color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 10000; opacity: 0; transition: opacity 0.3s;';
-        document.body.appendChild(toast);
+// Show toast notification (fallback if showToast not globally available)
+if (typeof showToast === 'undefined') {
+    function showToast(message) {
+        let toast = document.getElementById('aiToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'aiToast';
+            toast.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #1F2937; color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 10000; opacity: 0; transition: opacity 0.3s;';
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent = message;
+        toast.style.opacity = '1';
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+        }, 3000);
     }
-
-    toast.textContent = message;
-    toast.style.opacity = '1';
-
-    setTimeout(() => {
-        toast.style.opacity = '0';
-    }, 3000);
 }
 
 // ============================================================
@@ -1293,7 +1298,7 @@ function openHeatmapView() {
     const analysis = generateHeatmapAnalysis(data);
 
     const container = document.getElementById('aiScoreContent');
-    container.innerHTML = renderHeatmap(analysis);
+    if (container) container.innerHTML = renderHeatmap(analysis);
     const modal = ensureScoreModal();
     modal.style.display = 'flex';
 }

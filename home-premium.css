@@ -1,41 +1,16 @@
         :root {
-            --primary: #1A237E;
-            --primary-light: #3949AB;
-            --accent: #00D9FF;
-            --accent-glow: rgba(0, 217, 255, 0.3);
-            --secondary: #FFB300;
-            --success: #22C55E;
-            --warning: #F59E0B;
-            --danger: #EF4444;
             --bg-dark: #0A0E1A;
             --bg-card: rgba(255, 255, 255, 0.03);
             --bg-card-hover: rgba(255, 255, 255, 0.08);
-            --text-primary: #FFFFFF;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --text-muted: rgba(255, 255, 255, 0.5);
             --border: rgba(255, 255, 255, 0.1);
-            --gradient-primary: linear-gradient(135deg, #1A237E 0%, #0D47A1 50%, #1A237E 100%);
             --gradient-accent: linear-gradient(135deg, #00D9FF, #8B5CF6);
-            --gradient-gold: linear-gradient(135deg, #FFB300, #FF6F00);
-            --gradient-success: linear-gradient(135deg, #22C55E, #16A34A);
             --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-            --shadow-glow: 0 0 40px rgba(0, 217, 255, 0.2);
-            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
-            --radius: 16px;
-            --radius-lg: 24px;
-            --radius-full: 9999px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-dark);
-            color: var(--text-primary);
+            color: var(--text-primary, #FFFFFF);
             min-height: 100vh;
             overflow-x: hidden;
         }

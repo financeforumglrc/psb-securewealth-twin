@@ -1,99 +1,16 @@
 /* ==========================================================================
    RESUME BUILDER V2 - PREMIUM STYLES
+   Tokens, reset, scrollbar in design-system.css
    ========================================================================== */
 
-:root {
-    /* Color Palette - Premium corporate/tech vibe */
-    --v2-bg: #f8fafc;
-    --v2-surface: #ffffff;
-    --v2-surface-alt: #f1f5f9;
-    --v2-border: #e2e8f0;
-
-    --v2-primary: #3b82f6;
-    /* Blue 500 */
-    --v2-primary-hover: #2563eb;
-    /* Blue 600 */
-    --v2-success: #10b981;
-    /* Emerald 500 */
-    --v2-danger: #ef4444;
-    /* Red 500 */
-    --v2-warning: #f59e0b;
-    /* Amber 500 */
-    --v2-purple: #8b5cf6;
-    /* Violet 500 */
-
-    --v2-text: #0f172a;
-    /* Slate 900 */
-    --v2-text-muted: #64748b;
-    /* Slate 500 */
-    --v2-text-light: #94a3b8;
-    /* Slate 400 */
-
-    /* Glassmorphism Variables */
-    --v2-glass-bg: rgba(255, 255, 255, 0.7);
-    --v2-glass-border: rgba(255, 255, 255, 0.5);
-    --v2-glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
-    --v2-backdrop-blur: 12px;
-
-    /* Spacing & Transition */
-    --v2-radius: 12px;
-    --v2-header-height: 64px;
-    --v2-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-[data-theme="dark"] {
-    --v2-bg: #0f172a;
-    --v2-surface: #1e293b;
-    --v2-surface-alt: #334155;
-    --v2-border: #334155;
-
-    --v2-text: #f8fafc;
-    --v2-text-muted: #94a3b8;
-    --v2-text-light: #64748b;
-
-    --v2-glass-bg: rgba(30, 41, 59, 0.7);
-    --v2-glass-border: rgba(255, 255, 255, 0.1);
-    --v2-glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-}
-
-/* ==========================================================================
-   RESET & BASE
-   ========================================================================== */
 body.rb-v2-body {
-    background-color: var(--v2-bg);
-    color: var(--v2-text);
+    background-color: var(--v2-bg, #f8fafc);
+    color: var(--v2-text, #0f172a);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     margin: 0;
     padding: 0;
     height: 100vh;
     overflow: hidden;
-    /* App-like feel */
-}
-
-/* Scrollbar Customization */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--v2-border);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--v2-text-light);
-}
-
-/* Buttons & Inputs Base */
-button {
-    cursor: pointer;
-    border: none;
-    font-family: inherit;
 }
 
 input,

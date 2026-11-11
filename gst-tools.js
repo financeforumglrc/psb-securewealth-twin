@@ -43,6 +43,9 @@ const LATE_FEE = {
 };
 
 // HSN/SAC Database (Sample - expand as needed)
+// NOTE: backend/algorithms/hsnRateData.js is the SINGLE SOURCE OF TRUTH for
+// HSN/SAC rates (with per-entry effectiveFrom dates). This sample mirrors it —
+// update that file first, then sync here.
 const HSN_DATABASE = [
     { code: '0101', description: 'Live horses, asses, mules', rate: 0, type: 'goods' },
     { code: '0201', description: 'Meat of bovine animals, fresh', rate: 0, type: 'goods' },
@@ -51,7 +54,7 @@ const HSN_DATABASE = [
     { code: '1001', description: 'Wheat and meslin', rate: 0, type: 'goods' },
     { code: '1006', description: 'Rice', rate: 5, type: 'goods' },
     { code: '1701', description: 'Sugar', rate: 5, type: 'goods' },
-    { code: '2201', description: 'Waters, mineral and aerated', rate: 18, type: 'goods' },
+    { code: '2201', description: 'Waters (natural, not aerated)', rate: 0, type: 'goods' },
     { code: '2202', description: 'Aerated drinks, energy drinks', rate: 28, type: 'goods' },
     { code: '3004', description: 'Medicaments for therapeutic use', rate: 12, type: 'goods' },
     { code: '3401', description: 'Soap, organic surfactants', rate: 18, type: 'goods' },
@@ -60,15 +63,15 @@ const HSN_DATABASE = [
     { code: '6402', description: 'Footwear below ₹1000', rate: 5, type: 'goods' },
     { code: '7113', description: 'Gold jewellery', rate: 3, type: 'goods' },
     { code: '8471', description: 'Computers and accessories', rate: 18, type: 'goods' },
-    { code: '8517', description: 'Mobile phones', rate: 12, type: 'goods' },
+    { code: '8517', description: 'Mobile phones', rate: 18, type: 'goods' },
     { code: '8703', description: 'Motor cars, petrol above 1500cc', rate: 28, type: 'goods' },
-    { code: '8528', description: 'Television sets', rate: 28, type: 'goods' },
+    { code: '8528', description: 'Television sets, monitors', rate: 18, type: 'goods' },
     { code: '9401', description: 'Seats and furniture', rate: 18, type: 'goods' },
     { code: '9403', description: 'Office furniture', rate: 18, type: 'goods' },
     // Services (SAC)
     { code: '9954', description: 'Construction services', rate: 18, type: 'services' },
     { code: '9961', description: 'Transport of goods by road', rate: 5, type: 'services' },
-    { code: '9963', description: 'Accommodation services (Hotels)', rate: 18, type: 'services' },
+    { code: '9963', description: 'Hotel accommodation (₹1001–₹7500/night)', rate: 12, type: 'services' },
     { code: '9964', description: 'Passenger transport services', rate: 5, type: 'services' },
     { code: '9971', description: 'Financial services', rate: 18, type: 'services' },
     { code: '9972', description: 'Real estate services', rate: 18, type: 'services' },
@@ -77,10 +80,11 @@ const HSN_DATABASE = [
     { code: '9983', description: 'Professional services', rate: 18, type: 'services' },
     { code: '9984', description: 'Telecom services', rate: 18, type: 'services' },
     { code: '9985', description: 'Support services', rate: 18, type: 'services' },
-    { code: '9987', description: 'Maintenance and repair', rate: 18, type: 'services' },
+    { code: '9987', description: 'Maintenance and repair', rate: 5, type: 'services' },
     { code: '9988', description: 'Manufacturing services', rate: 18, type: 'services' },
-    { code: '9991', description: 'Education services', rate: 0, type: 'services' },
-    { code: '9992', description: 'Healthcare services', rate: 0, type: 'services' },
+    { code: '9991', description: 'Public administration services', rate: 18, type: 'services' },
+    { code: '9992', description: 'Education services', rate: 0, type: 'services' },
+    { code: '9993', description: 'Healthcare services', rate: 0, type: 'services' },
     { code: '9995', description: 'Recreation services', rate: 18, type: 'services' },
     { code: '9996', description: 'Personal services', rate: 18, type: 'services' },
     { code: '9997', description: 'Government services', rate: 18, type: 'services' },
@@ -95,16 +99,16 @@ const GST_RATE_CHART = {
     goods: [
         { category: '0% - Exempt', items: ['Fresh fruits & vegetables', 'Milk', 'Bread', 'Salt', 'Books', 'Newspapers', 'Handloom', 'Khadi'] },
         { category: '5% - Essential', items: ['Sugar', 'Tea', 'Coffee', 'Spices', 'Coal', 'Footwear below ₹1000', 'Apparel below ₹1000', 'Skimmed milk powder'] },
-        { category: '12% - Standard', items: ['Mobiles', 'Processed food', 'Butter', 'Cheese', 'Ghee', 'Sewing machines', 'Cellphones', 'Umbrella'] },
-        { category: '18% - Most Goods', items: ['Computers', 'Printers', 'Cameras', 'Speakers', 'Steel products', 'Cement', 'Paints', 'Ice cream'] },
+        { category: '12% - Standard', items: ['Processed food', 'Butter', 'Cheese', 'Ghee', 'Sewing machines', 'Umbrella', 'Hotel room ₹1001-₹7500'] },
+        { category: '18% - Most Goods', items: ['Computers', 'Mobiles', 'Cellphones', 'Printers', 'Cameras', 'Speakers', 'Steel products', 'Cement', 'Paints', 'Ice cream'] },
         { category: '28% - Luxury/Sin', items: ['Cars', 'Motorcycles', 'AC', 'Refrigerator', 'Washing machine', 'Tobacco', 'Aerated drinks', 'Pan masala'] }
     ],
     services: [
         { category: '0% - Exempt', items: ['Education', 'Healthcare', 'Agriculture', 'Public transport', 'Religious services'] },
         { category: '5% - Essential', items: ['Transport of goods by road', 'Passenger transport (AC bus)', 'Cab aggregator', 'Newspaper ads'] },
-        { category: '12% - Standard', items: ['Air travel (economy)', 'Hotel room ₹1000-7500', 'Construction (affordable)', 'Movie tickets below ₹100'] },
+        { category: '12% - Standard', items: ['Air travel (economy)', 'Hotel room ₹1001-₹7500', 'Construction (affordable)', 'Movie tickets below ₹100'] },
         { category: '18% - Most Services', items: ['IT services', 'Telecom', 'Banking', 'Insurance', 'Restaurant with AC', 'Hotel above ₹7500', 'Professional services'] },
-        { category: '28% - Luxury', items: ['5-star hotel services', 'Race club services', 'Casino', 'Betting'] }
+        { category: '28% - Luxury', items: ['Race club services', 'Casino', 'Betting', 'Online gaming'] }
     ],
     exempt: [
         { category: 'Essential Services', items: ['Public healthcare', 'Government education', 'Religious pilgrimage', 'Charitable activities'] },
@@ -729,6 +733,8 @@ function loadTheme() {
 document.addEventListener('DOMContentLoaded', function() {
     loadTheme();
     initNavigation();
+    const requestedTool = location.hash.slice(1);
+    if (requestedTool && document.getElementById('panel-' + requestedTool)) switchTool(requestedTool);
     
     // Initialize all calculators
     calculateGST();

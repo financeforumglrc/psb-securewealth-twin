@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GST Tools Suite - DS Financial Solutions</title>
     <meta name="description" content="Complete GST toolkit with 11 advanced calculators - GST Calculator, HSN Finder, ITC Calculator, RCM, Refund, Interest & Late Fee, E-Way Bill, Composition Scheme, 2A vs 3B Reconciliation">
+    <meta name="theme-color" content="#059669">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,6 +24,7 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="gst-tools.css">
+<link rel="stylesheet" href="experience.css">
 </head>
 <body>
     <div class="app-container">
@@ -114,7 +116,7 @@
                     <span class="subtitle">FY 2025-26 | All calculations as per latest GST rules</span>
                 </div>
                 <div class="header-actions">
-                    <button class="btn btn-secondary btn-icon" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <button class="btn btn-secondary btn-icon" data-click="toggleTheme()" title="Toggle Dark Mode">
                         <i class="fas fa-moon"></i>
                     </button>
                     <a href="index.html" class="btn btn-secondary">
@@ -175,8 +177,8 @@
                             <div class="calc-card-body">
                                 <!-- Mode Tabs -->
                                 <div class="tabs">
-                                    <button class="tab active" onclick="setGSTMode('exclusive')">Add GST (Exclusive)</button>
-                                    <button class="tab" onclick="setGSTMode('inclusive')">Remove GST (Inclusive)</button>
+                                    <button class="tab active" data-click="setGSTMode('exclusive')">Add GST (Exclusive)</button>
+                                    <button class="tab" data-click="setGSTMode('inclusive')">Remove GST (Inclusive)</button>
                                 </div>
                                 
                                 <div class="form-group">
@@ -188,10 +190,10 @@
                                 <div class="form-group">
                                     <label class="form-label">GST Rate</label>
                                     <div class="tabs">
-                                        <button class="tab" onclick="setGSTRate(5)">5%</button>
-                                        <button class="tab" onclick="setGSTRate(12)">12%</button>
-                                        <button class="tab active" onclick="setGSTRate(18)">18%</button>
-                                        <button class="tab" onclick="setGSTRate(28)">28%</button>
+                                        <button class="tab" data-click="setGSTRate(5)">5%</button>
+                                        <button class="tab" data-click="setGSTRate(12)">12%</button>
+                                        <button class="tab active" data-click="setGSTRate(18)">18%</button>
+                                        <button class="tab" data-click="setGSTRate(28)">28%</button>
                                     </div>
                                 </div>
                                 
@@ -292,9 +294,9 @@
                             </div>
                             
                             <div class="tabs" style="margin-top: 20px;">
-                                <button class="tab active" onclick="setHSNCategory('all')">All</button>
-                                <button class="tab" onclick="setHSNCategory('goods')">Goods (HSN)</button>
-                                <button class="tab" onclick="setHSNCategory('services')">Services (SAC)</button>
+                                <button class="tab active" data-click="setHSNCategory('all')">All</button>
+                                <button class="tab" data-click="setHSNCategory('goods')">Goods (HSN)</button>
+                                <button class="tab" data-click="setHSNCategory('services')">Services (SAC)</button>
                             </div>
                             
                             <div class="search-results" id="hsnResults">
@@ -503,9 +505,9 @@
                         </div>
                         <div class="calc-card-body">
                             <div class="tabs">
-                                <button class="tab active" onclick="setRefundType('export')">Export Refund</button>
-                                <button class="tab" onclick="setRefundType('inverted')">Inverted Duty</button>
-                                <button class="tab" onclick="setRefundType('accumulate')">Accumulated ITC</button>
+                                <button class="tab active" data-click="setRefundType('export')">Export Refund</button>
+                                <button class="tab" data-click="setRefundType('inverted')">Inverted Duty</button>
+                                <button class="tab" data-click="setRefundType('accumulate')">Accumulated ITC</button>
                             </div>
                             
                             <!-- Export Refund -->
@@ -966,7 +968,7 @@
                             </div>
                             
                             <div class="btn-group" style="justify-content: center;">
-                                <button class="btn btn-primary" onclick="downloadReconReport()">
+                                <button class="btn btn-primary" data-click="downloadReconReport()">
                                     <i class="fas fa-download"></i> Download Report
                                 </button>
                             </div>
@@ -982,9 +984,9 @@
                         </div>
                         <div class="calc-card-body">
                             <div class="tabs">
-                                <button class="tab active" onclick="showRateCategory('goods')">Goods</button>
-                                <button class="tab" onclick="showRateCategory('services')">Services</button>
-                                <button class="tab" onclick="showRateCategory('exempt')">Exempt</button>
+                                <button class="tab active" data-click="showRateCategory('goods')">Goods</button>
+                                <button class="tab" data-click="showRateCategory('services')">Services</button>
+                                <button class="tab" data-click="showRateCategory('exempt')">Exempt</button>
                             </div>
                             
                             <div id="rateChartContent">
@@ -1068,5 +1070,18 @@
     
     <!-- JavaScript -->
     <script src="gst-tools.js"></script>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
+<script src="js/tool-navigation.js"></script>
 </body>
 </html>

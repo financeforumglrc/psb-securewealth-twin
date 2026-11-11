@@ -38,14 +38,10 @@ const CONFIG = {
 };
 
 // Tax Slabs FY 2025-26 (New Regime)
-const NEW_REGIME_SLABS = [
-    { min: 0, max: 300000, rate: 0, label: '₹0 - ₹3,00,000' },
-    { min: 300000, max: 700000, rate: 5, label: '₹3,00,001 - ₹7,00,000' },
-    { min: 700000, max: 1000000, rate: 10, label: '₹7,00,001 - ₹10,00,000' },
-    { min: 1000000, max: 1200000, rate: 15, label: '₹10,00,001 - ₹12,00,000' },
-    { min: 1200000, max: 1500000, rate: 20, label: '₹12,00,001 - ₹15,00,000' },
-    { min: 1500000, max: Infinity, rate: 30, label: 'Above ₹15,00,000' }
-];
+const NEW_REGIME_SLABS = IncomeTax.newSlabs.map(([max, rate], index, slabs) => {
+    const min = index ? slabs[index - 1][0] : 0;
+    return { min, max, rate: rate * 100, label: max === Infinity ? 'Above ₹24,00,000' : '₹' + min.toLocaleString('en-IN') + ' - ₹' + max.toLocaleString('en-IN') };
+});
 
 // Tax Slabs FY 2025-26 (Old Regime - General)
 const OLD_REGIME_SLABS_GENERAL = [
@@ -208,7 +204,7 @@ function calculateRegimeComparison() {
     const totalDeductions = totalChapter6A + totalExemptions;
 
     // ==================== OLD REGIME CALCULATION ====================
-    const oldStdDeduction = CONFIG.STANDARD_DEDUCTION_OLD;
+    const oldStdDeduction = Math.min(grossSalary, CONFIG.STANDARD_DEDUCTION_OLD);
     const oldTaxableIncome = Math.max(0, grossIncome - oldStdDeduction - totalDeductions);
     
     const oldSlabs = getOldRegimeSlabs(ageCategory);
@@ -221,14 +217,12 @@ function calculateRegimeComparison() {
     }
     
     // Add surcharge if applicable
-    const oldSurcharge = calculateSurcharge(oldTaxableIncome, oldTaxBeforeCess);
-    oldTaxBeforeCess += oldSurcharge;
-    
-    const oldCess = oldTaxBeforeCess * CONFIG.CESS_RATE;
-    const oldTotalTax = Math.round(oldTaxBeforeCess + oldCess);
+    const oldAssessment = IncomeTax.calculate(oldTaxableIncome, { regime: 'old', ageCategory });
+    const oldCess = oldAssessment.cess;
+    const oldTotalTax = oldAssessment.totalTax;
 
     // ==================== NEW REGIME CALCULATION ====================
-    const newStdDeduction = CONFIG.STANDARD_DEDUCTION_NEW;
+    const newStdDeduction = Math.min(grossSalary, CONFIG.STANDARD_DEDUCTION_NEW);
     const newTaxableIncome = Math.max(0, grossIncome - newStdDeduction);
     
     const newResult = calculateSlabwiseTax(newTaxableIncome, NEW_REGIME_SLABS);
@@ -242,11 +236,9 @@ function calculateRegimeComparison() {
     }
     
     // Add surcharge if applicable
-    const newSurcharge = calculateSurcharge(newTaxableIncome, newTaxBeforeCess);
-    newTaxBeforeCess += newSurcharge;
-    
-    const newCess = newTaxBeforeCess * CONFIG.CESS_RATE;
-    const newTotalTax = Math.round(newTaxBeforeCess + newCess);
+    const newAssessment = IncomeTax.calculate(newTaxableIncome, { regime: 'new' });
+    const newCess = newAssessment.cess;
+    const newTotalTax = newAssessment.totalTax;
 
     // ==================== UPDATE UI ====================
     
@@ -290,7 +282,7 @@ function calculateRegimeComparison() {
     setText('recommendedRegime', isNewBetter ? 'New Tax Regime' : isOldBetter ? 'Old Tax Regime' : 'Both are Equal');
 
     // Break-even analysis
-    const breakEvenDeductions = calculateBreakEven(grossIncome);
+    const breakEvenDeductions = calculateBreakEven(grossIncome, ageCategory, grossSalary);
     setText('breakEvenText', 
         `At your income of ${formatCurrency(grossIncome)}, you need deductions of ${formatCurrency(breakEvenDeductions)} or more for Old Regime to be beneficial. Your current deductions: ${formatCurrency(totalDeductions + oldStdDeduction)}.`
     );
@@ -315,39 +307,16 @@ function calculateRegimeComparison() {
 /**
  * Calculate break-even deduction amount
  */
-function calculateBreakEven(grossIncome) {
-    // Binary search for break-even point
-    let low = 0;
-    let high = grossIncome;
-    
-    const newTaxableIncome = grossIncome - CONFIG.STANDARD_DEDUCTION_NEW;
-    const newResult = calculateSlabwiseTax(newTaxableIncome, NEW_REGIME_SLABS);
-    let newTax = newResult.totalTax;
-    
-    if (newTaxableIncome <= CONFIG.NEW_REGIME_REBATE_LIMIT) {
-        newTax = Math.max(0, newTax - Math.min(newTax, CONFIG.NEW_REGIME_REBATE_AMOUNT));
-    }
-    newTax = newTax * (1 + CONFIG.CESS_RATE);
-    
-    while (high - low > 1000) {
+function calculateBreakEven(grossIncome, ageCategory = 'general', salaryIncome = grossIncome) {
+    const newTax = IncomeTax.calculate(Math.max(0, grossIncome - Math.min(salaryIncome, CONFIG.STANDARD_DEDUCTION_NEW))).totalTax;
+    let low = 0, high = grossIncome;
+    const oldTax = deductions => IncomeTax.calculate(Math.max(0, grossIncome - Math.min(salaryIncome, CONFIG.STANDARD_DEDUCTION_OLD) - deductions), {regime:'old', ageCategory}).totalTax;
+    if (oldTax(0) <= newTax) return 0;
+    while (high - low > 1) {
         const mid = Math.floor((low + high) / 2);
-        const oldTaxable = Math.max(0, grossIncome - CONFIG.STANDARD_DEDUCTION_OLD - mid);
-        const oldResult = calculateSlabwiseTax(oldTaxable, OLD_REGIME_SLABS_GENERAL);
-        let oldTax = oldResult.totalTax;
-        
-        if (oldTaxable <= CONFIG.OLD_REGIME_REBATE_LIMIT) {
-            oldTax = Math.max(0, oldTax - CONFIG.OLD_REGIME_REBATE_AMOUNT);
-        }
-        oldTax = oldTax * (1 + CONFIG.CESS_RATE);
-        
-        if (oldTax < newTax) {
-            high = mid;
-        } else {
-            low = mid;
-        }
+        if (oldTax(mid) <= newTax) high = mid; else low = mid;
     }
-    
-    return Math.round(high);
+    return Math.ceil(high);
 }
 
 // ==================== INCOME TAX CALCULATOR ====================
@@ -377,7 +346,7 @@ function calculateIncomeTax() {
     const grossIncome = salaryIncome + Math.max(0, houseProperty) + interest + capital + other;
 
     const isNewRegime = currentIncomeTaxRegime === 'new';
-    const stdDeduction = isNewRegime ? CONFIG.STANDARD_DEDUCTION_NEW : CONFIG.STANDARD_DEDUCTION_OLD;
+    const stdDeduction = Math.min(salaryIncome, isNewRegime ? CONFIG.STANDARD_DEDUCTION_NEW : CONFIG.STANDARD_DEDUCTION_OLD);
     const taxableIncome = Math.max(0, grossIncome - stdDeduction);
 
     const slabs = isNewRegime ? NEW_REGIME_SLABS : OLD_REGIME_SLABS_GENERAL;
@@ -392,8 +361,9 @@ function calculateIncomeTax() {
         taxBeforeCess = Math.max(0, taxBeforeCess - CONFIG.OLD_REGIME_REBATE_AMOUNT);
     }
     
-    const cess = taxBeforeCess * CONFIG.CESS_RATE;
-    const totalTax = Math.round(taxBeforeCess + cess);
+    const assessment = IncomeTax.calculate(taxableIncome, { regime: isNewRegime ? 'new' : 'old' });
+    const cess = assessment.cess;
+    const totalTax = assessment.totalTax;
 
     // Update UI
     setText('itcGrossIncome', formatCurrency(grossIncome));
@@ -643,6 +613,7 @@ function calculateGST() {
 let comparisonChart = null;
 
 function updateComparisonChart(oldTax, newTax) {
+    if (typeof Chart === 'undefined') return;
     const ctx = getElement('taxComparisonChart');
     if (!ctx) return;
 

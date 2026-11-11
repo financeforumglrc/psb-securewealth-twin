@@ -16,3 +16,12 @@ replace-style.ps1
 .env
 .env.example
 .gitignore
+_dev/
+.git/
+.github/
+.husky/
+node_modules/
+*.md
+*.txt
+*.png
+*.ps1

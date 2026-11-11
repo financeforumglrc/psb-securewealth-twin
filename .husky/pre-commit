@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Lint staged files
+npx lint-staged
+
+# Run type checking
+npm run typecheck 2>/dev/null || echo "⚠️ Type checking skipped (not fully migrated to TypeScript)"

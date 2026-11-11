@@ -2,9 +2,11 @@
 <html lang="en" data-theme="light">
 
 <head>
+    <script src="backend/algorithms/incomeTax.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="World-Class Tax Calculator Portal - Advanced Income Tax, GST Calculator, Tax Regime Comparison with AI-powered recommendations. Professional tools by DS Financial Solutions.">
+    <meta name="theme-color" content="#1A237E">
     <meta name="keywords" content="Income Tax Calculator 2026, GST Calculator, Tax Regime Comparison, HRA Calculator, 80C Planner, Advance Tax">
     <title>Advanced Tax Calculator Portal | DS Financial Solutions</title>
 
@@ -28,6 +30,7 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="tax-portal.css">
+<link rel="stylesheet" href="experience.css">
 </head>
 
 <body>
@@ -115,7 +118,7 @@
                 <div class="sidebar-cta">
                     <h4>🎯 Tax Optimization</h4>
                     <p>Get personalized tax-saving recommendations</p>
-                    <a href="#" class="sidebar-cta-btn" onclick="showOptimizationTips()">
+                    <a href="#" class="sidebar-cta-btn" data-click="showOptimizationTips()">
                         <i class="fas fa-lightbulb"></i>
                         Get Tips
                     </a>
@@ -178,10 +181,10 @@
                             <p class="page-subtitle">AI-powered analysis with break-even calculation & optimization recommendations</p>
                         </div>
                         <div class="page-actions">
-                            <button class="btn btn-outline" onclick="resetCalculator()">
+                            <button class="btn btn-outline" data-click="resetCalculator()">
                                 <i class="fas fa-redo"></i> Reset
                             </button>
-                            <button class="btn btn-primary" onclick="downloadDetailedReport()">
+                            <button class="btn btn-primary" data-click="downloadDetailedReport()">
                                 <i class="fas fa-file-pdf"></i> Export Report
                             </button>
                         </div>
@@ -257,7 +260,7 @@
                                 <div class="deductions-accordion">
                                     <!-- Section 80C -->
                                     <div class="deduction-category open">
-                                        <div class="deduction-category-header" onclick="toggleCategory(this)">
+                                        <div class="deduction-category-header" data-click="toggleCategory(this)">
                                             <div class="deduction-category-title">
                                                 <i class="fas fa-piggy-bank"></i>
                                                 Section 80C Investments
@@ -330,7 +333,7 @@
 
                                     <!-- Other Deductions -->
                                     <div class="deduction-category">
-                                        <div class="deduction-category-header" onclick="toggleCategory(this)">
+                                        <div class="deduction-category-header" data-click="toggleCategory(this)">
                                             <div class="deduction-category-title">
                                                 <i class="fas fa-plus-circle"></i>
                                                 Other Deductions
@@ -393,7 +396,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-primary btn-block btn-lg" onclick="calculateRegimeComparison()">
+                            <button class="btn btn-primary btn-block btn-lg" data-click="calculateRegimeComparison()">
                                 <i class="fas fa-calculator"></i>
                                 Compare Tax Regimes
                             </button>
@@ -420,7 +423,7 @@
                                 </div>
                             </div>
                             <div class="calc-card-actions">
-                                <button class="btn btn-icon btn-ghost" onclick="shareResults()" title="Share">
+                                <button class="btn btn-icon btn-ghost" data-click="shareResults()" title="Share">
                                     <i class="fas fa-share-alt"></i>
                                 </button>
                             </div>
@@ -598,10 +601,10 @@
 
                             <!-- Action Buttons -->
                             <div class="action-bar">
-                                <button class="btn btn-secondary" onclick="downloadDetailedReport()">
+                                <button class="btn btn-secondary" data-click="downloadDetailedReport()">
                                     <i class="fas fa-file-pdf"></i> Download PDF Report
                                 </button>
-                                <button class="btn btn-success" onclick="shareResults()">
+                                <button class="btn btn-success" data-click="shareResults()">
                                     <i class="fas fa-share-alt"></i> Share Results
                                 </button>
                             </div>
@@ -634,11 +637,11 @@
                         </div>
                         <div class="calc-card-body">
                             <div class="tabs">
-                                <button class="tab active" data-regime="new" onclick="switchIncomeTaxRegime('new')">
+                                <button class="tab active" data-regime="new" data-click="switchIncomeTaxRegime('new')">
                                     New Regime
                                     <span class="badge">Recommended</span>
                                 </button>
-                                <button class="tab" data-regime="old" onclick="switchIncomeTaxRegime('old')">
+                                <button class="tab" data-regime="old" data-click="switchIncomeTaxRegime('old')">
                                     Old Regime
                                 </button>
                             </div>
@@ -699,7 +702,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-primary btn-block btn-lg" onclick="calculateIncomeTax()">
+                            <button class="btn btn-primary btn-block btn-lg" data-click="calculateIncomeTax()">
                                 <i class="fas fa-calculator"></i>
                                 Calculate Tax
                             </button>
@@ -828,7 +831,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-primary btn-block btn-lg" onclick="calculateHRA()">
+                            <button class="btn btn-primary btn-block btn-lg" data-click="calculateHRA()">
                                 <i class="fas fa-calculator"></i>
                                 Calculate HRA Exemption
                             </button>
@@ -1005,7 +1008,7 @@
                                 <input type="number" class="deduction-input" id="planner80C_SSY" value="0" onchange="calculate80CPlanner()">
                             </div>
 
-                            <button class="btn btn-primary btn-block btn-lg" onclick="calculate80CPlanner()">
+                            <button class="btn btn-primary btn-block btn-lg" data-click="calculate80CPlanner()">
                                 <i class="fas fa-calculator"></i>
                                 Calculate 80C Benefits
                             </button>
@@ -1106,11 +1109,11 @@
                         </div>
                         <div class="calc-card-body">
                             <div class="tabs">
-                                <button class="tab active" onclick="setGSTMode('exclusive')">
+                                <button class="tab active" data-click="setGSTMode('exclusive')">
                                     <i class="fas fa-plus-circle"></i>
                                     Add GST (Exclusive)
                                 </button>
-                                <button class="tab" onclick="setGSTMode('inclusive')">
+                                <button class="tab" data-click="setGSTMode('inclusive')">
                                     <i class="fas fa-minus-circle"></i>
                                     Remove GST (Inclusive)
                                 </button>
@@ -1124,10 +1127,10 @@
                             <div class="form-group">
                                 <label class="form-label">GST Rate</label>
                                 <div class="tabs" style="margin-bottom: 0;">
-                                    <button class="tab" onclick="setGSTRate(5)">5%</button>
-                                    <button class="tab" onclick="setGSTRate(12)">12%</button>
-                                    <button class="tab active" onclick="setGSTRate(18)">18%</button>
-                                    <button class="tab" onclick="setGSTRate(28)">28%</button>
+                                    <button class="tab" data-click="setGSTRate(5)">5%</button>
+                                    <button class="tab" data-click="setGSTRate(12)">12%</button>
+                                    <button class="tab active" data-click="setGSTRate(18)">18%</button>
+                                    <button class="tab" data-click="setGSTRate(28)">28%</button>
                                 </div>
                             </div>
 
@@ -1139,7 +1142,7 @@
                                 </select>
                             </div>
 
-                            <button class="btn btn-primary btn-block btn-lg" onclick="calculateGST()">
+                            <button class="btn btn-primary btn-block btn-lg" data-click="calculateGST()">
                                 <i class="fas fa-calculator"></i>
                                 Calculate GST
                             </button>
@@ -1273,6 +1276,19 @@
     </nav>
 
     <script src="tax-portal.js"></script>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
+<script src="js/tool-navigation.js"></script>
 </body>
 
 </html>

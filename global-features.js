@@ -29,8 +29,8 @@ const CookieConsent = {
                     <p>We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
                 </div>
                 <div class="cookie-actions">
-                    <button class="cookie-btn cookie-accept" onclick="CookieConsent.accept()">Accept All</button>
-                    <button class="cookie-btn cookie-decline" onclick="CookieConsent.decline()">Decline</button>
+                    <button class="cookie-btn cookie-accept" data-click="cookieAccept">Accept All</button>
+                    <button class="cookie-btn cookie-decline" data-click="cookieDecline">Decline</button>
                 </div>
             </div>
         `;
@@ -75,11 +75,11 @@ const NewsletterPopup = {
         popup.className = 'newsletter-modal';
         popup.innerHTML = `
             <div class="newsletter-modal-content">
-                <button class="newsletter-close" onclick="NewsletterPopup.hide()">×</button>
+                <button class="newsletter-close" data-click="newsletterClose">×</button>
                 <div class="newsletter-icon">📧</div>
                 <h3>Stay Updated!</h3>
                 <p>Get the latest tax updates, financial tips, and exclusive offers delivered to your inbox.</p>
-                <form class="newsletter-form-popup" onsubmit="NewsletterPopup.submit(event)">
+                <form class="newsletter-form-popup" data-submit="newsletterSubmit">
                     <input type="email" placeholder="Enter your email" required>
                     <button type="submit">Subscribe</button>
                 </form>
@@ -110,6 +110,10 @@ const NewsletterPopup = {
     }
 };
 
+// Intentionally global objects: CookieConsent, NewsletterPopup, SocialProof,
+// TestimonialsCarousel, QuickActions, ScrollReveal, FormValidation,
+// ProgressIndicator, Confetti, Skeleton, KeyboardNav, LanguageManager, UserAuth,
+// escapeHtml, formatCurrency
 // ==================== SOCIAL PROOF NOTIFICATIONS ====================
 const SocialProof = {
     notifications: [
@@ -148,7 +152,7 @@ const SocialProof = {
                 <span>${random.action}</span>
                 <small>${timeAgo} minute${timeAgo > 1 ? 's' : ''} ago</small>
             </div>
-            <button class="sp-close" onclick="this.parentElement.remove()">×</button>
+            <button class="sp-close" data-click="socialProofClose">×</button>
         `;
         document.body.appendChild(notif);
 
@@ -196,7 +200,7 @@ const TestimonialsCarousel = {
                 </div>
             </div>
             <div class="testimonial-dots">
-                ${this.testimonials.map((_, i) => `<span class="dot ${i === this.current ? 'active' : ''}" onclick="TestimonialsCarousel.goTo(${i})"></span>`).join('')}
+                ${this.testimonials.map((_, i) => `<span class="dot ${i === this.current ? 'active' : ''}" data-click="testimonialDot" data-index="${i}"></span>`).join('')}
             </div>
         `;
     },
@@ -219,7 +223,7 @@ const QuickActions = {
         const fab = document.createElement('div');
         fab.id = 'quickActionsFab';
         fab.innerHTML = `
-            <button class="fab-main" onclick="QuickActions.toggle()">
+            <button class="fab-main" data-click="quickActionsToggle">
                 <i class="fas fa-bolt"></i>
             </button>
             <div class="fab-menu">
@@ -386,11 +390,32 @@ document.addEventListener('DOMContentLoaded', () => {
     LanguageManager.init();
     UserAuth.init();
 
+    // Event delegation for data-click and data-submit
+    document.addEventListener('click', function(e) {
+        const action = e.target.closest('[data-click]')?.getAttribute('data-click');
+        if (!action) return;
+        switch (action) {
+            case 'cookieAccept': CookieConsent.accept(); break;
+            case 'cookieDecline': CookieConsent.decline(); break;
+            case 'newsletterClose': NewsletterPopup.hide(); break;
+            case 'socialProofClose': e.target.closest('#socialProofNotif')?.remove(); break;
+            case 'quickActionsToggle': QuickActions.toggle(); break;
+            case 'testimonialDot': TestimonialsCarousel.goTo(parseInt(e.target.getAttribute('data-index'))); break;
+        }
+    });
+
+    document.addEventListener('submit', function(e) {
+        const form = e.target.closest('[data-submit]');
+        if (form && form.getAttribute('data-submit') === 'newsletterSubmit') {
+            NewsletterPopup.submit(e);
+        }
+    });
+
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('Service Worker registered'))
-            .catch(err => console.log('SW registration failed:', err));
+            .then(reg => { if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('Service Worker registered'); } })
+            .catch(err => { if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('SW registration failed:', err); } });
     }
 });
 
@@ -524,6 +549,21 @@ const UserAuth = {
     }
 };
 
+
+// ==================== COMMON UTILITY FUNCTIONS ====================
+function formatCurrency(amount) {
+    if (amount === undefined || amount === null || isNaN(amount)) return '₹0';
+    const absAmount = Math.abs(amount);
+    let formatted;
+    if (absAmount >= 10000000) {
+        formatted = (absAmount / 10000000).toFixed(2) + ' Cr';
+    } else if (absAmount >= 100000) {
+        formatted = (absAmount / 100000).toFixed(2) + ' L';
+    } else {
+        formatted = absAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    }
+    return (amount < 0 ? '-₹' : '₹') + formatted;
+}
 
 // Expose for external use
 window.Confetti = Confetti;

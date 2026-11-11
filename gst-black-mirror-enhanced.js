@@ -86,23 +86,24 @@ const GSTINValidatorPro = {
         'V': { type: 'SEZ', desc: 'Special Economic Zone Developer/Unit', color: '#32CD32' }
     },
 
-    // Checksum calculation for GSTIN validation
+    // Checksum calculation for GSTIN validation (official GSTN algorithm)
+    // Charset "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", char value = index.
+    // For each of the first 14 chars: factor alternates 1, 2, 1, 2, ...;
+    // product = value * factor; sum += floor(product / 36) + product % 36.
+    // Check = (36 - sum % 36) % 36; the 15th char must equal charset[check].
     calculateChecksum(gstin) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        const weights = '1234567891234567';
-        let total = 0;
-        
+        const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let sum = 0;
+
         for (let i = 0; i < 14; i++) {
-            const char = gstin[i];
-            const pos = chars.indexOf(char);
-            const weight = parseInt(weights[i]);
-            const product = pos * weight;
-            total += Math.floor(product / 36) + (product % 36);
+            const value = chars.indexOf(gstin[i]);
+            const factor = (i % 2 === 0) ? 1 : 2;
+            const product = value * factor;
+            sum += Math.floor(product / 36) + (product % 36);
         }
-        
-        const remainder = total % 36;
-        const checkDigit = chars[(36 - remainder) % 36];
-        return checkDigit;
+
+        const check = (36 - (sum % 36)) % 36;
+        return chars[check];
     },
 
     // Comprehensive validation with 50+ checks
@@ -215,11 +216,13 @@ const GSTINValidatorPro = {
 
         // Check 7: Checksum Validation
         result.checksPerformed.push({ check: 'Checksum Verification', status: 'pending' });
+        let checksumValid = true;
         const calculatedChecksum = this.calculateChecksum(gstin);
         if (calculatedChecksum !== gstin[14]) {
             result.checksPerformed[6].status = 'fail';
             result.alerts.push({ type: 'error', message: `Checksum mismatch. Expected: ${calculatedChecksum}` });
             result.riskScore += 40;
+            checksumValid = false;
         } else {
             result.checksPerformed[6].status = 'pass';
         }
@@ -267,6 +270,11 @@ const GSTINValidatorPro = {
             result.isValid = false;
         } else {
             result.riskLevel = 'critical';
+            result.isValid = false;
+        }
+
+        // Checksum failures always invalidate the GSTIN regardless of other scores
+        if (!checksumValid) {
             result.isValid = false;
         }
 
@@ -428,7 +436,17 @@ const ITCRiskScanner = {
         GSTIN_INACTIVE: { color: '#FFD700', icon: 'fa-user-slash', label: 'Inactive Supplier', weight: 85 },
         LATE_FILING: { color: '#BA55D3', icon: 'fa-clock', label: 'Late Filing', weight: 40 },
         RATE_MISMATCH: { color: '#00BFFF', icon: 'fa-percent', label: 'Rate Mismatch', weight: 50 },
+        NO_2B_DATA: { color: '#9E9E9E', icon: 'fa-question-circle', label: 'No GSTR-2B Data', weight: 0 },
         SAFE: { color: '#00FF88', icon: 'fa-check-circle', label: 'Eligible ITC', weight: 0 }
+    },
+
+    // Heuristic assumptions (NOT statutory values) used for recovery estimates.
+    // Tune these based on observed supplier follow-up success rates.
+    assumptions: {
+        // Assumed fraction of "Not in GSTR-2B" ITC recoverable via supplier follow-up
+        notIn2BRecoveryRate: 0.7,
+        // Assumed fraction of value-mismatch ITC recoverable after reconciliation
+        valueMismatchRecoveryRate: 0.5
     },
 
     // Analyze ITC risks from data
@@ -447,6 +465,7 @@ const ITCRiskScanner = {
                 inactiveSupplier: { count: 0, amount: 0, invoices: [] },
                 lateFiling: { count: 0, amount: 0, invoices: [] },
                 rateMismatch: { count: 0, amount: 0, invoices: [] },
+                no2bData: { count: 0, amount: 0, invoices: [] },
                 safe: { count: 0, amount: 0, invoices: [] }
             },
             riskMatrix: [],
@@ -468,7 +487,7 @@ const ITCRiskScanner = {
                 supplierName: invoice.supplier_name || invoice['Supplier Name'] || invoice.supplierName || 'Unknown',
                 gstin: invoice.gstin || invoice.GSTIN || invoice['Supplier GSTIN'] || '',
                 invoiceDate: invoice.invoice_date || invoice['Invoice Date'] || invoice.date || '',
-                taxableValue: invoice.taxable_value || invoice['Taxable Value'] || invoice.amount || 0,
+                taxableValue: parseFloat(invoice.taxable_value || invoice['Taxable Value'] || invoice.amount || 0) || 0,
                 cgst: invoice.cgst || invoice.CGST || 0,
                 sgst: invoice.sgst || invoice.SGST || 0,
                 igst: invoice.igst || invoice.IGST || 0,
@@ -510,6 +529,11 @@ const ITCRiskScanner = {
                     results.categoryBreakdown.rateMismatch.amount += itcAmount;
                     results.categoryBreakdown.rateMismatch.invoices.push(invoiceRecord);
                     break;
+                case 'NO_2B_DATA':
+                    results.categoryBreakdown.no2bData.count++;
+                    results.categoryBreakdown.no2bData.amount += itcAmount;
+                    results.categoryBreakdown.no2bData.invoices.push(invoiceRecord);
+                    break;
                 default:
                     results.categoryBreakdown.safe.count++;
                     results.categoryBreakdown.safe.amount += itcAmount;
@@ -521,9 +545,9 @@ const ITCRiskScanner = {
         // Generate recommendations
         results.recommendations = this.generateRecommendations(results);
         
-        // Recovery potential
-        results.summary.recoveryPotential = results.categoryBreakdown.notIn2B.amount * 0.7 + 
-                                             results.categoryBreakdown.valueMismatch.amount * 0.5;
+        // Recovery potential (uses heuristic assumptions, see `assumptions`)
+        results.summary.recoveryPotential = results.categoryBreakdown.notIn2B.amount * this.assumptions.notIn2BRecoveryRate +
+                                             results.categoryBreakdown.valueMismatch.amount * this.assumptions.valueMismatchRecoveryRate;
 
         return results;
     },
@@ -537,22 +561,48 @@ const ITCRiskScanner = {
     },
 
     categorizeInvoice(invoice, gstr2bData) {
-        // Simulate categorization based on various factors
-        const random = Math.random();
-        
-        // Check if GSTIN is valid
+        // Deterministic categorization based on actual data patterns
         const gstin = invoice.gstin || invoice.GSTIN || invoice['Supplier GSTIN'] || '';
+        
+        // Check if GSTIN format is valid
         if (gstin && !this.isValidGSTINFormat(gstin)) {
             return 'GSTIN_INACTIVE';
         }
-
-        // Simulate different scenarios
-        if (random < 0.15) return 'NOT_IN_2B';
-        if (random < 0.25) return 'VALUE_MISMATCH';
-        if (random < 0.30) return 'GSTIN_INACTIVE';
-        if (random < 0.38) return 'LATE_FILING';
-        if (random < 0.45) return 'RATE_MISMATCH';
-        return 'SAFE';
+        
+        // If gstr2bData is provided, perform actual reconciliation
+        if (gstr2bData && gstr2bData.length > 0) {
+            const match = gstr2bData.find(gstr => {
+                const gstrGstin = gstr.gstin || gstr.GSTIN || gstr['Supplier GSTIN'] || '';
+                const gstrInv = gstr.invoice_no || gstr['Invoice No'] || gstr.invoiceNo || '';
+                const invNo = invoice.invoice_no || invoice['Invoice No'] || invoice.invoiceNo || '';
+                return gstrGstin.toUpperCase() === gstin.toUpperCase() && 
+                       gstrInv.toString().trim() === invNo.toString().trim();
+            });
+            
+            if (!match) {
+                return 'NOT_IN_2B';
+            }
+            
+            // Check for value mismatch
+            const invValue = parseFloat(invoice.taxable_value || invoice['Taxable Value'] || invoice.amount || 0);
+            const gstrValue = parseFloat(match.taxable_value || match['Taxable Value'] || match.amount || 0);
+            if (Math.abs(invValue - gstrValue) > 1) { // Allow ₹1 rounding difference
+                return 'VALUE_MISMATCH';
+            }
+            
+            // Check for rate mismatch
+            const invRate = parseFloat(invoice.rate || invoice.gst_rate || invoice['GST Rate'] || 0);
+            const gstrRate = parseFloat(match.rate || match.gst_rate || match['GST Rate'] || 0);
+            if (invRate > 0 && gstrRate > 0 && invRate !== gstrRate) {
+                return 'RATE_MISMATCH';
+            }
+            
+            return 'SAFE';
+        }
+        
+        // No GSTR-2B data supplied: reconciliation is impossible, so return an
+        // explicit verdict instead of a pseudo-random guess.
+        return 'NO_2B_DATA';
     },
 
     isValidGSTINFormat(gstin) {
@@ -562,9 +612,11 @@ const ITCRiskScanner = {
     calculateITCExpiry(invoiceDate) {
         if (!invoiceDate) return null;
         const date = new Date(invoiceDate);
-        // ITC must be claimed by September 30 of next FY or annual return filing, whichever is earlier
-        const fy = date.getMonth() >= 3 ? date.getFullYear() : date.getFullYear() - 1;
-        return new Date(fy + 2, 8, 30); // September 30 of next FY
+        if (isNaN(date.getTime())) return null;
+        // Section 16(4) CGST Act: ITC must be claimed by 30 November following
+        // the end of the financial year (April–March) to which the invoice belongs.
+        const fyEndYear = date.getMonth() >= 3 ? date.getFullYear() + 1 : date.getFullYear();
+        return new Date(fyEndYear, 10, 30); // 30 November (month index 10)
     },
 
     generateRecommendations(results) {
@@ -750,6 +802,7 @@ const ITCRiskScanner = {
             'GSTIN_INACTIVE': breakdown.inactiveSupplier,
             'LATE_FILING': breakdown.lateFiling,
             'RATE_MISMATCH': breakdown.rateMismatch,
+            'NO_2B_DATA': breakdown.no2bData,
             'SAFE': breakdown.safe
         };
         return map[key] || { count: 0, amount: 0 };
@@ -761,7 +814,9 @@ const ITCRiskScanner = {
 // ═══════════════════════════════════════════════════════════════════════════════════
 
 const TaxRateErrorDetector = {
-    // Comprehensive HSN Database with correct GST rates
+    // Comprehensive HSN Database with correct GST rates.
+    // Single source of truth: backend/algorithms/hsnRateData.js (per-entry effectiveFrom,
+    // price tiers for apparel/hotel). Keep this mirror in sync with that file.
     hsnDatabase: {
         // Chapter 84 - Machinery
         '8471': { rate: 18, description: 'Computers, Laptops, Data Processing Machines', category: 'Electronics' },
@@ -808,8 +863,9 @@ const TaxRateErrorDetector = {
         // Services (SAC Codes)
         '9954': { rate: 18, description: 'Construction Services', category: 'Services' },
         '9954.11': { rate: 12, description: 'Affordable Housing Construction', category: 'Services' },
-        '9963': { rate: 12, description: 'Accommodation Services (Hotels <7500)', category: 'Services' },
-        '9963.10': { rate: 18, description: 'Hotel Accommodation (>7500)', category: 'Services' },
+        // Hotel 9963: ≤₹1000/night exempt pre-18-Jul-2022; ₹1001–₹7500 → 12% (from 18-Jul-2022); >₹7500 → 18%
+        '9963': { rate: 12, description: 'Hotel Accommodation (₹1001–₹7500/night)', category: 'Services' },
+        '9963.10': { rate: 18, description: 'Hotel Accommodation (>₹7500/night)', category: 'Services' },
         '9971': { rate: 18, description: 'Financial Services', category: 'Services' },
         '9972': { rate: 18, description: 'Real Estate Services', category: 'Services' },
         '9973': { rate: 18, description: 'Leasing/Rental Services', category: 'Services' },
@@ -830,13 +886,16 @@ const TaxRateErrorDetector = {
         '1001': { rate: 0, description: 'Wheat', category: 'Food' },
         '1006': { rate: 5, description: 'Rice (Branded)', category: 'Food' },
         '0402': { rate: 5, description: 'Milk Products', category: 'Food' },
-        '1905': { rate: 5, description: 'Bread, Biscuits (Non-branded)', category: 'Food' },
+        // 1905 split: bread is 0%; biscuits are 18% (do NOT lump them together)
+        '1905': { rate: 0, description: 'Bread (All Types)', category: 'Food' },
+        '1905.31': { rate: 18, description: 'Biscuits', category: 'Food' },
         '2106': { rate: 18, description: 'Food Preparations', category: 'Food' },
         
         // Textiles
+        // Apparel: 5% up to ₹1000/piece (₹2500 from 22-Sep-2025, GST 2.0); 12% above the threshold
         '5208': { rate: 5, description: 'Cotton Fabrics', category: 'Textiles' },
-        '6101': { rate: 12, description: 'Readymade Garments (<1000)', category: 'Textiles' },
-        '6109': { rate: 12, description: 'T-Shirts, Vests', category: 'Textiles' },
+        '6101': { rate: 5, description: 'Readymade Garments (≤ ₹1000/piece)', category: 'Textiles' },
+        '6109': { rate: 5, description: 'T-Shirts, Vests (≤ ₹1000/piece)', category: 'Textiles' },
         
         // Gold & Jewellery
         '7108': { rate: 3, description: 'Gold', category: 'Precious Metals' },
@@ -873,7 +932,11 @@ const TaxRateErrorDetector = {
 
         data.forEach((invoice, index) => {
             const hsn = invoice.hsn || invoice.HSN || invoice['HSN Code'] || invoice.hsn_code || '';
-            const chargedRate = parseFloat(invoice.rate || invoice.gst_rate || invoice['GST Rate'] || invoice['Tax Rate'] || 0);
+            // Distinguish "no rate supplied" (skip) from an explicit 0% charge:
+            // a missing GST charge on a taxable HSN is an undercharge error.
+            const rawRate = invoice.rate ?? invoice.gst_rate ?? invoice['GST Rate'] ?? invoice['Tax Rate'];
+            const hasRate = rawRate !== undefined && rawRate !== null && rawRate !== '';
+            const chargedRate = parseFloat(rawRate) || 0;
             const taxableValue = parseFloat(invoice.taxable_value || invoice['Taxable Value'] || invoice.amount || 0);
             const description = invoice.description || invoice.Description || invoice['Item Description'] || '';
 
@@ -881,7 +944,7 @@ const TaxRateErrorDetector = {
 
             const correctRate = this.findCorrectRate(hsn, description);
             
-            if (correctRate !== null && chargedRate !== correctRate && chargedRate > 0) {
+            if (correctRate !== null && hasRate && chargedRate !== correctRate) {
                 const difference = chargedRate - correctRate;
                 const impact = (taxableValue * Math.abs(difference)) / 100;
 
@@ -1129,6 +1192,12 @@ const TaxRateErrorDetector = {
 // ═══════════════════════════════════════════════════════════════════════════════════
 
 const MissingITCRecovery = {
+    // Heuristic assumptions (NOT statutory values) used for recovery estimates.
+    assumptions: {
+        // Assumed success rate for recovering identified missing ITC
+        recoverySuccessRate: 0.8
+    },
+
     // Analyze missing ITC opportunities
     analyzeMissingITC(purchaseData, gstr2bData = []) {
         const results = {
@@ -1146,12 +1215,18 @@ const MissingITCRecovery = {
             recommendations: []
         };
 
-        // Simulate GSTR-2B invoices not in books
-        const simulatedMissing = this.simulateMissingInvoices(purchaseData);
+        // Find invoices in GSTR-2B but not in books
+        const simulatedMissing = this.findMissingInvoices(purchaseData, gstr2bData);
+
+        // Explicit verdict when reconciliation is impossible without GSTR-2B data
+        if (!gstr2bData || gstr2bData.length === 0) {
+            results.noDataMessage = 'No GSTR-2B data provided — missing-ITC analysis requires GSTR-2B data to reconcile against the purchase register.';
+        }
         
         simulatedMissing.forEach((inv, index) => {
             const expiryDate = this.calculateITCExpiry(inv.invoiceDate);
-            const daysToExpiry = Math.ceil((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
+            // Guard: invalid invoice dates yield a null expiry — never a NaN day count
+            const daysToExpiry = expiryDate ? Math.ceil((expiryDate - new Date()) / (1000 * 60 * 60 * 24)) : null;
             
             const missingInvoice = {
                 index: index + 1,
@@ -1163,7 +1238,7 @@ const MissingITCRecovery = {
                 itcAmount: inv.itcAmount,
                 expiryDate: expiryDate,
                 daysToExpiry: daysToExpiry,
-                urgency: daysToExpiry <= 30 ? 'CRITICAL' : daysToExpiry <= 90 ? 'HIGH' : daysToExpiry <= 180 ? 'MEDIUM' : 'LOW',
+                urgency: daysToExpiry === null ? 'UNKNOWN' : daysToExpiry <= 30 ? 'CRITICAL' : daysToExpiry <= 90 ? 'HIGH' : daysToExpiry <= 180 ? 'MEDIUM' : 'LOW',
                 status: 'NOT_RECORDED'
             };
 
@@ -1171,10 +1246,10 @@ const MissingITCRecovery = {
             results.summary.totalMissingITC += inv.itcAmount;
             results.summary.invoicesNotInBooks++;
 
-            if (daysToExpiry <= 30) {
+            if (daysToExpiry !== null && daysToExpiry <= 30) {
                 results.summary.expiringThisMonth++;
                 results.expiringITC.push(missingInvoice);
-            } else if (daysToExpiry <= 60) {
+            } else if (daysToExpiry !== null && daysToExpiry <= 60) {
                 results.summary.expiringNextMonth++;
                 results.expiringITC.push(missingInvoice);
             }
@@ -1202,12 +1277,12 @@ const MissingITCRecovery = {
             }
         });
 
-        // Sort by urgency
-        results.missingInvoices.sort((a, b) => a.daysToExpiry - b.daysToExpiry);
+        // Sort by urgency (unknown expiry dates go last)
+        results.missingInvoices.sort((a, b) => (a.daysToExpiry === null ? Infinity : a.daysToExpiry) - (b.daysToExpiry === null ? Infinity : b.daysToExpiry));
         results.supplierFollowups.sort((a, b) => b.totalITC - a.totalITC);
 
-        // Calculate potential recovery (80% assumed success rate)
-        results.summary.potentialRecovery = results.summary.totalMissingITC * 0.8;
+        // Calculate potential recovery (heuristic success rate, see `assumptions`)
+        results.summary.potentialRecovery = results.summary.totalMissingITC * this.assumptions.recoverySuccessRate;
 
         // Generate recommendations
         results.recommendations = this.generateRecoveryRecommendations(results);
@@ -1215,38 +1290,57 @@ const MissingITCRecovery = {
         return results;
     },
 
-    simulateMissingInvoices(purchaseData) {
-        // Simulate missing invoices (in real app, this would compare with actual GSTR-2B)
-        const suppliers = [
-            'ABC Technologies Pvt Ltd', 'XYZ Solutions LLP', 'Global Traders',
-            'Metro Supplies Inc', 'Digital Services Co', 'Sunrise Electronics',
-            'Quality Products Ltd', 'Fast Logistics', 'Premier Services'
-        ];
-
-        const states = ['27', '29', '33', '07', '09', '24', '19', '36'];
-
-        return Array.from({ length: Math.floor(Math.random() * 15) + 5 }, (_, i) => {
-            const randomDate = new Date();
-            randomDate.setMonth(randomDate.getMonth() - Math.floor(Math.random() * 12));
-            
-            const taxableValue = Math.floor(Math.random() * 500000) + 10000;
-            const state = states[Math.floor(Math.random() * states.length)];
-            
-            return {
-                supplierName: suppliers[Math.floor(Math.random() * suppliers.length)],
-                gstin: `${state}AABCD${Math.floor(Math.random() * 9000) + 1000}E1Z${Math.floor(Math.random() * 9)}`,
-                invoiceNo: `INV-${randomDate.getFullYear()}${String(randomDate.getMonth() + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 9000) + 1000)}`,
-                invoiceDate: randomDate.toISOString().split('T')[0],
-                taxableValue: taxableValue,
-                itcAmount: Math.floor(taxableValue * 0.18)
-            };
+    findMissingInvoices(purchaseData, gstr2bData) {
+        // Find invoices present in GSTR-2B but missing from purchase data
+        if (!gstr2bData || gstr2bData.length === 0) {
+            // Without GSTR-2B data, return empty - we cannot detect missing invoices
+            return [];
+        }
+        
+        const purchaseKeys = new Set();
+        purchaseData.forEach(inv => {
+            const gstin = (inv.gstin || inv.GSTIN || inv['Supplier GSTIN'] || '').toUpperCase();
+            const invNo = (inv.invoice_no || inv['Invoice No'] || inv.invoiceNo || '').toString().trim().toUpperCase();
+            purchaseKeys.add(`${gstin}|${invNo}`);
         });
+        
+        const missing = [];
+        gstr2bData.forEach(gstr => {
+            const gstin = (gstr.gstin || gstr.GSTIN || gstr['Supplier GSTIN'] || '').toUpperCase();
+            const invNo = (gstr.invoice_no || gstr['Invoice No'] || gstr.invoiceNo || '').toString().trim().toUpperCase();
+            const key = `${gstin}|${invNo}`;
+            
+            if (!purchaseKeys.has(key)) {
+                const taxableValue = parseFloat(gstr.taxable_value || gstr['Taxable Value'] || gstr.amount || 0) || 0;
+                const rate = parseFloat(gstr.rate || gstr.gst_rate || gstr['GST Rate'] || 18);
+                // Prefer actual tax amounts from the GSTR-2B record; fall back to
+                // invoice-level tax fields, then to rate * taxable value.
+                const igst = parseFloat(gstr.igst || gstr.IGST || 0) || 0;
+                const cgst = parseFloat(gstr.cgst || gstr.CGST || 0) || 0;
+                const sgst = parseFloat(gstr.sgst || gstr.SGST || 0) || 0;
+                const totalGst = parseFloat(gstr.total_gst || gstr['Total GST'] || gstr.gst || 0) || 0;
+                const itcAmount = (igst + cgst + sgst) || totalGst || Math.round(taxableValue * rate / 100);
+                missing.push({
+                    supplierName: gstr.supplier_name || gstr['Supplier Name'] || 'Unknown Supplier',
+                    gstin: gstin,
+                    invoiceNo: invNo,
+                    invoiceDate: gstr.invoice_date || gstr['Invoice Date'] || gstr.date || '',
+                    taxableValue: taxableValue,
+                    itcAmount: itcAmount
+                });
+            }
+        });
+        
+        return missing;
     },
 
     calculateITCExpiry(invoiceDate) {
         const date = new Date(invoiceDate);
-        const fy = date.getMonth() >= 3 ? date.getFullYear() : date.getFullYear() - 1;
-        return new Date(fy + 2, 8, 30); // September 30 of next FY
+        if (isNaN(date.getTime())) return null; // invalid date: no expiry, no NaN day counts
+        // Section 16(4) CGST Act: ITC must be claimed by 30 November following
+        // the end of the financial year (April–March) to which the invoice belongs.
+        const fyEndYear = date.getMonth() >= 3 ? date.getFullYear() + 1 : date.getFullYear();
+        return new Date(fyEndYear, 10, 30); // 30 November (month index 10)
     },
 
     generateRecoveryRecommendations(results) {
@@ -1315,6 +1409,16 @@ const MissingITCRecovery = {
                         <div class="bm-stat-label">Expiring Next Month</div>
                     </div>
                 </div>
+
+                <!-- No GSTR-2B Data Banner -->
+                ${results.noDataMessage ? `
+                    <div class="bm-card" style="margin-bottom: 1.5rem; border: 1px solid var(--bm-warning); background: rgba(255,215,0,0.08);">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem;">
+                            <i class="fas fa-database" style="color: var(--bm-warning); font-size: 1.25rem;"></i>
+                            <span style="font-size: 0.9rem; color: var(--bm-warning);">${results.noDataMessage}</span>
+                        </div>
+                    </div>
+                ` : ''}
 
                 <!-- Expiring ITC Alert -->
                 ${results.expiringITC.length > 0 ? `
@@ -1407,8 +1511,8 @@ const MissingITCRecovery = {
                                         <td>${inv.supplierName.substring(0, 18)}${inv.supplierName.length > 18 ? '...' : ''}</td>
                                         <td style="font-size: 0.8rem;">${inv.invoiceDate}</td>
                                         <td style="font-weight: 600;">₹${inv.itcAmount.toLocaleString('en-IN')}</td>
-                                        <td style="font-size: 0.8rem; color: ${inv.daysToExpiry <= 30 ? 'var(--bm-danger)' : inv.daysToExpiry <= 90 ? 'var(--bm-warning)' : 'var(--bm-text-secondary)'};">
-                                            ${inv.daysToExpiry} days
+                                        <td style="font-size: 0.8rem; color: ${inv.daysToExpiry === null ? 'var(--bm-text-secondary)' : inv.daysToExpiry <= 30 ? 'var(--bm-danger)' : inv.daysToExpiry <= 90 ? 'var(--bm-warning)' : 'var(--bm-text-secondary)'};">
+                                            ${inv.daysToExpiry === null ? 'N/A' : inv.daysToExpiry + ' days'}
                                         </td>
                                         <td>
                                             <span class="bm-urgency-badge ${inv.urgency.toLowerCase()}" style="padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; background: ${inv.urgency === 'CRITICAL' ? 'var(--bm-danger)' : inv.urgency === 'HIGH' ? 'var(--bm-warning)' : inv.urgency === 'MEDIUM' ? 'var(--bm-caution)' : 'var(--bm-safe)'}20; color: ${inv.urgency === 'CRITICAL' ? 'var(--bm-danger)' : inv.urgency === 'HIGH' ? 'var(--bm-warning)' : inv.urgency === 'MEDIUM' ? 'var(--bm-caution)' : 'var(--bm-safe)'};">
@@ -1545,7 +1649,10 @@ const ShellCompanyDetector = {
 
         // Check for month-end concentration
         const monthEndCount = supplier.invoices.filter(inv => {
-            const date = new Date(inv.invoice_date || inv['Invoice Date'] || inv.date);
+            const dateStr = inv.invoice_date || inv['Invoice Date'] || inv.date;
+            if (!dateStr) return false;
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return false;
             return date.getDate() >= 28;
         }).length;
 
@@ -1559,18 +1666,40 @@ const ShellCompanyDetector = {
             indicators.push({ ...this.riskIndicators.HIGH_VALUE_LOW_FREQ, avgValue: avgInvoiceValue });
         }
 
-        // Simulate other checks (in real app, these would query external databases)
-        // Randomly assign some risk indicators for demonstration
-        const randomRisks = Math.random();
-        if (randomRisks < 0.1) {
-            indicators.push(this.riskIndicators.BLACKLISTED);
-        } else if (randomRisks < 0.15) {
-            indicators.push(this.riskIndicators.CANCELLED_STATUS);
-        } else if (randomRisks < 0.25) {
-            indicators.push(this.riskIndicators.NEW_REGISTRATION);
-        } else if (randomRisks < 0.35) {
-            indicators.push(this.riskIndicators.RESIDENTIAL_ADDRESS);
+        // Check for circular transactions (same amount appearing multiple times)
+        const amountCounts = {};
+        supplier.invoices.forEach(inv => {
+            const amount = parseFloat(inv.taxable_value || inv['Taxable Value'] || inv.amount || 0);
+            const rounded = Math.round(amount / 1000) * 1000;
+            amountCounts[rounded] = (amountCounts[rounded] || 0) + 1;
+        });
+        const hasCircular = Object.values(amountCounts).some(c => c >= 3);
+        if (hasCircular) {
+            indicators.push(this.riskIndicators.CIRCULAR_TRANSACTIONS);
         }
+
+        // Deterministic check for mismatched business type based on GSTIN entity code
+        if (gstin && gstin.length >= 14) {
+            const entityCode = gstin[5]; // 6th char of GSTIN (4th char of PAN)
+            const entityNature = supplier.invoices[0]?.nature_of_business || supplier.invoices[0]?.businessType;
+            if (entityNature) {
+                // Entity code 'C' should be Company, 'P' should be Individual, etc.
+                const mismatches = {
+                    'C': ['proprietorship', 'individual', 'huf'],
+                    'P': ['company', 'llp', 'partnership'],
+                    'F': ['company', 'individual'],
+                    'H': ['company', 'llp', 'partnership']
+                };
+                const nature = entityNature.toString().toLowerCase();
+                if (mismatches[entityCode] && mismatches[entityCode].some(m => nature.includes(m))) {
+                    indicators.push(this.riskIndicators.MISMATCHED_BUSINESS);
+                }
+            }
+        }
+
+        // NOTE: BLACKLISTED and CANCELLED_STATUS require external API verification
+        // They are NOT assigned deterministically to avoid false positives
+        // In production, integrate with GSTN API for real-time status checks
 
         return indicators;
     },
@@ -1880,5 +2009,5 @@ function validateGSTINPro(gstin) {
     return result;
 }
 
-console.log('🔮 GST Black Mirror Enhanced Suite Loaded Successfully!');
-console.log('📊 Modules Available: GSTINValidatorPro, ITCRiskScanner, TaxRateErrorDetector, MissingITCRecovery, ShellCompanyDetector');
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('🔮 GST Black Mirror Enhanced Suite Loaded Successfully!'); }
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('📊 Modules Available: GSTINValidatorPro, ITCRiskScanner, TaxRateErrorDetector, MissingITCRecovery, ShellCompanyDetector'); }

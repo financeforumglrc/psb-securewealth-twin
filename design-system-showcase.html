@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DS Financial - Design System Showcase</title>
+    <meta name="description" content="DS Financial Design System showcase - comprehensive design tokens, components, and utility classes for the fintech platform.">
+    <meta name="theme-color" content="#0f172a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -49,6 +51,7 @@
             background: white;
         }
     </style>
+<link rel="stylesheet" href="experience.css">
 </head>
 <body>
     <div class="container">
@@ -266,12 +269,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Modal Demo</h3>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <button class="modal-close" data-click="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <p>This is a demo modal using the design system components.</p>
                 <div class="mt-4">
-                    <button class="btn btn-primary mr-3" onclick="closeModal()">Close</button>
+                    <button class="btn btn-primary mr-3" data-click="closeModal()">Close</button>
                     <button class="btn btn-secondary">Secondary Action</button>
                 </div>
             </div>
@@ -279,7 +282,7 @@
     </div>
 
     <div class="text-center mt-12">
-        <button class="btn btn-primary" onclick="openModal()">Open Modal Demo</button>
+        <button class="btn btn-primary" data-click="openModal()">Open Modal Demo</button>
     </div>
 
     <script>
@@ -307,6 +310,18 @@
             });
         });
     </script>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
 </body>
 </html></content>
 <parameter name="filePath">E:\DS_Financial\design-system-showcase.html

@@ -4,10 +4,10 @@
  * Local dev falls back to localhost.
  */
 (function () {
-    const isProduction = location.hostname.endsWith('github.io') ||
-                         location.hostname.endsWith('onrender.com') ||
-                         location.hostname === 'psb-securewealth-frontend.onrender.com';
-    window.DS_API_BASE_URL = isProduction
-        ? 'https://psb-securewealth-backend.onrender.com/api/v1'
-        : 'http://localhost:5000/api/v1';
+    // Allow a deployment to provide its own API URL before this script loads.
+    if (window.DS_API_BASE_URL) return;
+    const isLocal = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+    window.DS_API_BASE_URL = isLocal
+        ? '/api/v1'
+        : 'https://psb-securewealth-backend.onrender.com/api/v1';
 })();

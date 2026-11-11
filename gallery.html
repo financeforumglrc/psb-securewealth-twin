@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="js/config.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Model Gallery | dsFinancial</title>
+    <meta name="description" content="Explore pre-built DCF financial models for India's top companies. AI-powered stock analysis and valuation models by DS Financial.">
+    <meta name="theme-color" content="#0f172a">
     <link rel="stylesheet" href="design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -157,6 +160,7 @@
             .gallery-grid { grid-template-columns: 1fr; }
         }
     </style>
+<link rel="stylesheet" href="experience.css">
 </head>
 <body>
     <div class="container">
@@ -190,9 +194,7 @@
             return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
         }
 
-        const API_BASE = window.location.hostname.includes('localhost') 
-            ? 'http://localhost:5000/api/v1' 
-            : 'https://psb-securewealth-backend.onrender.com/api/v1';
+        const API_BASE = window.DS_API_BASE_URL;
 
         // Fallback seed data if API is unreachable
         const seedModels = [

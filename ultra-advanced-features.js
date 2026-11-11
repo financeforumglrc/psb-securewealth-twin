@@ -491,16 +491,18 @@ window.generateTaxScoreTab = function(results) {
     `;
 };
 
-// Helper functions
-function formatCurrency(amount) {
-    if (amount >= 10000000) {
-        return (amount / 10000000).toFixed(2) + ' Cr';
-    } else if (amount >= 100000) {
-        return (amount / 100000).toFixed(2) + ' L';
-    } else {
-        return amount.toLocaleString('en-IN');
+// Helper functions (defined in global-features.js; fallback for standalone)
+if (typeof formatCurrency === 'undefined') {
+    function formatCurrency(amount) {
+        if (amount >= 10000000) {
+            return (amount / 10000000).toFixed(2) + ' Cr';
+        } else if (amount >= 100000) {
+            return (amount / 100000).toFixed(2) + ' L';
+        } else {
+            return amount.toLocaleString('en-IN');
+        }
     }
 }
 
-console.log('%c🔥 ULTRA-ADVANCED FEATURES LOADED', 'color: #FF6B00; font-size: 18px; font-weight: bold;');
-console.log('%c💎 Advance Tax | Tax Loss | Refund Tracker | Salary Optimizer | Tax Score', 'color: #FFB800; font-size: 12px;');
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('%c🔥 ULTRA-ADVANCED FEATURES LOADED', 'color: #FF6B00; font-size: 18px; font-weight: bold;'); }
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('%c💎 Advance Tax | Tax Loss | Refund Tracker | Salary Optimizer | Tax Score', 'color: #FFB800; font-size: 12px;'); }

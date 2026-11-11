@@ -848,21 +848,24 @@ function loadTDSRateChart() {
 }
 
 // ==================== UTILITY FUNCTIONS ====================
-function formatCurrency(amount) {
-    if (amount === undefined || amount === null || isNaN(amount)) return '₹0';
-    
-    const absAmount = Math.abs(amount);
-    let formatted;
-    
-    if (absAmount >= 10000000) {
-        formatted = (absAmount / 10000000).toFixed(2) + ' Cr';
-    } else if (absAmount >= 100000) {
-        formatted = (absAmount / 100000).toFixed(2) + ' L';
-    } else {
-        formatted = absAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+// Defined in global-features.js; fallback for standalone use
+if (typeof formatCurrency === 'undefined') {
+    function formatCurrency(amount) {
+        if (amount === undefined || amount === null || isNaN(amount)) return '₹0';
+        
+        const absAmount = Math.abs(amount);
+        let formatted;
+        
+        if (absAmount >= 10000000) {
+            formatted = (absAmount / 10000000).toFixed(2) + ' Cr';
+        } else if (absAmount >= 100000) {
+            formatted = (absAmount / 100000).toFixed(2) + ' L';
+        } else {
+            formatted = absAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+        }
+        
+        return (amount < 0 ? '-₹' : '₹') + formatted;
     }
-    
-    return (amount < 0 ? '-₹' : '₹') + formatted;
 }
 
 function saveToStorage() {
@@ -877,7 +880,7 @@ function loadFromStorage() {
             updateRecentTxns();
         }
     } catch (e) {
-        console.log('Error loading from storage:', e);
+        console.warn('Error loading from storage:', e);
     }
 }
 
@@ -894,6 +897,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-console.log('🚀 DS Financial - Specialized Tools Loaded Successfully');
-console.log('📊 Crypto/VDA Tax Calculator | TDS Calculator');
-console.log('💼 FY 2025-26 | India-Specific Calculations');
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('🚀 DS Financial - Specialized Tools Loaded Successfully'); }
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('📊 Crypto/VDA Tax Calculator | TDS Calculator'); }
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('💼 FY 2025-26 | India-Specific Calculations'); }

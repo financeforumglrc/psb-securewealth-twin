@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="Premium Resume Builder V2 - Create professional, ATS-friendly resumes with AI assistance.">
+    <meta name="theme-color" content="#0f172a">
     <title>Resume Builder V2 | DS Financial</title>
 
     <!-- Fonts & Icons -->
@@ -28,6 +29,7 @@
     <link rel="stylesheet" href="resume-builder.css">
     <link rel="stylesheet" href="global-features.css">
     <link rel="stylesheet" href="enhanced-features.css">
+<link rel="stylesheet" href="experience.css">
 </head>
 
 <body class="rb-v2-body">
@@ -36,9 +38,9 @@
     <nav class="rb-v2-nav">
         <a href="index.html" class="rb-logo">DS Financial</a>
         <div class="rb-nav-actions">
-            <!-- <button class="btn-ghost" onclick="toggleTheme()"><i class="fas fa-moon"></i></button> -->
-            <button class="btn-ghost" onclick="openAISettings()"><i class="fas fa-robot"></i> AI Settings</button>
-            <button class="btn-primary" onclick="window.rb.exportPDF()"><i class="fas fa-download"></i> Download
+            <!-- <button class="btn-ghost" data-click="toggleTheme()"><i class="fas fa-moon"></i></button> -->
+            <button class="btn-ghost" data-click="openAISettings()"><i class="fas fa-robot"></i> AI Settings</button>
+            <button class="btn-primary" data-click="window.rb.exportPDF()"><i class="fas fa-download"></i> Download
                 PDF</button>
         </div>
     </nav>
@@ -72,7 +74,7 @@
 
                 <!-- Personal Info -->
                 <div class="rb-section-card open">
-                    <div class="rb-card-header" onclick="toggleCard(this)">
+                    <div class="rb-card-header" data-click="toggleCard(this)">
                         <h4><i class="fas fa-user"></i> Personal Information</h4>
                         <i class="fas fa-chevron-down"></i>
                     </div>
@@ -129,27 +131,27 @@
 
                 <!-- Summary -->
                 <div class="rb-section-card">
-                    <div class="rb-card-header" onclick="toggleCard(this)">
+                    <div class="rb-card-header" data-click="toggleCard(this)">
                         <h4><i class="fas fa-align-left"></i> Professional Summary</h4>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="rb-card-body">
                         <textarea id="summary" rows="5" placeholder="Briefly describe your professional background..."
                             oninput="window.rb.updateState('summary', null, this.value)"></textarea>
-                        <button class="btn-ai-ghost" onclick="triggerAI('summary')"><i class="fas fa-magic"></i> AI
+                        <button class="btn-ai-ghost" data-click="triggerAI('summary')"><i class="fas fa-magic"></i> AI
                             Write</button>
                     </div>
                 </div>
 
                 <!-- Experience -->
                 <div class="rb-section-card">
-                    <div class="rb-card-header" onclick="toggleCard(this)">
+                    <div class="rb-card-header" data-click="toggleCard(this)">
                         <h4><i class="fas fa-briefcase"></i> Experience</h4>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="rb-card-body">
                         <div id="experience-list"></div>
-                        <button class="btn-add-section" onclick="window.rb.addExperienceItem()">
+                        <button class="btn-add-section" data-click="window.rb.addExperienceItem()">
                             <i class="fas fa-plus"></i> Add Position
                         </button>
                     </div>
@@ -157,13 +159,13 @@
 
                 <!-- Education -->
                 <div class="rb-section-card">
-                    <div class="rb-card-header" onclick="toggleCard(this)">
+                    <div class="rb-card-header" data-click="toggleCard(this)">
                         <h4><i class="fas fa-graduation-cap"></i> Education</h4>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="rb-card-body">
                         <div id="education-list"></div>
-                        <button class="btn-add-section" onclick="window.rb.addEducationItem()">
+                        <button class="btn-add-section" data-click="window.rb.addEducationItem()">
                             <i class="fas fa-plus"></i> Add Education
                         </button>
                     </div>
@@ -171,14 +173,14 @@
 
                 <!-- Skills -->
                 <div class="rb-section-card">
-                    <div class="rb-card-header" onclick="toggleCard(this)">
+                    <div class="rb-card-header" data-click="toggleCard(this)">
                         <h4><i class="fas fa-tools"></i> Skills</h4>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="rb-card-body">
                         <textarea id="skills" rows="3" placeholder="Comma separated list (e.g. Java, Python, SQL)"
                             oninput="window.rb.updateState('skills', null, this.value)"></textarea>
-                        <button class="btn-ai-ghost" onclick="triggerAI('skills')"><i class="fas fa-lightbulb"></i>
+                        <button class="btn-ai-ghost" data-click="triggerAI('skills')"><i class="fas fa-lightbulb"></i>
                             Suggest Skills</button>
                     </div>
                 </div>
@@ -197,22 +199,22 @@
                 <div class="design-section">
                     <h3>Typography</h3>
                     <div class="form-grid">
-                        <button class="btn-sm font-btn" onclick="window.rb.setFont('Inter')">Inter (Modern)</button>
-                        <button class="btn-sm font-btn" onclick="window.rb.setFont('Merriweather')">Serif
+                        <button class="btn-sm font-btn" data-click="window.rb.setFont('Inter')">Inter (Modern)</button>
+                        <button class="btn-sm font-btn" data-click="window.rb.setFont('Merriweather')">Serif
                             (Classic)</button>
-                        <button class="btn-sm font-btn" onclick="window.rb.setFont('Roboto Mono')">Mono (Tech)</button>
+                        <button class="btn-sm font-btn" data-click="window.rb.setFont('Roboto Mono')">Mono (Tech)</button>
                     </div>
                 </div>
 
                 <div class="design-section">
                     <h3>Accent Color</h3>
                     <div class="color-picker-grid">
-                        <div class="color-dot" style="--bg: #3b82f6" onclick="window.rb.setAccent('#3b82f6')"></div>
-                        <div class="color-dot" style="--bg: #10b981" onclick="window.rb.setAccent('#10b981')"></div>
-                        <div class="color-dot" style="--bg: #ef4444" onclick="window.rb.setAccent('#ef4444')"></div>
-                        <div class="color-dot" style="--bg: #8b5cf6" onclick="window.rb.setAccent('#8b5cf6')"></div>
-                        <div class="color-dot" style="--bg: #f59e0b" onclick="window.rb.setAccent('#f59e0b')"></div>
-                        <div class="color-dot" style="--bg: #1f2937" onclick="window.rb.setAccent('#1f2937')"></div>
+                        <div class="color-dot" style="--bg: #3b82f6" data-click="window.rb.setAccent('#3b82f6')"></div>
+                        <div class="color-dot" style="--bg: #10b981" data-click="window.rb.setAccent('#10b981')"></div>
+                        <div class="color-dot" style="--bg: #ef4444" data-click="window.rb.setAccent('#ef4444')"></div>
+                        <div class="color-dot" style="--bg: #8b5cf6" data-click="window.rb.setAccent('#8b5cf6')"></div>
+                        <div class="color-dot" style="--bg: #f59e0b" data-click="window.rb.setAccent('#f59e0b')"></div>
+                        <div class="color-dot" style="--bg: #1f2937" data-click="window.rb.setAccent('#1f2937')"></div>
                     </div>
                 </div>
             </div>
@@ -225,7 +227,7 @@
                         <h4>Job Description Match</h4>
                         <p style="font-size: 0.85rem; color: var(--v2-text-muted); margin-bottom: 0;">Check how well
                             your resume matches a job post.</p>
-                        <button class="btn-ai" onclick="matchJob()">Analyze Match</button>
+                        <button class="btn-ai" data-click="matchJob()">Analyze Match</button>
                     </div>
 
                     <div class="ai-card">
@@ -233,7 +235,7 @@
                         <h4>Resume Scoring</h4>
                         <p style="font-size: 0.85rem; color: var(--v2-text-muted); margin-bottom: 0;">Get a detailed
                             score based on ATS best practices.</p>
-                        <button class="btn-ai" onclick="analyzeResume()">Get Score</button>
+                        <button class="btn-ai" data-click="analyzeResume()">Get Score</button>
                     </div>
                 </div>
             </div>
@@ -245,13 +247,13 @@
 
             <div class="preview-toolbar">
                 <div class="zoom-controls">
-                    <button onclick="setZoom(0.5)"><i class="fas fa-minus"></i></button>
+                    <button data-click="setZoom(0.5)"><i class="fas fa-minus"></i></button>
                     <span style="font-size: 0.8rem;">100%</span>
-                    <button onclick="setZoom(1.0)"><i class="fas fa-plus"></i></button>
+                    <button data-click="setZoom(1.0)"><i class="fas fa-plus"></i></button>
                 </div>
                 <div class="view-toggles">
-                    <button class="active" onclick="setView('desktop')"><i class="fas fa-desktop"></i></button>
-                    <button onclick="setView('mobile')"><i class="fas fa-mobile-alt"></i></button>
+                    <button class="active" data-click="setView('desktop')"><i class="fas fa-desktop"></i></button>
+                    <button data-click="setView('mobile')"><i class="fas fa-mobile-alt"></i></button>
                 </div>
             </div>
 
@@ -270,7 +272,7 @@
     <!-- AI Settings Modal -->
     <div id="aiSettingsModal" class="modal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeAISettings()">&times;</button>
+            <button class="close-modal" data-click="closeAISettings()">&times;</button>
             <h2>AI Settings</h2>
             <div class="form-group">
                 <label>AI Provider</label>
@@ -291,7 +293,7 @@
     <!-- Dashboard/Load Modal -->
     <div id="dashboardModal" class="modal">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeDashboard()">&times;</button>
+            <button class="close-modal" data-click="closeDashboard()">&times;</button>
             <h2>My Resumes</h2>
             <p>Load a previously saved resume.</p>
             <!-- List logic to be added -->
@@ -303,6 +305,18 @@
     <script src="resume-builder.js"></script>
     <script src="global-features.js"></script>
     <script src="enhanced-features.js"></script>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
 </body>
 
 </html>

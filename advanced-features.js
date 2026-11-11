@@ -2,17 +2,26 @@
  * ADVANCED FEATURES - DS SMART TAX OPTIMIZER™
  * Copyright © 2026 DS Financial Solutions
  * AI Chatbot, Voice Commands, Document Upload, Goals, Multi-year Projection, and more
+ *
+ * Intentionally global (used by HTML inline handlers and smart-tax-optimizer.js):
+ * toggleChatbot, sendChatMessage, addChatMessage, getAIResponse,
+ * toggleVoiceControl, stopVoiceRecognition, handleVoiceCommand, speak,
+ * switchTheme, generateGoalsTab, generateDocumentTab, generateNewsTab,
+ * generateProjectionTab, handleFileUpload, escapeHtml
  */
 
 // Security utility: escape HTML to prevent XSS
-function escapeHtml(text) {
-    if (text == null) return '';
-    return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+// Defined in global-features.js; fallback for standalone use
+if (typeof escapeHtml === 'undefined') {
+    function escapeHtml(text) {
+        if (text == null) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
 }
 
 // ============= AI CHATBOT =============
@@ -20,6 +29,7 @@ let chatbotOpen = false;
 
 function toggleChatbot() {
     const window = document.getElementById('chatbotWindow');
+    if (!window) return;
     chatbotOpen = !chatbotOpen;
     
     if (chatbotOpen) {
@@ -31,6 +41,7 @@ function toggleChatbot() {
 
 function sendChatMessage() {
     const input = document.getElementById('chatbotInput');
+    if (!input) return;
     const message = input.value.trim();
     
     if (!message) return;
@@ -48,6 +59,7 @@ function sendChatMessage() {
 
 function addChatMessage(text, type) {
     const messagesDiv = document.getElementById('chatbotMessages');
+    if (!messagesDiv) return;
     const messageDiv = document.createElement('div');
     messageDiv.className = `chatbot-message ${type}`;
     messageDiv.textContent = text;
@@ -128,6 +140,7 @@ function toggleVoiceControl() {
     }
     
     const button = document.getElementById('voiceButton');
+    if (!button) return;
     
     if (!voiceListening) {
         startVoiceRecognition();
@@ -178,7 +191,7 @@ function stopVoiceRecognition() {
 function handleVoiceCommand(command) {
     const lower = command.toLowerCase();
     
-    console.log('Voice command:', command);
+    if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('Voice command:', command); }
     
     // Open chatbot
     if (lower.includes('open chat') || lower.includes('help')) {
@@ -187,7 +200,8 @@ function handleVoiceCommand(command) {
     }
     // Calculate tax
     else if (lower.includes('calculate tax') || lower.includes('optimize')) {
-        document.getElementById('optimizeBtn').click();
+        const optimizeBtn = document.getElementById('optimizeBtn');
+        if (optimizeBtn) optimizeBtn.click();
         speak('Calculating your tax optimization');
     }
     // Switch tabs
@@ -230,7 +244,8 @@ function switchTheme(theme) {
     document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
     
     // Add active to selected
-    document.querySelector(`.theme-option.${theme}`).classList.add('active');
+    const selected = document.querySelector(`.theme-option.${theme}`);
+    if (selected) selected.classList.add('active');
     
     // Apply theme
     switch(theme) {
@@ -507,7 +522,7 @@ window.generateProjectionTab = function(results) {
 
 // ============= INITIALIZATION =============
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Advanced features loaded successfully!');
+    if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('Advanced features loaded successfully!'); }
     
     // Add drag and drop support for file upload if document tab exists
     document.addEventListener('dragover', function(e) {
@@ -528,5 +543,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-console.log('%c🚀 ADVANCED FEATURES LOADED', 'color: #00D9FF; font-size: 16px; font-weight: bold;');
-console.log('%c✨ AI Chatbot | Voice Control | Theme Switcher | Goals Tracker', 'color: #10B981; font-size: 12px;');
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('%c🚀 ADVANCED FEATURES LOADED', 'color: #00D9FF; font-size: 16px; font-weight: bold;'); }
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('%c✨ AI Chatbot | Voice Control | Theme Switcher | Goals Tracker', 'color: #10B981; font-size: 12px;'); }

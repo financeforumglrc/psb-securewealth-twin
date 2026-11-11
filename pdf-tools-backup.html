@@ -32,6 +32,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link rel="stylesheet" href="experience.css">
 </head>
 
 <body>
@@ -224,7 +225,7 @@
                         <div class="mega-menu-inner">
                             <div class="mega-col">
                                 <h4><i class="fas fa-calculator"></i> GST Calculators</h4>
-                                <a href="gst-tools.html#gst-calculator" class="mega-link">
+                                <a href="gst-tools.html#gst-calc" class="mega-link">
                                     <i class="fas fa-percent"></i>
                                     <div>
                                         <strong>GST Calculator</strong>
@@ -300,7 +301,7 @@
                                         <span>Step-by-step Help</span>
                                     </div>
                                 </a>
-                                <a href="gst-tools.html#itc-calculator" class="mega-link">
+                                <a href="gst-tools.html#itc-calc" class="mega-link">
                                     <i class="fas fa-coins"></i>
                                     <div>
                                         <strong>ITC Calculator</strong>
@@ -556,15 +557,15 @@
                 </div>
                 <!-- Category Pills -->
                 <div class="category-pills">
-                    <button class="pill active" onclick="filterByCategory('all')">All</button>
-                    <button class="pill" onclick="filterByCategory('convert')"><i class="fas fa-exchange-alt"></i>
+                    <button class="pill active" data-click="filterByCategory('all')">All</button>
+                    <button class="pill" data-click="filterByCategory('convert')"><i class="fas fa-exchange-alt"></i>
                         Convert</button>
-                    <button class="pill" onclick="filterByCategory('organize')"><i class="fas fa-layer-group"></i>
+                    <button class="pill" data-click="filterByCategory('organize')"><i class="fas fa-layer-group"></i>
                         Organize</button>
-                    <button class="pill" onclick="filterByCategory('edit')"><i class="fas fa-edit"></i> Edit</button>
-                    <button class="pill" onclick="filterByCategory('security')"><i class="fas fa-shield-alt"></i>
+                    <button class="pill" data-click="filterByCategory('edit')"><i class="fas fa-edit"></i> Edit</button>
+                    <button class="pill" data-click="filterByCategory('security')"><i class="fas fa-shield-alt"></i>
                         Security</button>
-                    <button class="pill" onclick="filterByCategory('ai-tools')"><i class="fas fa-robot"></i> AI</button>
+                    <button class="pill" data-click="filterByCategory('ai-tools')"><i class="fas fa-robot"></i> AI</button>
                 </div>
             </div>
         </div>
@@ -575,27 +576,27 @@
         <div class="container">
             <h2 class="section-title"><i class="fas fa-fire"></i> Most Popular</h2>
             <div class="popular-grid">
-                <div class="popular-card" onclick="openTool('merge')">
+                <div class="popular-card" data-click="openTool('merge')">
                     <div class="popular-icon"><i class="fas fa-object-group"></i></div>
                     <span>Merge PDF</span>
                 </div>
-                <div class="popular-card" onclick="openTool('compress')">
+                <div class="popular-card" data-click="openTool('compress')">
                     <div class="popular-icon"><i class="fas fa-compress-alt"></i></div>
                     <span>Compress</span>
                 </div>
-                <div class="popular-card" onclick="openTool('pdf-to-jpg')">
+                <div class="popular-card" data-click="openTool('pdf-to-jpg')">
                     <div class="popular-icon"><i class="fas fa-file-image"></i></div>
                     <span>PDF to JPG</span>
                 </div>
-                <div class="popular-card" onclick="openTool('split')">
+                <div class="popular-card" data-click="openTool('split')">
                     <div class="popular-icon"><i class="fas fa-cut"></i></div>
                     <span>Split PDF</span>
                 </div>
-                <div class="popular-card" onclick="openTool('ai-summarize')">
+                <div class="popular-card" data-click="openTool('ai-summarize')">
                     <div class="popular-icon ai-glow"><i class="fas fa-brain"></i></div>
                     <span>AI Summarize</span>
                 </div>
-                <div class="popular-card" onclick="openTool('html-to-pdf')">
+                <div class="popular-card" data-click="openTool('html-to-pdf')">
                     <div class="popular-icon"><i class="fas fa-code"></i></div>
                     <span>HTML to PDF</span>
                 </div>
@@ -621,12 +622,12 @@
             <div class="tool-category" id="convert">
                 <h2><i class="fas fa-exchange-alt"></i> Convert</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="pdf-to-jpg" onclick="openTool('pdf-to-jpg')">
+                    <div class="tool-card" data-tool="pdf-to-jpg" data-click="openTool('pdf-to-jpg')">
                         <div class="tool-icon convert"><i class="fas fa-file-image"></i></div>
                         <h3>PDF to JPG</h3>
                         <p>Convert PDF pages to JPG images</p>
                     </div>
-                    <div class="tool-card" data-tool="jpg-to-pdf" onclick="openTool('jpg-to-pdf')">
+                    <div class="tool-card" data-tool="jpg-to-pdf" data-click="openTool('jpg-to-pdf')">
                         <div class="tool-icon convert"><i class="fas fa-file-pdf"></i></div>
                         <h3>JPG to PDF</h3>
                         <p>Convert images to PDF document</p>
@@ -638,17 +639,17 @@
             <div class="tool-category" id="organize">
                 <h2><i class="fas fa-layer-group"></i> Organize</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="merge" onclick="openTool('merge')">
+                    <div class="tool-card" data-tool="merge" data-click="openTool('merge')">
                         <div class="tool-icon organize"><i class="fas fa-object-group"></i></div>
                         <h3>Merge PDF</h3>
                         <p>Combine multiple PDFs into one</p>
                     </div>
-                    <div class="tool-card" data-tool="split" onclick="openTool('split')">
+                    <div class="tool-card" data-tool="split" data-click="openTool('split')">
                         <div class="tool-icon organize"><i class="fas fa-cut"></i></div>
                         <h3>Split PDF</h3>
                         <p>Extract pages from PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="rotate" onclick="openTool('rotate')">
+                    <div class="tool-card" data-tool="rotate" data-click="openTool('rotate')">
                         <div class="tool-icon organize"><i class="fas fa-sync-alt"></i></div>
                         <h3>Rotate PDF</h3>
                         <p>Rotate PDF pages</p>
@@ -660,7 +661,7 @@
             <div class="tool-category" id="optimize">
                 <h2><i class="fas fa-compress-arrows-alt"></i> Optimize</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="compress" onclick="openTool('compress')">
+                    <div class="tool-card" data-tool="compress" data-click="openTool('compress')">
                         <div class="tool-icon optimize"><i class="fas fa-compress"></i></div>
                         <h3>Compress PDF</h3>
                         <p>Reduce PDF file size</p>
@@ -672,27 +673,27 @@
             <div class="tool-category" id="edit">
                 <h2><i class="fas fa-edit"></i> Edit</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="watermark" onclick="openTool('watermark')">
+                    <div class="tool-card" data-tool="watermark" data-click="openTool('watermark')">
                         <div class="tool-icon edit"><i class="fas fa-tint"></i></div>
                         <h3>Add Watermark</h3>
                         <p>Add text watermark to pages</p>
                     </div>
-                    <div class="tool-card" data-tool="page-numbers" onclick="openTool('page-numbers')">
+                    <div class="tool-card" data-tool="page-numbers" data-click="openTool('page-numbers')">
                         <div class="tool-icon edit"><i class="fas fa-list-ol"></i></div>
                         <h3>Page Numbers</h3>
                         <p>Add page numbers to PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="delete-pages" onclick="openTool('delete-pages')">
+                    <div class="tool-card" data-tool="delete-pages" data-click="openTool('delete-pages')">
                         <div class="tool-icon edit"><i class="fas fa-trash-alt"></i></div>
                         <h3>Delete Pages</h3>
                         <p>Remove specific pages</p>
                     </div>
-                    <div class="tool-card" data-tool="extract-pages" onclick="openTool('extract-pages')">
+                    <div class="tool-card" data-tool="extract-pages" data-click="openTool('extract-pages')">
                         <div class="tool-icon edit"><i class="fas fa-file-export"></i></div>
                         <h3>Extract Pages</h3>
                         <p>Extract pages to new PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="reorder-pages" onclick="openTool('reorder-pages')">
+                    <div class="tool-card" data-tool="reorder-pages" data-click="openTool('reorder-pages')">
                         <div class="tool-icon edit"><i class="fas fa-sort"></i></div>
                         <h3>Reorder Pages</h3>
                         <p>Drag to rearrange pages</p>
@@ -704,22 +705,22 @@
             <div class="tool-category" id="security">
                 <h2><i class="fas fa-shield-alt"></i> Security</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="protect" onclick="openTool('protect')">
+                    <div class="tool-card" data-tool="protect" data-click="openTool('protect')">
                         <div class="tool-icon security"><i class="fas fa-lock"></i></div>
                         <h3>Protect PDF</h3>
                         <p>Add password protection</p>
                     </div>
-                    <div class="tool-card" data-tool="unlock" onclick="openTool('unlock')">
+                    <div class="tool-card" data-tool="unlock" data-click="openTool('unlock')">
                         <div class="tool-icon security"><i class="fas fa-unlock"></i></div>
                         <h3>Unlock PDF</h3>
                         <p>Remove password protection</p>
                     </div>
-                    <div class="tool-card" data-tool="esign" onclick="openTool('esign')">
+                    <div class="tool-card" data-tool="esign" data-click="openTool('esign')">
                         <div class="tool-icon security"><i class="fas fa-signature"></i></div>
                         <h3>E-Sign PDF</h3>
                         <p>Add your signature</p>
                     </div>
-                    <div class="tool-card" data-tool="stamp" onclick="openTool('stamp')">
+                    <div class="tool-card" data-tool="stamp" data-click="openTool('stamp')">
                         <div class="tool-icon security"><i class="fas fa-stamp"></i></div>
                         <h3>Add Stamp</h3>
                         <p>Add predefined stamps</p>
@@ -731,17 +732,17 @@
             <div class="tool-category" id="advanced">
                 <h2><i class="fas fa-magic"></i> Advanced</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="html-to-pdf" onclick="openTool('html-to-pdf')">
+                    <div class="tool-card" data-tool="html-to-pdf" data-click="openTool('html-to-pdf')">
                         <div class="tool-icon advanced"><i class="fas fa-code"></i></div>
                         <h3>HTML to PDF</h3>
                         <p>Convert HTML/URL to PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="pdf-to-text" onclick="openTool('pdf-to-text')">
+                    <div class="tool-card" data-tool="pdf-to-text" data-click="openTool('pdf-to-text')">
                         <div class="tool-icon advanced"><i class="fas fa-align-left"></i></div>
                         <h3>PDF to Text</h3>
                         <p>Extract text from PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="ocr" onclick="openTool('ocr')">
+                    <div class="tool-card" data-tool="ocr" data-click="openTool('ocr')">
                         <div class="tool-icon advanced"><i class="fas fa-eye"></i></div>
                         <h3>OCR PDF</h3>
                         <p>Extract text from scanned PDFs</p>
@@ -753,22 +754,22 @@
             <div class="tool-category" id="pro">
                 <h2><i class="fas fa-crown"></i> Pro Features</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="compare" onclick="openTool('compare')">
+                    <div class="tool-card" data-tool="compare" data-click="openTool('compare')">
                         <div class="tool-icon pro"><i class="fas fa-columns"></i></div>
                         <h3>Compare PDFs</h3>
                         <p>Visual diff between PDFs</p>
                     </div>
-                    <div class="tool-card" data-tool="editor" onclick="openTool('editor')">
+                    <div class="tool-card" data-tool="editor" data-click="openTool('editor')">
                         <div class="tool-icon pro"><i class="fas fa-pen-fancy"></i></div>
                         <h3>PDF Editor</h3>
                         <p>Add text, shapes, annotations</p>
                     </div>
-                    <div class="tool-card" data-tool="batch" onclick="openTool('batch')">
+                    <div class="tool-card" data-tool="batch" data-click="openTool('batch')">
                         <div class="tool-icon pro"><i class="fas fa-layer-group"></i></div>
                         <h3>Batch Process</h3>
                         <p>Process multiple files</p>
                     </div>
-                    <div class="tool-card" data-tool="templates" onclick="openTool('templates')">
+                    <div class="tool-card" data-tool="templates" data-click="openTool('templates')">
                         <div class="tool-icon pro"><i class="fas fa-file-invoice"></i></div>
                         <h3>PDF Templates</h3>
                         <p>Generate invoices, receipts</p>
@@ -780,37 +781,37 @@
             <div class="tool-category" id="utilities">
                 <h2><i class="fas fa-tools"></i> Utilities</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="metadata" onclick="openTool('metadata')">
+                    <div class="tool-card" data-tool="metadata" data-click="openTool('metadata')">
                         <div class="tool-icon utilities"><i class="fas fa-info-circle"></i></div>
                         <h3>Edit Metadata</h3>
                         <p>Edit title, author, keywords</p>
                     </div>
-                    <div class="tool-card" data-tool="pdf-info" onclick="openTool('pdf-info')">
+                    <div class="tool-card" data-tool="pdf-info" data-click="openTool('pdf-info')">
                         <div class="tool-icon utilities"><i class="fas fa-file-alt"></i></div>
                         <h3>PDF Info</h3>
                         <p>View document details</p>
                     </div>
-                    <div class="tool-card" data-tool="reverse" onclick="openTool('reverse')">
+                    <div class="tool-card" data-tool="reverse" data-click="openTool('reverse')">
                         <div class="tool-icon utilities"><i class="fas fa-exchange-alt"></i></div>
                         <h3>Reverse Pages</h3>
                         <p>Flip page order</p>
                     </div>
-                    <div class="tool-card" data-tool="flatten" onclick="openTool('flatten')">
+                    <div class="tool-card" data-tool="flatten" data-click="openTool('flatten')">
                         <div class="tool-icon utilities"><i class="fas fa-layer-group"></i></div>
                         <h3>Flatten PDF</h3>
                         <p>Flatten forms & annotations</p>
                     </div>
-                    <div class="tool-card" data-tool="grayscale" onclick="openTool('grayscale')">
+                    <div class="tool-card" data-tool="grayscale" data-click="openTool('grayscale')">
                         <div class="tool-icon utilities"><i class="fas fa-adjust"></i></div>
                         <h3>Grayscale</h3>
                         <p>Convert to black & white</p>
                     </div>
-                    <div class="tool-card" data-tool="header-footer" onclick="openTool('header-footer')">
+                    <div class="tool-card" data-tool="header-footer" data-click="openTool('header-footer')">
                         <div class="tool-icon utilities"><i class="fas fa-heading"></i></div>
                         <h3>Header/Footer</h3>
                         <p>Add custom headers/footers</p>
                     </div>
-                    <div class="tool-card" data-tool="duplicate" onclick="openTool('duplicate')">
+                    <div class="tool-card" data-tool="duplicate" data-click="openTool('duplicate')">
                         <div class="tool-icon utilities"><i class="fas fa-copy"></i></div>
                         <h3>Duplicate Pages</h3>
                         <p>Copy specific pages</p>
@@ -821,22 +822,22 @@
                 <div class="tool-category" id="page-tools">
                     <h2><i class="fas fa-expand-arrows-alt"></i> Page Tools</h2>
                     <div class="tools-grid">
-                        <div class="tool-card" data-tool="page-size" onclick="openTool('page-size')">
+                        <div class="tool-card" data-tool="page-size" data-click="openTool('page-size')">
                             <div class="tool-icon page"><i class="fas fa-ruler-combined"></i></div>
                             <h3>Page Size</h3>
                             <p>Convert A4, Letter, Legal</p>
                         </div>
-                        <div class="tool-card" data-tool="crop" onclick="openTool('crop')">
+                        <div class="tool-card" data-tool="crop" data-click="openTool('crop')">
                             <div class="tool-icon page"><i class="fas fa-crop-alt"></i></div>
                             <h3>Crop Pages</h3>
                             <p>Trim page margins</p>
                         </div>
-                        <div class="tool-card" data-tool="scale" onclick="openTool('scale')">
+                        <div class="tool-card" data-tool="scale" data-click="openTool('scale')">
                             <div class="tool-icon page"><i class="fas fa-search-plus"></i></div>
                             <h3>Scale Pages</h3>
                             <p>Resize by percentage</p>
                         </div>
-                        <div class="tool-card" data-tool="interleave" onclick="openTool('interleave')">
+                        <div class="tool-card" data-tool="interleave" data-click="openTool('interleave')">
                             <div class="tool-icon page"><i class="fas fa-random"></i></div>
                             <h3>Interleave</h3>
                             <p>Merge alternating pages</p>
@@ -848,32 +849,32 @@
                 <div class="tool-category" id="extras">
                     <h2><i class="fas fa-star"></i> Extras</h2>
                     <div class="tools-grid">
-                        <div class="tool-card" data-tool="qr-code" onclick="openTool('qr-code')">
+                        <div class="tool-card" data-tool="qr-code" data-click="openTool('qr-code')">
                             <div class="tool-icon extras"><i class="fas fa-qrcode"></i></div>
                             <h3>Add QR Code</h3>
                             <p>Embed QR codes</p>
                         </div>
-                        <div class="tool-card" data-tool="background" onclick="openTool('background')">
+                        <div class="tool-card" data-tool="background" data-click="openTool('background')">
                             <div class="tool-icon extras"><i class="fas fa-fill-drip"></i></div>
                             <h3>Add Background</h3>
                             <p>Set background color</p>
                         </div>
-                        <div class="tool-card" data-tool="redact" onclick="openTool('redact')">
+                        <div class="tool-card" data-tool="redact" data-click="openTool('redact')">
                             <div class="tool-icon extras"><i class="fas fa-eraser"></i></div>
                             <h3>Redact Text</h3>
                             <p>Blackout sensitive info</p>
                         </div>
-                        <div class="tool-card" data-tool="bookmarks" onclick="openTool('bookmarks')">
+                        <div class="tool-card" data-tool="bookmarks" data-click="openTool('bookmarks')">
                             <div class="tool-icon extras"><i class="fas fa-bookmark"></i></div>
                             <h3>Add Bookmarks</h3>
                             <p>Create navigation TOC</p>
                         </div>
-                        <div class="tool-card" data-tool="form-data" onclick="openTool('form-data')">
+                        <div class="tool-card" data-tool="form-data" data-click="openTool('form-data')">
                             <div class="tool-icon extras"><i class="fas fa-table"></i></div>
                             <h3>Extract Form</h3>
                             <p>Get form data as JSON</p>
                         </div>
-                        <div class="tool-card" data-tool="pdf-to-html" onclick="openTool('pdf-to-html')">
+                        <div class="tool-card" data-tool="pdf-to-html" data-click="openTool('pdf-to-html')">
                             <div class="tool-icon extras"><i class="fas fa-file-code"></i></div>
                             <h3>PDF to HTML</h3>
                             <p>Convert to HTML</p>
@@ -886,22 +887,22 @@
             <div class="tool-category" id="analysis">
                 <h2><i class="fas fa-chart-bar"></i> Analysis</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="word-count" onclick="openTool('word-count')">
+                    <div class="tool-card" data-tool="word-count" data-click="openTool('word-count')">
                         <div class="tool-icon analysis"><i class="fas fa-font"></i></div>
                         <h3>Word Count</h3>
                         <p>Count words & characters</p>
                     </div>
-                    <div class="tool-card" data-tool="image-extract" onclick="openTool('image-extract')">
+                    <div class="tool-card" data-tool="image-extract" data-click="openTool('image-extract')">
                         <div class="tool-icon analysis"><i class="fas fa-images"></i></div>
                         <h3>Extract Images</h3>
                         <p>Get all images from PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="link-extract" onclick="openTool('link-extract')">
+                    <div class="tool-card" data-tool="link-extract" data-click="openTool('link-extract')">
                         <div class="tool-icon analysis"><i class="fas fa-link"></i></div>
                         <h3>Extract Links</h3>
                         <p>Get all URLs from PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="contrast" onclick="openTool('contrast')">
+                    <div class="tool-card" data-tool="contrast" data-click="openTool('contrast')">
                         <div class="tool-icon analysis"><i class="fas fa-adjust"></i></div>
                         <h3>Adjust Contrast</h3>
                         <p>Improve scan quality</p>
@@ -913,32 +914,32 @@
             <div class="tool-category" id="multi-doc">
                 <h2><i class="fas fa-copy"></i> Multi-Document</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="n-up" onclick="openTool('n-up')">
+                    <div class="tool-card" data-tool="n-up" data-click="openTool('n-up')">
                         <div class="tool-icon multidoc"><i class="fas fa-th-large"></i></div>
                         <h3>N-Up Printing</h3>
                         <p>2/4/9 pages per sheet</p>
                     </div>
-                    <div class="tool-card" data-tool="split-every" onclick="openTool('split-every')">
+                    <div class="tool-card" data-tool="split-every" data-click="openTool('split-every')">
                         <div class="tool-icon multidoc"><i class="fas fa-cut"></i></div>
                         <h3>Split Every N</h3>
                         <p>Split into chunks</p>
                     </div>
-                    <div class="tool-card" data-tool="overlay" onclick="openTool('overlay')">
+                    <div class="tool-card" data-tool="overlay" data-click="openTool('overlay')">
                         <div class="tool-icon multidoc"><i class="fas fa-clone"></i></div>
                         <h3>Overlay PDFs</h3>
                         <p>Combine page content</p>
                     </div>
-                    <div class="tool-card" data-tool="border" onclick="openTool('border')">
+                    <div class="tool-card" data-tool="border" data-click="openTool('border')">
                         <div class="tool-icon multidoc"><i class="fas fa-border-style"></i></div>
                         <h3>Add Border</h3>
                         <p>Decorative page borders</p>
                     </div>
-                    <div class="tool-card" data-tool="csv-to-pdf" onclick="openTool('csv-to-pdf')">
+                    <div class="tool-card" data-tool="csv-to-pdf" data-click="openTool('csv-to-pdf')">
                         <div class="tool-icon multidoc"><i class="fas fa-table"></i></div>
                         <h3>CSV to PDF</h3>
                         <p>Convert data to table</p>
                     </div>
-                    <div class="tool-card" data-tool="collage" onclick="openTool('collage')">
+                    <div class="tool-card" data-tool="collage" data-click="openTool('collage')">
                         <div class="tool-icon multidoc"><i class="fas fa-image"></i></div>
                         <h3>Photo Collage</h3>
                         <p>Create image collage</p>
@@ -950,42 +951,42 @@
             <div class="tool-category" id="specialized">
                 <h2><i class="fas fa-tools"></i> Specialized</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="repair" onclick="openTool('repair')">
+                    <div class="tool-card" data-tool="repair" data-click="openTool('repair')">
                         <div class="tool-icon specialized"><i class="fas fa-hammer"></i></div>
                         <h3>Repair PDF</h3>
                         <p>Rebuild document structure</p>
                     </div>
-                    <div class="tool-card" data-tool="remove-blank" onclick="openTool('remove-blank')">
+                    <div class="tool-card" data-tool="remove-blank" data-click="openTool('remove-blank')">
                         <div class="tool-icon specialized"><i class="fas fa-file-excel"></i></div>
                         <h3>Remove Blanks</h3>
                         <p>Delete empty pages</p>
                     </div>
-                    <div class="tool-card" data-tool="deskew" onclick="openTool('deskew')">
+                    <div class="tool-card" data-tool="deskew" data-click="openTool('deskew')">
                         <div class="tool-icon specialized"><i class="fas fa-sync-alt"></i></div>
                         <h3>Fine Rotate</h3>
                         <p>Deskew scanned pages</p>
                     </div>
-                    <div class="tool-card" data-tool="bates" onclick="openTool('bates')">
+                    <div class="tool-card" data-tool="bates" data-click="openTool('bates')">
                         <div class="tool-icon specialized"><i class="fas fa-stamp"></i></div>
                         <h3>Bates Numbering</h3>
                         <p>Legal document indexing</p>
                     </div>
-                    <div class="tool-card" data-tool="markdown-pdf" onclick="openTool('markdown-pdf')">
+                    <div class="tool-card" data-tool="markdown-pdf" data-click="openTool('markdown-pdf')">
                         <div class="tool-icon specialized"><i class="fab fa-markdown"></i></div>
                         <h3>Markdown to PDF</h3>
                         <p>Convert MD text to PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="json-pdf" onclick="openTool('json-pdf')">
+                    <div class="tool-card" data-tool="json-pdf" data-click="openTool('json-pdf')">
                         <div class="tool-icon specialized"><i class="fas fa-code"></i></div>
                         <h3>JSON to PDF</h3>
                         <p>Convert JSON data to PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="watermark-tile" onclick="openTool('watermark-tile')">
+                    <div class="tool-card" data-tool="watermark-tile" data-click="openTool('watermark-tile')">
                         <div class="tool-icon specialized"><i class="fas fa-grip-horizontal"></i></div>
                         <h3>Tiled Watermark</h3>
                         <p>Repeated pattern watermark</p>
                     </div>
-                    <div class="tool-card" data-tool="extract-fonts" onclick="openTool('extract-fonts')">
+                    <div class="tool-card" data-tool="extract-fonts" data-click="openTool('extract-fonts')">
                         <div class="tool-icon specialized"><i class="fas fa-font"></i></div>
                         <h3>Extract Fonts</h3>
                         <p>List fonts used in PDF</p>
@@ -997,32 +998,32 @@
             <div class="tool-category" id="office-visual">
                 <h2><i class="fas fa-briefcase"></i> Office & Visual</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="visual-organizer" onclick="openTool('visual-organizer')">
+                    <div class="tool-card" data-tool="visual-organizer" data-click="openTool('visual-organizer')">
                         <div class="tool-icon office"><i class="fas fa-th"></i></div>
                         <h3>Visual Organizer</h3>
                         <p>Drag & drop page sorting</p>
                     </div>
-                    <div class="tool-card" data-tool="word-pdf" onclick="openTool('word-pdf')">
+                    <div class="tool-card" data-tool="word-pdf" data-click="openTool('word-pdf')">
                         <div class="tool-icon office"><i class="fas fa-file-word"></i></div>
                         <h3>Word to PDF</h3>
                         <p>Convert DOCX to PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="excel-pdf" onclick="openTool('excel-pdf')">
+                    <div class="tool-card" data-tool="excel-pdf" data-click="openTool('excel-pdf')">
                         <div class="tool-icon office"><i class="fas fa-file-excel"></i></div>
                         <h3>Excel to PDF</h3>
                         <p>Convert XLSX to PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="ppt-pdf" onclick="openTool('ppt-pdf')">
+                    <div class="tool-card" data-tool="ppt-pdf" data-click="openTool('ppt-pdf')">
                         <div class="tool-icon office"><i class="fas fa-file-powerpoint"></i></div>
                         <h3>PPT to PDF</h3>
                         <p>Convert PPTX to PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="smart-redact" onclick="openTool('smart-redact')">
+                    <div class="tool-card" data-tool="smart-redact" data-click="openTool('smart-redact')">
                         <div class="tool-icon office"><i class="fas fa-user-secret"></i></div>
                         <h3>Smart Redact</h3>
                         <p>Auto-find sensitive data</p>
                     </div>
-                    <div class="tool-card" data-tool="sign-verifier" onclick="openTool('sign-verifier')">
+                    <div class="tool-card" data-tool="sign-verifier" data-click="openTool('sign-verifier')">
                         <div class="tool-icon office"><i class="fas fa-file-signature"></i></div>
                         <h3>Sign Verifier</h3>
                         <p>Inspect digital signatures</p>
@@ -1034,42 +1035,42 @@
             <div class="tool-category" id="power-user">
                 <h2><i class="fas fa-bolt"></i> Power User</h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="a11y-check" onclick="openTool('a11y-check')">
+                    <div class="tool-card" data-tool="a11y-check" data-click="openTool('a11y-check')">
                         <div class="tool-icon power"><i class="fas fa-universal-access"></i></div>
                         <h3>A11y Checker</h3>
                         <p>Accessibility scan</p>
                     </div>
-                    <div class="tool-card" data-tool="pdf-diff" onclick="openTool('pdf-diff')">
+                    <div class="tool-card" data-tool="pdf-diff" data-click="openTool('pdf-diff')">
                         <div class="tool-icon power"><i class="fas fa-not-equal"></i></div>
                         <h3>PDF Diff</h3>
                         <p>Compare two PDFs</p>
                     </div>
-                    <div class="tool-card" data-tool="ink-remover" onclick="openTool('ink-remover')">
+                    <div class="tool-card" data-tool="ink-remover" data-click="openTool('ink-remover')">
                         <div class="tool-icon power"><i class="fas fa-eraser"></i></div>
                         <h3>Ink Remover</h3>
                         <p>Strip annotations</p>
                     </div>
-                    <div class="tool-card" data-tool="flatten-annot" onclick="openTool('flatten-annot')">
+                    <div class="tool-card" data-tool="flatten-annot" data-click="openTool('flatten-annot')">
                         <div class="tool-icon power"><i class="fas fa-compress-alt"></i></div>
                         <h3>Flatten Annotations</h3>
                         <p>Burn markup into PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="linearize" onclick="openTool('linearize')">
+                    <div class="tool-card" data-tool="linearize" data-click="openTool('linearize')">
                         <div class="tool-icon power"><i class="fas fa-bolt"></i></div>
                         <h3>Linearize</h3>
                         <p>Web optimize PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="extract-attach" onclick="openTool('extract-attach')">
+                    <div class="tool-card" data-tool="extract-attach" data-click="openTool('extract-attach')">
                         <div class="tool-icon power"><i class="fas fa-paperclip"></i></div>
                         <h3>Extract Attachments</h3>
                         <p>Get embedded files</p>
                     </div>
-                    <div class="tool-card" data-tool="tts" onclick="openTool('tts')">
+                    <div class="tool-card" data-tool="tts" data-click="openTool('tts')">
                         <div class="tool-icon power"><i class="fas fa-volume-up"></i></div>
                         <h3>Text-to-Speech</h3>
                         <p>Read PDF aloud</p>
                     </div>
-                    <div class="tool-card" data-tool="url-qr" onclick="openTool('url-qr')">
+                    <div class="tool-card" data-tool="url-qr" data-click="openTool('url-qr')">
                         <div class="tool-icon power"><i class="fas fa-qrcode"></i></div>
                         <h3>URL to QR</h3>
                         <p>Generate QR from link</p>
@@ -1083,37 +1084,37 @@
                         style="font-size: 0.7rem; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; padding: 2px 8px; border-radius: 12px; margin-left: 8px;">NEW</span>
                 </h2>
                 <div class="tools-grid">
-                    <div class="tool-card" data-tool="ai-summarize" onclick="openTool('ai-summarize')">
+                    <div class="tool-card" data-tool="ai-summarize" data-click="openTool('ai-summarize')">
                         <div class="tool-icon ai"><i class="fas fa-brain"></i></div>
                         <h3>AI Summarizer</h3>
                         <p>Summarize PDF content</p>
                     </div>
-                    <div class="tool-card" data-tool="ai-qa" onclick="openTool('ai-qa')">
+                    <div class="tool-card" data-tool="ai-qa" data-click="openTool('ai-qa')">
                         <div class="tool-icon ai"><i class="fas fa-comments"></i></div>
                         <h3>AI Q&A</h3>
                         <p>Ask questions about PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="ai-generate" onclick="openTool('ai-generate')">
+                    <div class="tool-card" data-tool="ai-generate" data-click="openTool('ai-generate')">
                         <div class="tool-icon ai"><i class="fas fa-magic"></i></div>
                         <h3>AI Generator</h3>
                         <p>Generate content for PDF</p>
                     </div>
-                    <div class="tool-card" data-tool="ai-translate" onclick="openTool('ai-translate')">
+                    <div class="tool-card" data-tool="ai-translate" data-click="openTool('ai-translate')">
                         <div class="tool-icon ai"><i class="fas fa-language"></i></div>
                         <h3>AI Translator</h3>
                         <p>Translate PDF content</p>
                     </div>
-                    <div class="tool-card" data-tool="ai-keypoints" onclick="openTool('ai-keypoints')">
+                    <div class="tool-card" data-tool="ai-keypoints" data-click="openTool('ai-keypoints')">
                         <div class="tool-icon ai"><i class="fas fa-list-ul"></i></div>
                         <h3>AI Key Points</h3>
                         <p>Extract key facts & entities</p>
                     </div>
-                    <div class="tool-card" data-tool="ai-rewrite" onclick="openTool('ai-rewrite')">
+                    <div class="tool-card" data-tool="ai-rewrite" data-click="openTool('ai-rewrite')">
                         <div class="tool-icon ai"><i class="fas fa-pen-nib"></i></div>
                         <h3>AI Rewriter</h3>
                         <p>Rewrite in different tones</p>
                     </div>
-                    <div class="tool-card" data-tool="ai-grammar" onclick="openTool('ai-grammar')">
+                    <div class="tool-card" data-tool="ai-grammar" data-click="openTool('ai-grammar')">
                         <div class="tool-icon ai"><i class="fas fa-spell-check"></i></div>
                         <h3>AI Grammar Fix</h3>
                         <p>Fix grammar & writing</p>
@@ -1124,9 +1125,9 @@
     </section>
 
     <!-- Tool Modal -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeTool()">
-        <div class="modal" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeTool()">&times;</button>
+    <div class="modal-overlay" id="modalOverlay" data-click="closeTool()">
+        <div class="modal" data-click="event.stopPropagation()">
+            <button class="modal-close" data-click="closeTool()">&times;</button>
             <div class="modal-header" id="modalHeader">
                 <div class="modal-icon"><i class="fas fa-file-pdf"></i></div>
                 <h2 id="modalTitle">Tool Title</h2>
@@ -1158,6 +1159,18 @@
     <script src="pdf-tools.js"></script>
     <script src="global-features.js"></script>
     <script src="enhanced-features.js"></script>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
 </body>
 
 </html>

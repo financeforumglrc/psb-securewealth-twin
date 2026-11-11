@@ -1,10 +1,7 @@
 /* ============================================
-   Financial Modelling App — Comprehensive Styles
+   Financial Modelling App — Dashboard Styles
+   Tokens, reset, scrollbar in design-system.css
    ============================================ */
-
-/* ------------------------------------------
-   1. Dashboard Styles
-   ------------------------------------------ */
 
 .dashboard-container {
   display: grid;

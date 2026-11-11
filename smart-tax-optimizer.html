@@ -2,9 +2,11 @@
 <html lang="en" data-theme="cyber">
 
 <head>
+    <script src="backend/algorithms/incomeTax.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="DS Smart Tax Optimizer - AI-powered tax optimization engine that saves you thousands">
+    <meta name="theme-color" content="#1A237E">
     <title>Smart Tax Optimizer™ | DS Financial</title>
 
     <!-- Fonts -->
@@ -4620,6 +4622,7 @@
             }
         }
     </style>
+<link rel="stylesheet" href="experience.css">
 </head>
 
 <body>
@@ -4647,65 +4650,65 @@
             
             <nav class="nav-menu">
                 <div class="nav-category">Main</div>
-                <div class="nav-item active" onclick="showPanel('dashboard')">
+                <div class="nav-item active" data-click="showPanel('dashboard')">
                     <i class="fas fa-th-large"></i>
                     <span>Dashboard</span>
                 </div>
-                <div class="nav-item" onclick="showPanel('calculator')">
+                <div class="nav-item" data-click="showPanel('calculator')">
                     <i class="fas fa-calculator"></i>
                     <span>Tax Calculator</span>
                     <span class="badge">Core</span>
                 </div>
-                <div class="nav-item" onclick="showPanel('deductions')">
+                <div class="nav-item" data-click="showPanel('deductions')">
                     <i class="fas fa-hand-holding-usd"></i>
                     <span>Deduction Finder</span>
                 </div>
-                <div class="nav-item" onclick="showPanel('regime')">
+                <div class="nav-item" data-click="showPanel('regime')">
                     <i class="fas fa-balance-scale"></i>
                     <span>Regime Comparison</span>
                 </div>
                 
                 <div class="nav-category">AI Tools</div>
-                <div class="nav-item" onclick="showPanel('taxdna')">
+                <div class="nav-item" data-click="showPanel('taxdna')">
                     <i class="fas fa-dna"></i>
                     <span>Tax DNA™</span>
                     <span class="badge new">Patent</span>
                 </div>
-                <div class="nav-item" onclick="showPanel('optimizer')">
+                <div class="nav-item" data-click="showPanel('optimizer')">
                     <i class="fas fa-brain"></i>
                     <span>AI Optimizer</span>
                     <span class="badge hot">AI</span>
                 </div>
-                <div class="nav-item" onclick="showPanel('voice')">
+                <div class="nav-item" data-click="showPanel('voice')">
                     <i class="fas fa-microphone"></i>
                     <span>Voice Filing™</span>
                     <span class="badge new">New</span>
                 </div>
                 
                 <div class="nav-category">Planning</div>
-                <div class="nav-item" onclick="showPanel('whatif')">
+                <div class="nav-item" data-click="showPanel('whatif')">
                     <i class="fas fa-magic"></i>
                     <span>What-If Scenarios</span>
                 </div>
-                <div class="nav-item" onclick="showPanel('calendar')">
+                <div class="nav-item" data-click="showPanel('calendar')">
                     <i class="fas fa-calendar-alt"></i>
                     <span>Tax Calendar</span>
                 </div>
-                <div class="nav-item" onclick="showPanel('investment')">
+                <div class="nav-item" data-click="showPanel('investment')">
                     <i class="fas fa-chart-line"></i>
                     <span>Investment Planner</span>
                 </div>
                 
                 <div class="nav-category">Analysis</div>
-                <div class="nav-item" onclick="showPanel('peer')">
+                <div class="nav-item" data-click="showPanel('peer')">
                     <i class="fas fa-users"></i>
                     <span>Peer Comparison</span>
                 </div>
-                <div class="nav-item" onclick="showPanel('reports')">
+                <div class="nav-item" data-click="showPanel('reports')">
                     <i class="fas fa-file-pdf"></i>
                     <span>Export Reports</span>
                 </div>
-                <div class="nav-item" onclick="showPanel('guide')">
+                <div class="nav-item" data-click="showPanel('guide')">
                     <i class="fas fa-graduation-cap"></i>
                     <span>Tax Guide</span>
                 </div>
@@ -4713,7 +4716,7 @@
             
             <!-- THEME CUSTOMIZATION PANEL -->
             <div class="theme-customizer">
-                <div class="theme-customizer-header" onclick="toggleThemeCustomizer()">
+                <div class="theme-customizer-header" data-click="toggleThemeCustomizer()">
                     <h4><i class="fas fa-palette"></i> Customize Theme</h4>
                     <i class="fas fa-chevron-down" id="themeToggleIcon"></i>
                 </div>
@@ -4722,15 +4725,15 @@
                     <div class="theme-section">
                         <span class="theme-section-label">Theme Presets</span>
                         <div class="theme-presets">
-                            <button class="theme-preset-btn active" data-theme="cyber" onclick="setTheme('cyber')" title="Cyber"></button>
-                            <button class="theme-preset-btn" data-theme="ocean" onclick="setTheme('ocean')" title="Ocean"></button>
-                            <button class="theme-preset-btn" data-theme="forest" onclick="setTheme('forest')" title="Forest"></button>
-                            <button class="theme-preset-btn" data-theme="sunset" onclick="setTheme('sunset')" title="Sunset"></button>
-                            <button class="theme-preset-btn" data-theme="midnight" onclick="setTheme('midnight')" title="Midnight"></button>
-                            <button class="theme-preset-btn" data-theme="neon" onclick="setTheme('neon')" title="Neon"></button>
-                            <button class="theme-preset-btn" data-theme="ruby" onclick="setTheme('ruby')" title="Ruby"></button>
-                            <button class="theme-preset-btn" data-theme="sakura" onclick="setTheme('sakura')" title="Sakura"></button>
-                            <button class="theme-preset-btn" data-theme="light" onclick="setTheme('light')" title="Light"></button>
+                            <button class="theme-preset-btn active" data-theme="cyber" data-click="setTheme('cyber')" title="Cyber"></button>
+                            <button class="theme-preset-btn" data-theme="ocean" data-click="setTheme('ocean')" title="Ocean"></button>
+                            <button class="theme-preset-btn" data-theme="forest" data-click="setTheme('forest')" title="Forest"></button>
+                            <button class="theme-preset-btn" data-theme="sunset" data-click="setTheme('sunset')" title="Sunset"></button>
+                            <button class="theme-preset-btn" data-theme="midnight" data-click="setTheme('midnight')" title="Midnight"></button>
+                            <button class="theme-preset-btn" data-theme="neon" data-click="setTheme('neon')" title="Neon"></button>
+                            <button class="theme-preset-btn" data-theme="ruby" data-click="setTheme('ruby')" title="Ruby"></button>
+                            <button class="theme-preset-btn" data-theme="sakura" data-click="setTheme('sakura')" title="Sakura"></button>
+                            <button class="theme-preset-btn" data-theme="light" data-click="setTheme('light')" title="Light"></button>
                         </div>
                     </div>
                     
@@ -4753,10 +4756,10 @@
                     <div class="theme-section">
                         <span class="theme-section-label">Icon Style</span>
                         <div class="icon-style-selector">
-                            <button class="icon-style-btn active" onclick="setIconStyle('solid')" data-style="solid">
+                            <button class="icon-style-btn active" data-click="setIconStyle('solid')" data-style="solid">
                                 <i class="fas fa-star"></i> Solid
                             </button>
-                            <button class="icon-style-btn" onclick="setIconStyle('regular')" data-style="regular">
+                            <button class="icon-style-btn" data-click="setIconStyle('regular')" data-style="regular">
                                 <i class="far fa-star"></i> Outline
                             </button>
                         </div>
@@ -4766,9 +4769,9 @@
                     <div class="theme-section">
                         <span class="theme-section-label">Text Size</span>
                         <div class="font-size-control">
-                            <button class="font-size-btn" onclick="adjustFontSize(-1)"><i class="fas fa-minus"></i></button>
+                            <button class="font-size-btn" data-click="adjustFontSize(-1)"><i class="fas fa-minus"></i></button>
                             <span class="font-size-value" id="fontSizeValue">100%</span>
-                            <button class="font-size-btn" onclick="adjustFontSize(1)"><i class="fas fa-plus"></i></button>
+                            <button class="font-size-btn" data-click="adjustFontSize(1)"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
                     
@@ -4776,16 +4779,16 @@
                     <div class="theme-section">
                         <div class="theme-toggle">
                             <span class="theme-toggle-label">Animations</span>
-                            <div class="toggle-switch active" id="animationToggle" onclick="toggleAnimations()"></div>
+                            <div class="toggle-switch active" id="animationToggle" data-click="toggleAnimations()"></div>
                         </div>
                         <div class="theme-toggle">
                             <span class="theme-toggle-label">Glow Effects</span>
-                            <div class="toggle-switch active" id="glowToggle" onclick="toggleGlowEffects()"></div>
+                            <div class="toggle-switch active" id="glowToggle" data-click="toggleGlowEffects()"></div>
                         </div>
                     </div>
                     
                     <!-- Reset Button -->
-                    <button class="theme-reset-btn" onclick="resetTheme()">
+                    <button class="theme-reset-btn" data-click="resetTheme()">
                         <i class="fas fa-undo"></i> Reset to Default
                     </button>
                 </div>
@@ -4803,7 +4806,7 @@
             <!-- TOP HEADER -->
             <header class="top-header">
                 <div class="header-left">
-                    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                    <button class="mobile-menu-btn" data-click="toggleSidebar()">
                         <i class="fas fa-bars"></i>
                     </button>
                     <h1 class="page-title" id="pageTitle">Dashboard</h1>
@@ -4855,7 +4858,7 @@
                     
                     <!-- Quick Stats Cards -->
                     <div class="tools-grid">
-                        <div class="tool-card ripple" onclick="showPanel('calculator')">
+                        <div class="tool-card ripple" data-click="showPanel('calculator')">
                             <div class="tool-card-icon purple">
                                 <i class="fas fa-calculator"></i>
                             </div>
@@ -4864,7 +4867,7 @@
                             <span class="tool-card-badge"><i class="fas fa-star"></i> Most Used</span>
                         </div>
                         
-                        <div class="tool-card ripple" onclick="showPanel('deductions')">
+                        <div class="tool-card ripple" data-click="showPanel('deductions')">
                             <div class="tool-card-icon green">
                                 <i class="fas fa-search-dollar"></i>
                             </div>
@@ -4873,7 +4876,7 @@
                             <span class="tool-card-badge"><i class="fas fa-gem"></i> Premium</span>
                         </div>
                         
-                        <div class="tool-card ripple" onclick="showPanel('taxdna')">
+                        <div class="tool-card ripple" data-click="showPanel('taxdna')">
                             <div class="tool-card-icon cyan">
                                 <i class="fas fa-dna"></i>
                             </div>
@@ -4882,7 +4885,7 @@
                             <span class="tool-card-badge patent"><i class="fas fa-certificate"></i> Patent Pending</span>
                         </div>
                         
-                        <div class="tool-card ripple" onclick="showPanel('optimizer')">
+                        <div class="tool-card ripple" data-click="showPanel('optimizer')">
                             <div class="tool-card-icon pink">
                                 <i class="fas fa-brain"></i>
                             </div>
@@ -4891,7 +4894,7 @@
                             <span class="tool-card-badge patent"><i class="fas fa-robot"></i> AI Powered</span>
                         </div>
                         
-                        <div class="tool-card ripple" onclick="showPanel('whatif')">
+                        <div class="tool-card ripple" data-click="showPanel('whatif')">
                             <div class="tool-card-icon orange">
                                 <i class="fas fa-magic"></i>
                             </div>
@@ -4900,7 +4903,7 @@
                             <span class="tool-card-badge"><i class="fas fa-flask"></i> Simulate</span>
                         </div>
                         
-                        <div class="tool-card ripple" onclick="showPanel('voice')">
+                        <div class="tool-card ripple" data-click="showPanel('voice')">
                             <div class="tool-card-icon blue">
                                 <i class="fas fa-microphone"></i>
                             </div>
@@ -4918,27 +4921,27 @@
                         </div>
                         <div class="section-body">
                             <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
-                                <button class="quick-action-btn purple" onclick="showPanel('whatif')">
+                                <button class="quick-action-btn purple" data-click="showPanel('whatif')">
                                     <i class="fas fa-magic" style="color: #A78BFA;"></i>
                                     <strong>What-If Scenarios</strong>
                                     <div class="label">Simulate changes</div>
                                 </button>
-                                <button class="quick-action-btn green" onclick="showPanel('investment')">
+                                <button class="quick-action-btn green" data-click="showPanel('investment')">
                                     <i class="fas fa-wallet" style="color: #10B981;"></i>
                                     <strong>Build Portfolio</strong>
                                     <div class="label">Investment planner</div>
                                 </button>
-                                <button class="quick-action-btn cyan" onclick="showPanel('calendar')">
+                                <button class="quick-action-btn cyan" data-click="showPanel('calendar')">
                                     <i class="fas fa-calendar-alt" style="color: #00D9FF;"></i>
                                     <strong>Tax Calendar</strong>
                                     <div class="label">Upcoming dates</div>
                                 </button>
-                                <button class="quick-action-btn purple" onclick="showPanel('peer')">
+                                <button class="quick-action-btn purple" data-click="showPanel('peer')">
                                     <i class="fas fa-users" style="color: #F59E0B;"></i>
                                     <strong>Compare Peers</strong>
                                     <div class="label">Benchmark yourself</div>
                                 </button>
-                                <button class="quick-action-btn pink" onclick="showPanel('reports')">
+                                <button class="quick-action-btn pink" data-click="showPanel('reports')">
                                     <i class="fas fa-file-pdf" style="color: #EC4899;"></i>
                                     <strong>Export PDF</strong>
                                     <div class="label">Download reports</div>
@@ -5012,7 +5015,7 @@
                                         <div style="font-size: 0.75rem; color: rgba(255,255,255,0.6);">Preview</div>
                                     </div>
                                 </div>
-                                <button onclick="openCalculatorModal()" style="padding: 1rem 2.5rem; background: linear-gradient(135deg, #7C3AED, #00D9FF); border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer; font-size: 1.1rem; box-shadow: 0 4px 20px rgba(124,58,237,0.4);">
+                                <button data-click="openCalculatorModal()" style="padding: 1rem 2.5rem; background: linear-gradient(135deg, #7C3AED, #00D9FF); border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer; font-size: 1.1rem; box-shadow: 0 4px 20px rgba(124,58,237,0.4);">
                                     <i class="fas fa-play"></i> Launch Calculator
                                 </button>
                             </div>
@@ -5129,7 +5132,7 @@
                                     <i class="fas fa-info-circle" style="color: #00D9FF;"></i> 
                                     <strong>Want to calculate with all deductions?</strong>
                                 </p>
-                                <button onclick="openCalculatorModal()" style="margin-top: 0.75rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #7C3AED, #00D9FF); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
+                                <button data-click="openCalculatorModal()" style="margin-top: 0.75rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #7C3AED, #00D9FF); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">
                                     <i class="fas fa-calculator"></i> Open Full Calculator
                                 </button>
                             </div>
@@ -5197,7 +5200,7 @@
                                 <div style="font-size: 4rem; margin-bottom: 1rem;"><i class="fas fa-dna" style="color: #00D9FF;"></i></div>
                                 <h3 style="color: white; margin-bottom: 1rem;">Generate Your Tax DNA™</h3>
                                 <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Discover your unique tax personality profile based on 47 genetic markers</p>
-                                <button onclick="generateTaxDNA()" style="padding: 1rem 2rem; background: linear-gradient(135deg, #00D9FF, #7C3AED); border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer; font-size: 1rem;">
+                                <button data-click="generateTaxDNA()" style="padding: 1rem 2rem; background: linear-gradient(135deg, #00D9FF, #7C3AED); border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer; font-size: 1rem;">
                                     <i class="fas fa-magic"></i> Generate My Tax DNA
                                 </button>
                             </div>
@@ -5219,7 +5222,7 @@
                                 <div style="font-size: 4rem; margin-bottom: 1rem;"><i class="fas fa-brain" style="color: #EC4899;"></i></div>
                                 <h3 style="color: white; margin-bottom: 1rem;">AI-Powered Optimization</h3>
                                 <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Our advanced AI analyzes your complete financial profile and recommends optimal tax-saving strategies</p>
-                                <button onclick="runAIOptimizer()" style="padding: 1rem 2rem; background: linear-gradient(135deg, #EC4899, #7C3AED); border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer; font-size: 1rem;">
+                                <button data-click="runAIOptimizer()" style="padding: 1rem 2rem; background: linear-gradient(135deg, #EC4899, #7C3AED); border: none; border-radius: 12px; color: white; font-weight: 600; cursor: pointer; font-size: 1rem;">
                                     <i class="fas fa-play"></i> Run AI Optimizer
                                 </button>
                             </div>
@@ -5243,13 +5246,13 @@
                         <div class="section-body" id="voiceContainer">
                             <!-- Voice Mode Tabs -->
                             <div class="voice-mode-tabs">
-                                <button class="voice-mode-tab active" onclick="switchVoiceMode('freeform')" data-mode="freeform">
+                                <button class="voice-mode-tab active" data-click="switchVoiceMode('freeform')" data-mode="freeform">
                                     <i class="fas fa-comments"></i> Free Conversation
                                 </button>
-                                <button class="voice-mode-tab" onclick="switchVoiceMode('wizard')" data-mode="wizard">
+                                <button class="voice-mode-tab" data-click="switchVoiceMode('wizard')" data-mode="wizard">
                                     <i class="fas fa-magic"></i> Guided Wizard
                                 </button>
-                                <button class="voice-mode-tab" onclick="switchVoiceMode('dictation')" data-mode="dictation">
+                                <button class="voice-mode-tab" data-click="switchVoiceMode('dictation')" data-mode="dictation">
                                     <i class="fas fa-keyboard"></i> Dictation Mode
                                 </button>
                             </div>
@@ -5267,7 +5270,7 @@
                                         <div class="voice-ring ring-2"></div>
                                         <div class="voice-ring ring-3"></div>
                                         <div class="voice-ring ring-4"></div>
-                                        <button class="voice-main-btn" id="voiceMainBtn" onclick="toggleAdvancedVoice()">
+                                        <button class="voice-main-btn" id="voiceMainBtn" data-click="toggleAdvancedVoice()">
                                             <i class="fas fa-microphone" id="voiceBtnIcon"></i>
                                         </button>
                                         <div class="voice-level-indicator" id="voiceLevelIndicator"></div>
@@ -5285,9 +5288,9 @@
                                     <div class="voice-transcript" id="voiceTranscript" style="display: none;">
                                         <div class="transcript-header">
                                             <div class="transcript-label">You said:</div>
-                                            <button class="transcript-action" onclick="editTranscript()" title="Edit"><i class="fas fa-edit"></i></button>
-                                            <button class="transcript-action" onclick="copyTranscript()" title="Copy"><i class="fas fa-copy"></i></button>
-                                            <button class="transcript-action" onclick="undoLastCommand()" title="Undo"><i class="fas fa-undo"></i></button>
+                                            <button class="transcript-action" data-click="editTranscript()" title="Edit"><i class="fas fa-edit"></i></button>
+                                            <button class="transcript-action" data-click="copyTranscript()" title="Copy"><i class="fas fa-copy"></i></button>
+                                            <button class="transcript-action" data-click="undoLastCommand()" title="Undo"><i class="fas fa-undo"></i></button>
                                         </div>
                                         <div class="transcript-text" id="transcriptText"></div>
                                         <div class="transcript-alternatives" id="transcriptAlternatives"></div>
@@ -5309,14 +5312,14 @@
                                     </div>
                                     <div class="wizard-answer" id="wizardAnswer" style="display: none;">
                                         <div class="answer-value" id="wizardAnswerValue"></div>
-                                        <button class="answer-confirm" onclick="confirmWizardAnswer()"><i class="fas fa-check"></i> Confirm</button>
-                                        <button class="answer-redo" onclick="redoWizardQuestion()"><i class="fas fa-redo"></i> Say Again</button>
+                                        <button class="answer-confirm" data-click="confirmWizardAnswer()"><i class="fas fa-check"></i> Confirm</button>
+                                        <button class="answer-redo" data-click="redoWizardQuestion()"><i class="fas fa-redo"></i> Say Again</button>
                                     </div>
                                     <div class="wizard-controls">
-                                        <button class="wizard-nav-btn" onclick="previousWizardStep()" id="wizardPrevBtn" disabled>
+                                        <button class="wizard-nav-btn" data-click="previousWizardStep()" id="wizardPrevBtn" disabled>
                                             <i class="fas fa-arrow-left"></i> Previous
                                         </button>
-                                        <button class="wizard-nav-btn primary" onclick="skipWizardStep()">
+                                        <button class="wizard-nav-btn primary" data-click="skipWizardStep()">
                                             Skip <i class="fas fa-forward"></i>
                                         </button>
                                     </div>
@@ -5328,13 +5331,13 @@
                                         <i class="fas fa-lightbulb"></i> Smart Suggestions
                                     </div>
                                     <div class="suggestions-list" id="suggestionsList">
-                                        <div class="suggestion-chip" onclick="simulateVoiceCommand('What is my total 80C investment?')">
+                                        <div class="suggestion-chip" data-click="simulateVoiceCommand('What is my total 80C investment?')">
                                             <i class="fas fa-question-circle"></i> Check 80C status
                                         </div>
-                                        <div class="suggestion-chip" onclick="simulateVoiceCommand('How much more can I save?')">
+                                        <div class="suggestion-chip" data-click="simulateVoiceCommand('How much more can I save?')">
                                             <i class="fas fa-piggy-bank"></i> Savings potential
                                         </div>
-                                        <div class="suggestion-chip" onclick="simulateVoiceCommand('Compare both regimes')">
+                                        <div class="suggestion-chip" data-click="simulateVoiceCommand('Compare both regimes')">
                                             <i class="fas fa-balance-scale"></i> Compare regimes
                                         </div>
                                     </div>
@@ -5348,91 +5351,91 @@
                                             Voice Commands
                                         </h4>
                                         <div class="commands-category-tabs">
-                                            <button class="category-tab active" onclick="filterVoiceCommands('all')">All</button>
-                                            <button class="category-tab" onclick="filterVoiceCommands('income')">Income</button>
-                                            <button class="category-tab" onclick="filterVoiceCommands('deductions')">Deductions</button>
-                                            <button class="category-tab" onclick="filterVoiceCommands('actions')">Actions</button>
+                                            <button class="category-tab active" data-click="filterVoiceCommands('all')">All</button>
+                                            <button class="category-tab" data-click="filterVoiceCommands('income')">Income</button>
+                                            <button class="category-tab" data-click="filterVoiceCommands('deductions')">Deductions</button>
+                                            <button class="category-tab" data-click="filterVoiceCommands('actions')">Actions</button>
                                         </div>
                                     </div>
                                     <div class="voice-commands-grid" id="voiceCommandsGrid">
-                                        <div class="voice-command-chip" data-category="income" onclick="simulateVoiceCommand('My salary is 12 lakhs per annum')">
+                                        <div class="voice-command-chip" data-category="income" data-click="simulateVoiceCommand('My salary is 12 lakhs per annum')">
                                             <i class="fas fa-rupee-sign"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"My salary is 12 lakhs"</span>
                                                 <span class="chip-hint">Sets annual income</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="income" onclick="simulateVoiceCommand('I also have rental income of 3 lakhs')">
+                                        <div class="voice-command-chip" data-category="income" data-click="simulateVoiceCommand('I also have rental income of 3 lakhs')">
                                             <i class="fas fa-building"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Rental income 3 lakhs"</span>
                                                 <span class="chip-hint">Adds rental income</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="deductions" onclick="simulateVoiceCommand('I invested 1.5 lakhs in PPF')">
+                                        <div class="voice-command-chip" data-category="deductions" data-click="simulateVoiceCommand('I invested 1.5 lakhs in PPF')">
                                             <i class="fas fa-piggy-bank"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Invested 1.5L in PPF"</span>
                                                 <span class="chip-hint">80C deduction</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="deductions" onclick="simulateVoiceCommand('Add NPS 50000')">
+                                        <div class="voice-command-chip" data-category="deductions" data-click="simulateVoiceCommand('Add NPS 50000')">
                                             <i class="fas fa-chart-line"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Add NPS 50000"</span>
                                                 <span class="chip-hint">80CCD(1B) deduction</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="deductions" onclick="simulateVoiceCommand('I pay 25000 rent monthly')">
+                                        <div class="voice-command-chip" data-category="deductions" data-click="simulateVoiceCommand('I pay 25000 rent monthly')">
                                             <i class="fas fa-home"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Rent 25000 monthly"</span>
                                                 <span class="chip-hint">HRA calculation</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="deductions" onclick="simulateVoiceCommand('Health insurance premium is 25000')">
+                                        <div class="voice-command-chip" data-category="deductions" data-click="simulateVoiceCommand('Health insurance premium is 25000')">
                                             <i class="fas fa-heartbeat"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Health insurance 25000"</span>
                                                 <span class="chip-hint">80D deduction</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="actions" onclick="simulateVoiceCommand('Calculate my tax')">
+                                        <div class="voice-command-chip" data-category="actions" data-click="simulateVoiceCommand('Calculate my tax')">
                                             <i class="fas fa-calculator"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Calculate my tax"</span>
                                                 <span class="chip-hint">Run calculation</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="actions" onclick="simulateVoiceCommand('Switch to new regime')">
+                                        <div class="voice-command-chip" data-category="actions" data-click="simulateVoiceCommand('Switch to new regime')">
                                             <i class="fas fa-exchange-alt"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Switch to new regime"</span>
                                                 <span class="chip-hint">Change tax regime</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="actions" onclick="simulateVoiceCommand('Show my deductions')">
+                                        <div class="voice-command-chip" data-category="actions" data-click="simulateVoiceCommand('Show my deductions')">
                                             <i class="fas fa-list"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Show my deductions"</span>
                                                 <span class="chip-hint">View all deductions</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="actions" onclick="simulateVoiceCommand('Undo last change')">
+                                        <div class="voice-command-chip" data-category="actions" data-click="simulateVoiceCommand('Undo last change')">
                                             <i class="fas fa-undo"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Undo last change"</span>
                                                 <span class="chip-hint">Revert action</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="actions" onclick="simulateVoiceCommand('Start guided filing')">
+                                        <div class="voice-command-chip" data-category="actions" data-click="simulateVoiceCommand('Start guided filing')">
                                             <i class="fas fa-magic"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Start guided filing"</span>
                                                 <span class="chip-hint">Step-by-step wizard</span>
                                             </div>
                                         </div>
-                                        <div class="voice-command-chip" data-category="actions" onclick="simulateVoiceCommand('Export my data')">
+                                        <div class="voice-command-chip" data-category="actions" data-click="simulateVoiceCommand('Export my data')">
                                             <i class="fas fa-download"></i>
                                             <div class="chip-content">
                                                 <span class="chip-text">"Export my data"</span>
@@ -5450,8 +5453,8 @@
                                             Conversation
                                         </h4>
                                         <div class="conversation-actions">
-                                            <button class="conv-action-btn" onclick="clearConversation()" title="Clear"><i class="fas fa-trash"></i></button>
-                                            <button class="conv-action-btn" onclick="exportConversation()" title="Export"><i class="fas fa-download"></i></button>
+                                            <button class="conv-action-btn" data-click="clearConversation()" title="Clear"><i class="fas fa-trash"></i></button>
+                                            <button class="conv-action-btn" data-click="exportConversation()" title="Export"><i class="fas fa-download"></i></button>
                                         </div>
                                     </div>
                                     <div class="conversation-messages" id="conversationMessages">
@@ -5474,11 +5477,11 @@
                                 <div class="voice-text-input">
                                     <div class="input-with-voice">
                                         <input type="text" id="voiceTextInput" class="sleek-input" placeholder="Type or press Space to speak..." onkeypress="handleVoiceInputKey(event)">
-                                        <button class="input-voice-btn" onclick="toggleAdvancedVoice()" title="Voice Input">
+                                        <button class="input-voice-btn" data-click="toggleAdvancedVoice()" title="Voice Input">
                                             <i class="fas fa-microphone"></i>
                                         </button>
                                     </div>
-                                    <button class="btn-sleek gradient" onclick="processTextCommand()">
+                                    <button class="btn-sleek gradient" data-click="processTextCommand()">
                                         <i class="fas fa-paper-plane"></i>
                                     </button>
                                 </div>
@@ -5491,10 +5494,10 @@
                                             Extracted Tax Data
                                         </h4>
                                         <div class="extracted-actions">
-                                            <button class="btn-sleek ghost" onclick="clearExtractedData()">
+                                            <button class="btn-sleek ghost" data-click="clearExtractedData()">
                                                 <i class="fas fa-times"></i> Clear
                                             </button>
-                                            <button class="btn-sleek primary" onclick="applyExtractedData()">
+                                            <button class="btn-sleek primary" data-click="applyExtractedData()">
                                                 <i class="fas fa-check"></i> Apply All
                                             </button>
                                         </div>
@@ -5527,7 +5530,7 @@
                     
                     <!-- Voice Settings Panel - Enhanced -->
                     <div class="section-panel">
-                        <div class="section-header" onclick="toggleVoiceSettings(this)">
+                        <div class="section-header" data-click="toggleVoiceSettings(this)">
                             <h3><i class="fas fa-sliders-h"></i> Advanced Voice Settings</h3>
                             <i class="fas fa-chevron-down settings-toggle-icon"></i>
                         </div>
@@ -5592,10 +5595,10 @@
                                 </div>
                             </div>
                             <div class="voice-test-section">
-                                <button class="btn-sleek ghost" onclick="testVoiceSettings()">
+                                <button class="btn-sleek ghost" data-click="testVoiceSettings()">
                                     <i class="fas fa-volume-up"></i> Test Voice Settings
                                 </button>
-                                <button class="btn-sleek ghost" onclick="calibrateVoice()">
+                                <button class="btn-sleek ghost" data-click="calibrateVoice()">
                                     <i class="fas fa-microphone-alt"></i> Calibrate Microphone
                                 </button>
                             </div>
@@ -5649,22 +5652,22 @@
                         </div>
                         <div class="section-body" id="whatifContainer">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-                                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; cursor: pointer;" onclick="simulateScenario('salary')">
+                                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; cursor: pointer;" data-click="simulateScenario('salary')">
                                     <i class="fas fa-arrow-up" style="color: #10B981; margin-right: 0.5rem;"></i>
                                     <strong style="color: white;">Salary Increase</strong>
                                     <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.5rem;">What if you get a 20% hike?</p>
                                 </div>
-                                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; cursor: pointer;" onclick="simulateScenario('investment')">
+                                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; cursor: pointer;" data-click="simulateScenario('investment')">
                                     <i class="fas fa-chart-line" style="color: #00D9FF; margin-right: 0.5rem;"></i>
                                     <strong style="color: white;">New Investment</strong>
                                     <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.5rem;">Add ELSS, NPS, or other investments</p>
                                 </div>
-                                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; cursor: pointer;" onclick="simulateScenario('home')">
+                                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; cursor: pointer;" data-click="simulateScenario('home')">
                                     <i class="fas fa-home" style="color: #F59E0B; margin-right: 0.5rem;"></i>
                                     <strong style="color: white;">Buy a House</strong>
                                     <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.5rem;">Home loan tax benefits simulation</p>
                                 </div>
-                                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; cursor: pointer;" onclick="simulateScenario('rental')">
+                                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; cursor: pointer;" data-click="simulateScenario('rental')">
                                     <i class="fas fa-building" style="color: #A78BFA; margin-right: 0.5rem;"></i>
                                     <strong style="color: white;">Rental Income</strong>
                                     <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.5rem;">Adding property rental income</p>
@@ -5822,22 +5825,22 @@
                         </div>
                         <div class="section-body" id="reportsContainer">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-                                <button onclick="exportReport('summary')" style="background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.1)); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 1.5rem; color: white; cursor: pointer; text-align: left;">
+                                <button data-click="exportReport('summary')" style="background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.1)); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 1.5rem; color: white; cursor: pointer; text-align: left;">
                                     <i class="fas fa-file-pdf" style="font-size: 2rem; color: #EF4444; margin-bottom: 0.75rem; display: block;"></i>
                                     <strong>Tax Summary PDF</strong>
                                     <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.5rem;">Complete tax calculation report</p>
                                 </button>
-                                <button onclick="exportReport('deductions')" style="background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.1)); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; padding: 1.5rem; color: white; cursor: pointer; text-align: left;">
+                                <button data-click="exportReport('deductions')" style="background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.1)); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; padding: 1.5rem; color: white; cursor: pointer; text-align: left;">
                                     <i class="fas fa-file-excel" style="font-size: 2rem; color: #10B981; margin-bottom: 0.75rem; display: block;"></i>
                                     <strong>Deductions Sheet</strong>
                                     <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.5rem;">All deductions in Excel format</p>
                                 </button>
-                                <button onclick="exportReport('investment')" style="background: linear-gradient(135deg, rgba(0,217,255,0.2), rgba(0,217,255,0.1)); border: 1px solid rgba(0,217,255,0.3); border-radius: 12px; padding: 1.5rem; color: white; cursor: pointer; text-align: left;">
+                                <button data-click="exportReport('investment')" style="background: linear-gradient(135deg, rgba(0,217,255,0.2), rgba(0,217,255,0.1)); border: 1px solid rgba(0,217,255,0.3); border-radius: 12px; padding: 1.5rem; color: white; cursor: pointer; text-align: left;">
                                     <i class="fas fa-chart-pie" style="font-size: 2rem; color: #00D9FF; margin-bottom: 0.75rem; display: block;"></i>
                                     <strong>Investment Plan</strong>
                                     <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.5rem;">Personalized investment roadmap</p>
                                 </button>
-                                <button onclick="exportReport('taxdna')" style="background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(124,58,237,0.1)); border: 1px solid rgba(124,58,237,0.3); border-radius: 12px; padding: 1.5rem; color: white; cursor: pointer; text-align: left;">
+                                <button data-click="exportReport('taxdna')" style="background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(124,58,237,0.1)); border: 1px solid rgba(124,58,237,0.3); border-radius: 12px; padding: 1.5rem; color: white; cursor: pointer; text-align: left;">
                                     <i class="fas fa-dna" style="font-size: 2rem; color: #A78BFA; margin-bottom: 0.75rem; display: block;"></i>
                                     <strong>Tax DNA™ Report</strong>
                                     <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.5rem;">Your tax personality profile</p>
@@ -5926,7 +5929,7 @@
         <div style="max-width: 1400px; margin: 0 auto;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <h2 style="color: white; font-size: 1.5rem;"><i class="fas fa-calculator" style="color: #00D9FF;"></i> Complete Tax Calculator</h2>
-                <button onclick="closeCalculatorModal()" style="background: rgba(255,255,255,0.1); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; font-size: 1.25rem;">
+                <button data-click="closeCalculatorModal()" style="background: rgba(255,255,255,0.1); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; font-size: 1.25rem;">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -5965,10 +5968,10 @@
                         </div>
                     </div>
                     <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 0.5rem;">
-                        <button onclick="expandAllSections()" style="background: rgba(0,217,255,0.2); border: 1px solid rgba(0,217,255,0.3); border-radius: 4px; padding: 0.25rem 0.75rem; color: #00d9ff; font-size: 0.7rem; cursor: pointer;">
+                        <button data-click="expandAllSections()" style="background: rgba(0,217,255,0.2); border: 1px solid rgba(0,217,255,0.3); border-radius: 4px; padding: 0.25rem 0.75rem; color: #00d9ff; font-size: 0.7rem; cursor: pointer;">
                             <i class="fas fa-expand-alt"></i> Expand All
                         </button>
-                        <button onclick="collapseAllSections()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 0.25rem 0.75rem; color: rgba(255,255,255,0.7); font-size: 0.7rem; cursor: pointer;">
+                        <button data-click="collapseAllSections()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 0.25rem 0.75rem; color: rgba(255,255,255,0.7); font-size: 0.7rem; cursor: pointer;">
                             <i class="fas fa-compress-alt"></i> Collapse All
                         </button>
                     </div>
@@ -5979,7 +5982,7 @@
                 
                 <!-- Section 1: Personal Details -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-user-circle"></i> Personal Details <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-user-circle"></i> Personal Details <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Basic info for tax slabs</p>
                     
@@ -6029,7 +6032,7 @@
                 
                 <!-- Section 2: Salary Income -->
                 <div class="input-section" id="salaryIncomeSection">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-wallet"></i> HEAD 1: Salary Income <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-wallet"></i> HEAD 1: Salary Income <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Section 15-17 - Salary, Perquisites & Benefits</p>
                     
@@ -6283,7 +6286,7 @@
                 
                 <!-- Section 3: Income from House Property -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-building"></i> HEAD 2: House Property <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-building"></i> HEAD 2: House Property <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Rental income & Section 24 deductions</p>
                     
@@ -6382,7 +6385,7 @@
                 
                 <!-- Section 4: Business/Profession Income -->
                 <div class="input-section" id="businessIncomeSection">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-briefcase"></i> HEAD 3: Business/Profession <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-briefcase"></i> HEAD 3: Business/Profession <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">For business owners & freelancers (Sec 28-44)</p>
                     
@@ -6478,7 +6481,7 @@
                 
                 <!-- Section 5: Capital Gains -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-chart-line"></i> HEAD 4: Capital Gains <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-chart-line"></i> HEAD 4: Capital Gains <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Sale of shares, property, gold (Sec 45-55)</p>
                     
@@ -6510,7 +6513,7 @@
                     
                     <div class="form-group">
                         <label>
-                            <span>STCG on Property (< 24 months)</span>
+                            <span>STCG on Property (&lt; 24 months)</span>
                             <i class="fas fa-info-circle info-icon" data-tooltip="Property held less than 24 months"></i>
                         </label>
                         <div class="currency-input">
@@ -6595,7 +6598,7 @@
                 
                 <!-- Section 6: Other Sources -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-coins"></i> HEAD 5: Other Sources <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-coins"></i> HEAD 5: Other Sources <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Interest, dividends, gifts (Sec 56-59)</p>
                     
@@ -6746,7 +6749,7 @@
                 
                 <!-- Section: HRA & Rent Deductions -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-home"></i> HRA & Rent Deductions <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-home"></i> HRA & Rent Deductions <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Sec 10(13A) HRA | Sec 80GG Rent</p>
                     
@@ -6825,7 +6828,7 @@
                 
                 <!-- Section 80C, 80CCC, 80CCD(1) Combined -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-piggy-bank"></i> 80C/80CCC/80CCD(1) - ₹1.5L <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-piggy-bank"></i> 80C/80CCC/80CCD(1) - ₹1.5L <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Insurance, PF, Pension - Combined limit</p>
                     
@@ -6962,7 +6965,7 @@
                 
                 <!-- Section: 80CCD(1B) & 80CCD(2) - NPS Beyond Limit -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-landmark"></i> 80CCD(1B)/80CCD(2) - NPS <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-landmark"></i> 80CCD(1B)/80CCD(2) - NPS <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Additional NPS deductions beyond ₹1.5L</p>
                     
@@ -7003,7 +7006,7 @@
                 
                 <!-- Section 80D - Medical Insurance -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-heartbeat"></i> Section 80D - Health Insurance <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-heartbeat"></i> Section 80D - Health Insurance <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Medical insurance - Up to ₹1L deduction</p>
                     
@@ -7092,7 +7095,7 @@
                 
                 <!-- Section 80DD & 80DDB - Disability & Medical Treatment -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-wheelchair"></i> 80DD/80DDB - Disability & Medical <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-wheelchair"></i> 80DD/80DDB - Disability & Medical <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Disability & specified disease treatment</p>
                     
@@ -7151,7 +7154,7 @@
                 
                 <!-- Section 80E, 80EE, 80EEA, 80EEB - Loan Interest -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-graduation-cap"></i> 80E/80EE/80EEA/80EEB - Loans <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-graduation-cap"></i> 80E/80EE/80EEA/80EEB - Loans <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Education, home & EV loan interest</p>
                     
@@ -7219,7 +7222,7 @@
                 
                 <!-- Section 80G, 80GGA, 80GGC - Donations -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-hand-holding-heart"></i> 80G/80GGA/80GGC - Donations <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-hand-holding-heart"></i> 80G/80GGA/80GGC - Donations <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Charitable & political contributions</p>
                     
@@ -7315,7 +7318,7 @@
                 
                 <!-- Section 80TTA, 80TTB - Interest Income Deductions -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-university"></i> 80TTA/80TTB - Interest Deductions <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-university"></i> 80TTA/80TTB - Interest Deductions <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Savings & deposit interest deductions</p>
                     
@@ -7354,7 +7357,7 @@
                 
                 <!-- Section 80U - Self Disability -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-accessible-icon"></i> Section 80U - Self Disability <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-accessible-icon"></i> Section 80U - Self Disability <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Fixed deduction for certified disability</p>
                     
@@ -7384,7 +7387,7 @@
                 
                 <!-- Section 9: Tax Already Paid -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-receipt"></i> Tax Already Paid <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-receipt"></i> Tax Already Paid <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">TDS & advance tax deducted/paid</p>
                     
@@ -7428,7 +7431,7 @@
                 
                 <!-- Section 10: Tax Regime -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-balance-scale"></i> Tax Regime Selection <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-balance-scale"></i> Tax Regime Selection <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     <p class="section-helper">Choose regime for more savings</p>
                     
@@ -7465,7 +7468,7 @@
                 
                 <!-- Section 11: Goals -->
                 <div class="input-section">
-                    <h3 onclick="toggleSection(this)"><i class="fas fa-bullseye"></i> Optimization Goals <i class="fas fa-chevron-down toggle-icon"></i></h3>
+                    <h3 data-click="toggleSection(this)"><i class="fas fa-bullseye"></i> Optimization Goals <i class="fas fa-chevron-down toggle-icon"></i></h3>
                     <div class="section-content">
                     
                     <div class="form-group">
@@ -7518,26 +7521,26 @@
 
     <!-- Floating Quick Access Bar -->
     <div class="floating-bar" id="floatingBar">
-        <button class="floating-btn" data-tooltip="Dashboard" onclick="showPanel('dashboard')">
+        <button class="floating-btn" data-tooltip="Dashboard" data-click="showPanel('dashboard')">
             <i class="fas fa-th-large"></i>
         </button>
-        <button class="floating-btn" data-tooltip="Calculator" onclick="openCalculatorModal()">
+        <button class="floating-btn" data-tooltip="Calculator" data-click="openCalculatorModal()">
             <i class="fas fa-calculator"></i>
         </button>
-        <button class="floating-btn primary" data-tooltip="Quick Optimize" onclick="quickOptimize()">
+        <button class="floating-btn primary" data-tooltip="Quick Optimize" data-click="quickOptimize()">
             <i class="fas fa-magic"></i>
             <span class="pulse-dot"></span>
         </button>
-        <button class="floating-btn" data-tooltip="Deductions" onclick="showPanel('deductions')">
+        <button class="floating-btn" data-tooltip="Deductions" data-click="showPanel('deductions')">
             <i class="fas fa-search-dollar"></i>
         </button>
-        <button class="floating-btn" data-tooltip="AI Tools" onclick="showPanel('taxdna')">
+        <button class="floating-btn" data-tooltip="AI Tools" data-click="showPanel('taxdna')">
             <i class="fas fa-brain"></i>
         </button>
     </div>
     
     <!-- Floating Theme Toggle Button -->
-    <button class="floating-theme-toggle" onclick="toggleThemeCustomizer()" title="Customize Theme">
+    <button class="floating-theme-toggle" data-click="toggleThemeCustomizer()" title="Customize Theme">
         <i class="fas fa-palette"></i>
     </button>
 
@@ -7552,13 +7555,13 @@
 
     <!-- AI Chatbot Widget -->
     <div class="chatbot-widget">
-        <button class="chatbot-toggle" onclick="toggleChatbot()">
+        <button class="chatbot-toggle" data-click="toggleChatbot()">
             <i class="fas fa-robot"></i>
         </button>
         <div class="chatbot-window" id="chatbotWindow">
             <div class="chatbot-header">
                 <h4><i class="fas fa-robot"></i> AI Tax Assistant</h4>
-                <button class="chatbot-close" onclick="toggleChatbot()" style="background:none;border:none;color:white;font-size:1.25rem;cursor:pointer;"><i class="fas fa-times"></i></button>
+                <button class="chatbot-close" data-click="toggleChatbot()" style="background:none;border:none;color:white;font-size:1.25rem;cursor:pointer;"><i class="fas fa-times"></i></button>
             </div>
             <div class="chatbot-messages" id="chatbotMessages">
                 <div class="chatbot-message bot">
@@ -7567,24 +7570,24 @@
             </div>
             <div class="chatbot-input">
                 <input type="text" id="chatbotInput" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter') sendChatMessage()">
-                <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+                <button data-click="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
     <!-- Voice Control -->
     <div class="voice-control">
-        <button class="voice-button" id="voiceButton" onclick="toggleVoiceControl()">
+        <button class="voice-button" id="voiceButton" data-click="toggleVoiceControl()">
             <i class="fas fa-microphone"></i>
         </button>
     </div>
 
     <!-- Theme Switcher -->
     <div class="theme-switcher">
-        <div class="theme-option dark active" onclick="switchTheme('dark')"></div>
-        <div class="theme-option blue" onclick="switchTheme('blue')"></div>
-        <div class="theme-option purple" onclick="switchTheme('purple')"></div>
-        <div class="theme-option green" onclick="switchTheme('green')"></div>
+        <div class="theme-option dark active" data-click="switchTheme('dark')"></div>
+        <div class="theme-option blue" data-click="switchTheme('blue')"></div>
+        <div class="theme-option purple" data-click="switchTheme('purple')"></div>
+        <div class="theme-option green" data-click="switchTheme('green')"></div>
     </div>
 
     <script src="script.js"></script>
@@ -9468,10 +9471,10 @@
                         <h3 style="color: white; margin: 1.5rem 0 0.5rem;">All Done!</h3>
                         <p style="color: rgba(255,255,255,0.6); margin-bottom: 2rem;">I've collected all your tax information. Ready to calculate?</p>
                         <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                            <button onclick="applyExtractedData()" class="wizard-nav-btn primary">
+                            <button data-click="applyExtractedData()" class="wizard-nav-btn primary">
                                 <i class="fas fa-calculator"></i> Calculate Tax
                             </button>
-                            <button onclick="switchVoiceMode('freeform')" class="wizard-nav-btn">
+                            <button data-click="switchVoiceMode('freeform')" class="wizard-nav-btn">
                                 <i class="fas fa-comments"></i> Ask Questions
                             </button>
                         </div>
@@ -9860,7 +9863,7 @@
             }
             
             container.innerHTML = suggestions.map(s => 
-                `<button class="suggestion-chip" onclick="simulateVoiceCommand('${s.text}')">
+                `<button class="suggestion-chip" data-click="simulateVoiceCommand('${s.text}')">
                     <i class="fas ${s.icon}"></i> ${s.text}
                 </button>`
             ).join('');
@@ -10162,7 +10165,7 @@
             if (!container) return;
             
             container.innerHTML = smartSuggestions.initial.map(s => 
-                `<button class="suggestion-chip" onclick="simulateVoiceCommand('${s.text}')">
+                `<button class="suggestion-chip" data-click="simulateVoiceCommand('${s.text}')">
                     <i class="fas ${s.icon}"></i> ${s.text}
                 </button>`
             ).join('');
@@ -10210,6 +10213,19 @@
             }
         });
     </script>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
+<script src="js/tool-repairs.js"></script>
 </body>
 
 </html>

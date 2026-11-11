@@ -8,14 +8,7 @@
  */
 
 // Tax Slabs for FY 2025-26 (New Regime)
-const TAX_SLABS_NEW = [
-    { limit: 300000, rate: 0 },
-    { limit: 700000, rate: 0.05 },
-    { limit: 1000000, rate: 0.10 },
-    { limit: 1200000, rate: 0.15 },
-    { limit: 1500000, rate: 0.20 },
-    { limit: Infinity, rate: 0.30 }
-];
+const TAX_SLABS_NEW = IncomeTax.newSlabs.map(([limit, rate]) => ({ limit, rate }));
 
 // Tax Slabs for FY 2025-26 (Old Regime)
 const TAX_SLABS_OLD = [
@@ -173,7 +166,7 @@ async function runOptimization() {
         income: totalIncome,
         basicSalary: parseFloat(document.getElementById('basicSalary')?.value) || 600000,
         hraReceived: parseFloat(document.getElementById('hraReceived')?.value) || 240000,
-        currentInvestments: Math.min(total80C, 150000) || parseFloat(document.getElementById('investments')?.value) || 50000,
+        currentInvestments: Math.min(total80C, 150000) || parseFloat(document.getElementById('investments')?.value) || 0,
         total80C: total80C,
         rent: parseFloat(document.getElementById('rent')?.value) || 0,
         livingArrangement: document.getElementById('livingArrangement')?.value || 'rented',
@@ -301,15 +294,15 @@ async function optimizeTaxes(profile) {
 }
 
 function calculateOldRegimeTax(profile) {
-    const income = profile.income;
-    const currentInvestments = profile.currentInvestments;
+    const income = Math.max(0, Number(profile.income) || 0);
+    const currentInvestments = Math.max(0, Number(profile.currentInvestments) || 0);
     const rent = profile.rent;
     
     // Calculate deductions
     let deductions = 0;
     
     // Standard Deduction
-    const standardDeduction = 50000;
+    const standardDeduction = !profile.employmentType || profile.employmentType === 'salaried' || profile.employmentType === 'pensioner' ? 50000 : 0;
     deductions += standardDeduction;
     
     // 80C Deduction
@@ -321,8 +314,13 @@ function calculateOldRegimeTax(profile) {
     deductions += hra;
     
     // Professional Tax
-    const professionalTax = 2400;
+    const professionalTax = Math.max(0, Number(profile.professionalTax) || 0);
     deductions += professionalTax;
+    deductions += Math.min(200000, Math.max(0, Number(profile.homeLoanInterest) || 0));
+    deductions += Math.min(50000, Math.max(0, Number(profile.nps) || 0));
+    deductions += Math.min(profile.age >= 60 ? 50000 : 25000, Math.max(0, Number(profile.healthInsuranceSelf) || 0));
+    deductions += Math.min(profile.parentsSenior ? 50000 : 25000, Math.max(0, Number(profile.healthInsuranceParents) || 0));
+    deductions += Math.max(0, Number(profile.educationLoan) || 0);
     
     // Taxable Income
     const taxableIncome = Math.max(0, income - deductions);
@@ -341,9 +339,9 @@ function calculateOldRegimeTax(profile) {
         }
     }
     
-    // Add Cess
-    const cess = tax * 0.04;
-    const totalTax = tax + cess;
+    const assessed = IncomeTax.calculate(taxableIncome, { regime: 'old', ageCategory: profile.age >= 80 ? 'super-senior' : profile.age >= 60 ? 'senior' : 'general' });
+    tax = assessed.tax;
+    const { cess, totalTax, surcharge, rebate, marginalRelief } = assessed;
     
     return {
         regime: 'Old Regime',
@@ -353,15 +351,16 @@ function calculateOldRegimeTax(profile) {
         tax: tax,
         cess: cess,
         totalTax: totalTax,
-        effectiveRate: (totalTax / income * 100).toFixed(2)
+        surcharge, rebate, marginalRelief,
+        effectiveRate: (income ? totalTax / income * 100 : 0).toFixed(2)
     };
 }
 
 function calculateNewRegimeTax(profile) {
-    const income = profile.income;
+    const income = Math.max(0, Number(profile.income) || 0);
     
     // New regime has no deductions except standard deduction
-    const standardDeduction = 50000; // Updated for FY 2025-26
+    const standardDeduction = !profile.employmentType || profile.employmentType === 'salaried' || profile.employmentType === 'pensioner' ? 75000 : 0;
     const taxableIncome = Math.max(0, income - standardDeduction);
     
     // Calculate Tax
@@ -378,9 +377,9 @@ function calculateNewRegimeTax(profile) {
         }
     }
     
-    // Add Cess
-    const cess = tax * 0.04;
-    const totalTax = tax + cess;
+    const assessed = IncomeTax.calculate(taxableIncome, { regime: 'new' });
+    tax = assessed.tax;
+    const { cess, totalTax, surcharge, rebate, marginalRelief } = assessed;
     
     return {
         regime: 'New Regime',
@@ -390,26 +389,31 @@ function calculateNewRegimeTax(profile) {
         tax: tax,
         cess: cess,
         totalTax: totalTax,
-        effectiveRate: (totalTax / income * 100).toFixed(2)
+        surcharge, rebate, marginalRelief,
+        effectiveRate: (income ? totalTax / income * 100 : 0).toFixed(2)
     };
 }
 
 function calculateHRA(profile) {
-    if (profile.rent === 0) return 0;
+    if (!profile.rent || profile.rent === 0) return 0;
+    if (!profile.hraReceived || profile.hraReceived === 0) return 0;
     
+    // profile.rent is annual rent paid (as passed from route: rentPaid * 12)
+    // profile.hraReceived is annual HRA received
     const annualRent = profile.rent * 12;
-    const salary = profile.income;
+    const annualHRA = profile.hraReceived;
+    const basicSalary = profile.basicSalary || profile.income * 0.5;
+    const isMetro = profile.cityType === 'metro';
     
-    // HRA is minimum of:
-    // 1. Actual HRA received (assuming 50% of salary)
-    // 2. Rent paid minus 10% of salary
-    // 3. 50% of salary (40% for non-metro)
+    // HRA exemption is minimum of:
+    // 1. Actual HRA received
+    // 2. Rent paid minus 10% of basic salary
+    // 3. 50% of basic salary (metro) or 40% (non-metro)
     
-    const actualHRA = salary * 0.5; // Assuming 50% HRA
-    const rentMinus10 = annualRent - (salary * 0.1);
-    const fiftyPercent = salary * 0.5; // Assuming metro city
+    const rentMinus10 = annualRent - (basicSalary * 0.1);
+    const cityLimit = basicSalary * (isMetro ? 0.5 : 0.4);
     
-    return Math.max(0, Math.min(actualHRA, rentMinus10, fiftyPercent));
+    return Math.max(0, Math.min(annualHRA, rentMinus10, cityLimit));
 }
 
 /**
@@ -1424,20 +1428,27 @@ function generateBenchmarkTab(results) {
     `;
 }
 
-// Utility Functions
-function formatCurrency(amount) {
-    if (amount >= 10000000) {
-        return (amount / 10000000).toFixed(2) + ' Cr';
-    } else if (amount >= 100000) {
-        return (amount / 100000).toFixed(2) + ' L';
-    } else {
-        return amount.toLocaleString('en-IN');
+// Utility Functions (defined in global-features.js; fallback for standalone)
+if (typeof formatCurrency === 'undefined') {
+    function formatCurrency(amount) {
+        if (amount >= 10000000) {
+            return (amount / 10000000).toFixed(2) + ' Cr';
+        } else if (amount >= 100000) {
+            return (amount / 100000).toFixed(2) + ' L';
+        } else {
+            return amount.toLocaleString('en-IN');
+        }
     }
 }
 
 // Action Functions
 function downloadReport() {
-    alert('Report download feature coming soon! This will generate a detailed PDF with all recommendations.');
+  if(!optimizationResults.optimal)return alert('Calculate your tax results first.');
+  const results=optimizationResults;
+  const rows=[['Financial year','2025-26'],['Gross income',results.optimal.grossIncome],['Old regime tax',results.oldRegime.totalTax],['New regime tax',results.newRegime.totalTax],['Selected regime',results.optimal.regime],['Total tax',results.optimal.totalTax]];
+  const csv=rows.map(row=>row.map(value=>'"'+String(value).replaceAll('"','""')+'"').join(',')).join('\r\n');
+  const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+  const link=document.createElement('a');link.href=url;link.download='tax-report-FY-2025-26.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
 function shareResults() {
@@ -1452,9 +1463,7 @@ function shareResults() {
     }
 }
 
-function bookConsultation() {
-    alert('Consultation booking feature coming soon! Our tax experts will contact you within 24 hours.');
-}
+function bookConsultation() { location.href='index.html#contact'; }
 
 // Feature Tab Switching
 function switchFeatureTab(tabName) {
@@ -1914,7 +1923,7 @@ function exportToExcel() {
 }
 
 // Copyright Protection
-console.log('%c⚠️ DS SMART TAX OPTIMIZER™', 'color: #00D9FF; font-size: 20px; font-weight: bold;');
-console.log('%cProprietary Software - Patent Pending', 'color: #7C3AED; font-size: 14px;');
-console.log('%c© 2026 DS Financial Solutions. All rights reserved.', 'color: #10B981; font-size: 12px;');
-console.log('%cUnauthorized copying, modification, or distribution is strictly prohibited.', 'color: #EF4444; font-size: 12px;');
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('%c⚠️ DS SMART TAX OPTIMIZER™', 'color: #00D9FF; font-size: 20px; font-weight: bold;'); }
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('%cProprietary Software - Patent Pending', 'color: #7C3AED; font-size: 14px;'); }
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('%c© 2026 DS Financial Solutions. All rights reserved.', 'color: #10B981; font-size: 12px;'); }
+if (typeof DEBUG !== 'undefined' && DEBUG) { console.log('%cUnauthorized copying, modification, or distribution is strictly prohibited.', 'color: #EF4444; font-size: 12px;'); }

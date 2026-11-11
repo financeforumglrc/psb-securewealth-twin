@@ -159,6 +159,7 @@
             border-color: var(--accent);
         }
     </style>
+<link rel="stylesheet" href="experience.css">
 </head>
 
 <body>
@@ -171,7 +172,7 @@
             <a href="index.html" class="btn btn-primary">
                 <i class="fas fa-home"></i> Go Home
             </a>
-            <a href="#" onclick="event.preventDefault(); history.back();" class="btn btn-secondary">
+            <a href="#" data-click="event.preventDefault(); history.back();" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Go Back
             </a>
         </div>
@@ -187,6 +188,18 @@
             </div>
         </div>
     </div>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
 </body>
 
 </html>

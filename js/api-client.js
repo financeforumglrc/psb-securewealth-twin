@@ -6,12 +6,12 @@
 
 class DSFinancialAPI {
     constructor(config = {}) {
-        this.baseURL = config.baseURL || (typeof window !== 'undefined' && window.DS_API_BASE_URL) || 'http://localhost:5000/api/v1';
+        this.baseURL = config.baseURL || (typeof window !== 'undefined' && window.DS_API_BASE_URL) || '/api/v1';
         this.apiKey = config.apiKey || null;
         this.token = config.token || localStorage.getItem('ds_auth_token') || null;
         this.refreshToken = config.refreshToken || localStorage.getItem('ds_refresh_token') || null;
         this.timeout = config.timeout || 30000;
-        this.retries = config.retries || 3;
+        this.retries = config.retries ?? 3;
         this.patentsUsed = new Set();
         this.apiCalls = 0;
     }
@@ -33,7 +33,7 @@ class DSFinancialAPI {
         const config = {
             method: options.method || 'GET',
             headers,
-            signal: AbortSignal.timeout(this.timeout)
+            credentials: 'include'
         };
 
         if (options.body) {
@@ -41,28 +41,36 @@ class DSFinancialAPI {
         }
 
         let lastError;
+        let refreshed = false;
         for (let attempt = 1; attempt <= this.retries; attempt++) {
             try {
-                const response = await fetch(url, config);
-                const data = await response.json();
+                const response = await fetch(url, { ...config, signal: AbortSignal.timeout(this.timeout) });
+                const data = await response.json().catch(() => ({ error: 'The service returned an invalid response. Please try again.' }));
 
                 if (data.patent) this.patentsUsed.add(data.patent);
                 if (data.patents) data.patents.forEach(p => this.patentsUsed.add(p));
                 this.apiCalls++;
 
-                if (response.status === 401 && data.code === 'TOKEN_EXPIRED') {
-                    await this.refreshAccessToken();
-                    headers['Authorization'] = `Bearer ${this.token}`;
-                    continue;
+                if (response.status === 401 && data.code === 'TOKEN_EXPIRED' && endpoint !== '/auth/refresh' && !refreshed) {
+                    refreshed = true;
+                    if (await this.refreshAccessToken()) {
+                        headers['Authorization'] = `Bearer ${this.token}`;
+                        attempt--;
+                        continue;
+                    }
                 }
 
                 if (!response.ok) {
-                    throw new Error(data.error || `HTTP ${response.status}`);
+                    const error = new Error(typeof data.error === 'string' ? data.error : data.error?.message || `HTTP ${response.status}`);
+                    error.status = response.status;
+                    throw error;
                 }
 
                 return data;
             } catch (error) {
                 lastError = error;
+                // Retrying a mutation can create duplicate payments or records.
+                if (config.method !== 'GET' || (error.status && error.status < 500)) throw error;
                 if (attempt < this.retries) {
                     await new Promise(r => setTimeout(r, 1000 * attempt));
                 }

@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: ds-financial
+    runtime: node
+    region: singapore
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build && npm run check:tools
+    startCommand: node backend/server.js
+    healthCheckPath: /api/v1/ready
+    numInstances: 1
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: 24.18.0
+      - key: NODE_ENV
+        value: production
+      - key: SERVE_FRONTEND
+        value: "true"
+      - key: VITE_API_BASE_URL
+        value: /api/v1
+      - key: REQUIRE_POSTGRES
+        value: "true"
+      - key: DATABASE_PATH
+        value: /tmp/ds-financial.db
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_ID
+        value: owner
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: DEMO_MODE
+        value: "false"
+      - key: TRUST_PROXY
+        value: "1"

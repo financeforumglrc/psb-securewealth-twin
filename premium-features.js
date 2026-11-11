@@ -2,6 +2,13 @@
  * PREMIUM FEATURES - DS SMART TAX OPTIMIZER™
  * Copyright © 2026 DS Financial Solutions
  * Form 16 Parser, Capital Gains, Family Planning, Retirement, and more
+ *
+ * Intentionally global (used by smart-tax-optimizer.js tab system):
+ * generateForm16Tab, generateCapitalGainsTab, generateFamilyTaxTab,
+ * generateRetirementTab, generateAuditRiskTab, generateMultiYearTab,
+ * generateInvestmentCompareTab, generateRemindersTab,
+ * parseForm16, enableWhatsAppReminders, enableEmailReminders,
+ * enableBrowserNotifications, addCustomReminder
  */
 
 // ============= FORM 16 ANALYZER =============
@@ -32,10 +39,10 @@ window.generateForm16Tab = function() {
         </p>
         
         <div style="padding: 2rem; border: 2px dashed var(--optimizer-secondary); border-radius: 16px; text-align: center; margin-bottom: 2rem; cursor: pointer; transition: all 0.3s;" 
-             onclick="document.getElementById('form16Upload').click()"
+             data-click="uploadForm16"
              onmouseover="this.style.background='rgba(0, 217, 255, 0.1)'"
              onmouseout="this.style.background='transparent'">
-            <input type="file" id="form16Upload" accept=".pdf" style="display: none;" onchange="parseForm16(this)">
+            <input type="file" id="form16Upload" accept=".pdf" style="display: none;" data-change="parseForm16">
             <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--optimizer-secondary); margin-bottom: 1rem;"></i>
             <div style="color: white; font-weight: 700; margin-bottom: 0.5rem;">Upload Form 16 PDF</div>
             <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.875rem;">Click or drag & drop to upload</div>
@@ -749,15 +756,15 @@ window.generateRemindersTab = function() {
         </p>
         
         <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
-            <button onclick="enableWhatsAppReminders()" style="flex: 1; min-width: 200px; padding: 1rem 1.5rem; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+            <button data-click="enableWhatsAppReminders" style="flex: 1; min-width: 200px; padding: 1rem 1.5rem; background: linear-gradient(135deg, #25D366, #128C7E); border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
                 <i class="fab fa-whatsapp" style="font-size: 1.25rem;"></i>
                 Enable WhatsApp Alerts
             </button>
-            <button onclick="enableEmailReminders()" style="flex: 1; min-width: 200px; padding: 1rem 1.5rem; background: linear-gradient(135deg, #EA4335, #FBBC04); border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+            <button data-click="enableEmailReminders" style="flex: 1; min-width: 200px; padding: 1rem 1.5rem; background: linear-gradient(135deg, #EA4335, #FBBC04); border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
                 <i class="fas fa-envelope" style="font-size: 1.25rem;"></i>
                 Enable Email Alerts
             </button>
-            <button onclick="enableBrowserNotifications()" style="flex: 1; min-width: 200px; padding: 1rem 1.5rem; background: var(--gradient-neon); border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+            <button data-click="enableBrowserNotifications" style="flex: 1; min-width: 200px; padding: 1rem 1.5rem; background: var(--gradient-neon); border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
                 <i class="fas fa-bell" style="font-size: 1.25rem;"></i>
                 Enable Push Notifications
             </button>
@@ -811,7 +818,7 @@ window.generateRemindersTab = function() {
                     <label style="color: rgba(255, 255, 255, 0.6); font-size: 0.875rem; display: block; margin-bottom: 0.5rem;">Due Date</label>
                     <input type="date" style="width: 100%; padding: 0.75rem 1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white;">
                 </div>
-                <button onclick="addCustomReminder()" style="padding: 0.75rem 1.5rem; background: var(--gradient-neon); border: none; border-radius: 8px; color: white; font-weight: 700; cursor: pointer;">
+                <button data-click="addCustomReminder" style="padding: 0.75rem 1.5rem; background: var(--gradient-neon); border: none; border-radius: 8px; color: white; font-weight: 700; cursor: pointer;">
                     <i class="fas fa-plus"></i> Add
                 </button>
             </div>
@@ -843,6 +850,37 @@ function enableBrowserNotifications() {
 function addCustomReminder() {
     alert('Custom reminder added!\n\nYou will be notified via your preferred channels.\n\nThis is a demo feature.');
 }
+
+// ============= EVENT DELEGATION =============
+document.addEventListener('click', function(e) {
+    const action = e.target.closest('[data-click]')?.getAttribute('data-click');
+    if (!action) return;
+    e.preventDefault();
+    switch (action) {
+        case 'uploadForm16':
+            document.getElementById('form16Upload')?.click();
+            break;
+        case 'enableWhatsAppReminders':
+            enableWhatsAppReminders();
+            break;
+        case 'enableEmailReminders':
+            enableEmailReminders();
+            break;
+        case 'enableBrowserNotifications':
+            enableBrowserNotifications();
+            break;
+        case 'addCustomReminder':
+            addCustomReminder();
+            break;
+    }
+});
+
+document.addEventListener('change', function(e) {
+    const action = e.target.getAttribute('data-change');
+    if (action === 'parseForm16') {
+        parseForm16(e.target);
+    }
+});
 
 console.log('%c💎 PREMIUM FEATURES LOADED', 'color: #FFB800; font-size: 18px; font-weight: bold;');
 console.log('%c📊 Form 16 | Capital Gains | Family Tax | Retirement | Audit Risk | Multi-Year | Investments | Reminders', 'color: #00D9FF; font-size: 12px;');

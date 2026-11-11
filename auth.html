@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authentication | DS Financial</title>
+    <meta name="description" content="Login or register to access DS Financial's production-grade financial infrastructure platform.">
+    <meta name="theme-color" content="#0f172a">
     <link rel="stylesheet" href="design-system.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -214,6 +216,7 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
+<link rel="stylesheet" href="experience.css">
 </head>
 <body>
 
@@ -231,15 +234,15 @@
 
         <div class="auth-body">
             <div class="auth-tabs">
-                <div class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Login</div>
-                <div class="auth-tab" id="tabRegister" onclick="switchTab('register')">Register</div>
+                <div class="auth-tab active" id="tabLogin" data-click="switchTab('login')">Login</div>
+                <div class="auth-tab" id="tabRegister" data-click="switchTab('register')">Register</div>
             </div>
 
             <div class="alert alert-error" id="errorAlert"></div>
             <div class="alert alert-success" id="successAlert"></div>
 
             <!-- Login Form -->
-            <form id="loginForm" onsubmit="handleLogin(event)">
+            <form id="loginForm" data-submit="handleLogin(event)">
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
                     <div class="input-group">
@@ -260,7 +263,7 @@
             </form>
 
             <!-- Register Form -->
-            <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;">
+            <form id="registerForm" data-submit="handleRegister(event)" style="display: none;">
                 <div class="form-group">
                     <label class="form-label">Full Name</label>
                     <div class="input-group">
@@ -389,5 +392,17 @@
             }
         }
     </script>
+<script>
+(function(){
+  document.addEventListener("click",function(e){
+    var el=e.target.closest("[data-click]");
+    if(el){var c=el.getAttribute("data-click");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+  document.addEventListener("submit",function(e){
+    var el=e.target.closest("[data-submit]");
+    if(el){e.preventDefault();var c=el.getAttribute("data-submit");if(c)try{(new Function("event",c)).call(el,e)}catch(x){console.warn(x)}}
+  });
+})();
+</script>
 </body>
 </html>

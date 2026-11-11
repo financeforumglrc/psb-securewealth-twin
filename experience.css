@@ -1,0 +1,30 @@
+/* Shared usability rules; preserve each workspace's established palette. */
+:root { --ds-focus: #2563eb; --ds-anchor-offset: 100px; }
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: var(--ds-anchor-offset); -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-width: 320px; }
+img, video, canvas { max-width: 100%; }
+input, select, textarea, button { font: inherit; }
+input, select, textarea { min-width: 0; }
+button, [role="button"], [data-click] { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .6; }
+a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid var(--ds-focus); outline-offset: 3px; }
+[data-theme="dark"] { --ds-focus: #67e8f9; color-scheme: dark; }
+[id] { scroll-margin-top: var(--ds-anchor-offset); }
+.tool-panel, .inv-content, .main-content, .content-area, .form-group, .ctrl-group { min-width: 0; }
+.table-container, .table-responsive { max-width: 100%; overflow-x: auto; }
+dialog { max-width: calc(100vw - 32px); max-height: calc(100dvh - 32px); overflow: auto; }
+dialog::backdrop { background: rgb(15 23 42 / .65); }
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px; max-width: 100%; }
+  button, .btn, .nav-tab, .inv-tab, .cat-pill { min-height: 44px; }
+  .ctrl-row { flex-wrap: wrap; }
+  .ctrl-group { flex: 1 1 180px; }
+  .inv-tabs, .category-pills, .cat-pills { max-width: 100%; overflow-x: auto; }
+  .modal { max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
