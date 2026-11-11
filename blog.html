@@ -240,6 +240,28 @@
                 <a href="#" class="btn-read">Read More →</a>
             </div>
         </div>
+
+        <!-- Article 4 -->
+        <div class="blog-card" data-click="openArticle('gst-calendar')">
+            <div class="blog-img"><i class="fas fa-calendar-alt"></i></div>
+            <div class="blog-content">
+                <div><span class="tag">GST</span> <span class="read-time">4 min read</span></div>
+                <h3>GST Filing Calendar & Due Dates</h3>
+                <p>Every monthly and quarterly GSTR deadline you need to track — with links to our due-date tool.</p>
+                <a href="#" class="btn-read">Read More →</a>
+            </div>
+        </div>
+
+        <!-- Article 5 -->
+        <div class="blog-card" data-click="openArticle('capital-gains')">
+            <div class="blog-img"><i class="fas fa-chart-line"></i></div>
+            <div class="blog-content">
+                <div><span class="tag">Investments</span> <span class="read-time">5 min read</span></div>
+                <h3>Capital Gains Tax: A Simple Guide</h3>
+                <p>Short-term vs long-term, the FY 2025-26 rates, and the exemptions that can wipe out your tax.</p>
+                <a href="#" class="btn-read">Read More →</a>
+            </div>
+        </div>
     </div>
 
     <!-- Article Reader Modal -->
@@ -295,6 +317,59 @@
                 
                 <h2>3. Home Loan Interest</h2>
                 <p>Section 24(b) allows up to ₹2 Lakh deduction on interest paid on home loans for self-occupied property.</p>
+            `,
+            'gst-calendar': `
+                <h1>GST Filing Calendar & Due Dates</h1>
+                <p>Late GST filing attracts interest (0.5%/month) plus late fees. Here are the key monthly and quarterly deadlines every taxpayer must track.</p>
+                
+                <h2>Monthly Filers (Turnover over ₹5 Cr)</h2>
+                <ul>
+                    <li><strong>GSTR-1</strong> (Outward supplies): 11th of next month.</li>
+                    <li><strong>GSTR-3B</strong> (Summary return): 20th of next month.</li>
+                </ul>
+                
+                <h2>Quarterly Filers (QRMP scheme)</h2>
+                <ul>
+                    <li><strong>GSTR-1</strong>: 13th of the month after the quarter.</li>
+                    <li><strong>GSTR-3B</strong>: 22nd or 24th of the month after the quarter (varies by state).</li>
+                    <li><strong>GSTR-4</strong> (Composition): 30th of the month after the quarter.</li>
+                </ul>
+                
+                <h2>Annual Returns</h2>
+                <ul>
+                    <li><strong>GSTR-9</strong> (Annual return): 31st December of the next financial year.</li>
+                    <li><strong>GSTR-9C</strong> (Reconciliation): with GSTR-9 if turnover exceeds ₹5 Cr.</li>
+                </ul>
+                
+                <p>Use our <a href="gst-tools.html#panel-due-dates">GST Due Dates Tool</a> to see your personalized deadline calendar.</p>
+            `,
+            'capital-gains': `
+                <h1>Capital Gains Tax: A Simple Guide</h1>
+                <p>When you sell an asset for more than you bought it, the profit is a capital gain — and it is taxable. Here is how it works in India.</p>
+                
+                <h2>Short-Term vs Long-Term</h2>
+                <ul>
+                    <li><strong>Equity shares / mutual funds:</strong> &lt; 12 months = short-term (STCG); ≥ 12 months = long-term (LTCG).</li>
+                    <li><strong>Immovable property:</strong> &lt; 24 months = short-term; ≥ 24 months = long-term.</li>
+                    <li><strong>Debt funds / gold:</strong> &lt; 36 months = short-term; ≥ 36 months = long-term.</li>
+                </ul>
+                
+                <h2>Tax Rates (FY 2025-26)</h2>
+                <ul>
+                    <li><strong>STCG on equity:</strong> 20%.</li>
+                    <li><strong>LTCG on equity:</strong> 12.5% above ₹1.25 Lakh exemption.</li>
+                    <li><strong>Short-term (other):</strong> taxed at your slab rate.</li>
+                    <li><strong>Long-term (other):</strong> 12.5% without indexation.</li>
+                </ul>
+                
+                <h2>Key Exemptions</h2>
+                <ul>
+                    <li><strong>Section 54:</strong> Reinvest LTCG on property into a new house to save tax.</li>
+                    <li><strong>Section 54F:</strong> Reinvest in a house after selling other long-term assets.</li>
+                    <li><strong>Section 54EC:</strong> Invest in NHAI/REC bonds (up to ₹50 Lakh) to save LTCG.</li>
+                </ul>
+                
+                <p>Plan your sale using our <a href="tax-portal.html#panel-tds">Tax Calculator</a> before you exit a position.</p>
             `
         };
 
