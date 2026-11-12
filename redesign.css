@@ -36,7 +36,10 @@
 body {
   font-family: 'Inter', system-ui, sans-serif !important;
   color: #DDE2F5 !important;
-  background: #060B18 !important;
+  /* No !important on background: pages with their own explicit body
+     background (investment-tools light gradient, gst-black-mirror theme)
+     keep it; pages using var(--bg-dark) convert via the token. */
+  background: var(--bg-dark, #060B18);
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -52,8 +55,9 @@ h1, h2, h3, h4, h5, h6,
   color: #F8FAFC !important;
 }
 
-/* Deep-space canvas + ambient radial glows */
-body,
+/* Deep-space canvas + ambient radial glows.
+   Applied only to the dedicated .bg-animation layer (index.html) so pages
+   with their own explicit body background keep it. */
 .bg-animation {
   background:
     radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.10), transparent 60%),

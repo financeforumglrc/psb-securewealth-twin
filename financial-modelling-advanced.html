@@ -1709,6 +1709,7 @@
     </style>
 <link rel="stylesheet" href="experience.css">
 <link rel="stylesheet" href="modelling-workspace.css">
+
 </head>
 <body>
     <!-- Welcome Modal -->
@@ -9854,7 +9855,8 @@ ${ratioHtml ? `<div style="background:#0f1520;border:1px solid #374151;border-ra
         function printMemo() {
             const content = document.getElementById('memoBody').innerHTML;
             const w = window.open('', '_blank');
-            w.document.write(`<html><head><title>Investment Memo</title><style>body{font-family:Georgia,serif;line-height:1.7;max-width:720px;margin:40px auto;padding:0 20px;color:#1F2937;}h2{color:#2563EB;}h3{color:#2563EB;font-size:1rem;}</style></head><body>${content}\x3Cscript\x3E
+            w.document.write(`<html><head><title>Investment Memo</title><style>body{font-family:Georgia,serif;line-height:1.7;max-width:720px;margin:40px auto;padding:0 20px;color:#1F2937;}h2{color:#2563EB;}h3{color:#2563EB;font-size:1rem;}</style>
+</head><body>${content}\x3Cscript\x3E
 (function(){
   document.addEventListener("click",function(e){
     var el=e.target.closest("[data-click]");
