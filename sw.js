@@ -2,7 +2,7 @@
  * DS Financial — Service Worker
  * Advanced PWA with offline support, caching strategies, and background sync
  */
-const CACHE_VERSION = 'v3-tools-20261030';
+const CACHE_VERSION = 'v4-redesign-20261112';
 const STATIC_CACHE = `ds-financial-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `ds-financial-dynamic-${CACHE_VERSION}`;
 const API_CACHE = `ds-financial-api-${CACHE_VERSION}`;
@@ -90,7 +90,9 @@ function isStaticAsset(url) {
 // Network-first strategy for API calls
 async function networkFirst(request, cacheName) {
   try {
-    const response = await fetch(request);
+    // no-store: always fetch fresh from network (bypass browser HTTP cache) so
+    // deployments show immediately instead of serving stale HTML/CSS/JS.
+    const response = await fetch(request, { cache: 'no-store' });
     const cache = await caches.open(cacheName);
     if (response.ok) await cache.put(request, response.clone());
     return response;
