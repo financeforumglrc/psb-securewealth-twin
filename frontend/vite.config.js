@@ -55,7 +55,7 @@ function publicToolAssets() {
         this.emitFile({ type: 'asset', fileName: relative.replaceAll('\\', '/'), source: fs.readFileSync(path.join(siteRoot, relative)) });
       };
       for (const file of fs.readdirSync(siteRoot)) {
-        if (/\.(js|css)$/.test(file) || ['manifest.json', 'robots.txt', 'sitemap.xml'].includes(file)) emit(file);
+        if (/\.(js|css)$/.test(file) || ['manifest.json', 'robots.txt', 'sitemap.xml', 'og-image.png'].includes(file)) emit(file);
       }
       const walk = (directory) => {
         for (const entry of fs.readdirSync(path.join(siteRoot, directory), { withFileTypes: true })) {
