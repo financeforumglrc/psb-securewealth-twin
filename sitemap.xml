@@ -1,87 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/</loc>
-        <lastmod>2026-05-09</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
+        <loc>https://ds-financial.onrender.com/api-demo.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/index.html</loc>
-        <lastmod>2026-05-09</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
+        <loc>https://ds-financial.onrender.com/auth.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/smart-tax-optimizer.html</loc>
-        <lastmod>2026-05-09</lastmod>
+        <loc>https://ds-financial.onrender.com/blog.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/design-system-showcase.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/financial-modelling.html</loc>
+        <lastmod>2026-11-12</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/tax-portal.html</loc>
-        <lastmod>2026-05-09</lastmod>
+        <loc>https://ds-financial.onrender.com/financial-modelling-advanced.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/financial-modelling-v2.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/gallery.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/gst-black-mirror.html</loc>
+        <lastmod>2026-11-12</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/gst-black-mirror.html</loc>
-        <lastmod>2026-05-09</lastmod>
+        <loc>https://ds-financial.onrender.com/gst-tools.html</loc>
+        <lastmod>2026-11-12</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/gst-tools.html</loc>
-        <lastmod>2026-05-09</lastmod>
+        <loc>https://ds-financial.onrender.com/</loc>
+        <lastmod>2026-11-12</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>1</priority>
     </url>
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/investment-tools.html</loc>
-        <lastmod>2026-05-09</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/pdf-tools.html</loc>
-        <lastmod>2026-05-09</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/resume-builder.html</loc>
-        <lastmod>2026-05-09</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/invoice-generator.html</loc>
-        <lastmod>2026-05-09</lastmod>
+        <loc>https://ds-financial.onrender.com/index-new.html</loc>
+        <lastmod>2026-11-12</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/specialized-tools.html</loc>
-        <lastmod>2026-05-09</lastmod>
+        <loc>https://ds-financial.onrender.com/investment-tools.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/invoice-generator.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/offline.html</loc>
+        <lastmod>2026-11-12</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/tools-hub.html</loc>
-        <lastmod>2026-05-09</lastmod>
+        <loc>https://ds-financial.onrender.com/pdf-tools.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/pdf-tools-backup.html</loc>
+        <lastmod>2026-11-12</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/blog.html</loc>
-        <lastmod>2026-05-09</lastmod>
-        <changefreq>weekly</changefreq>
+        <loc>https://ds-financial.onrender.com/pdf-ultra.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://excel-lentminds.github.io/Tax-tools/privacy.html</loc>
-        <lastmod>2026-05-09</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
+        <loc>https://ds-financial.onrender.com/privacy.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/resume-builder.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/smart-tax-optimizer.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/specialized-tools.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ds-financial.onrender.com/tax-portal.html</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
     </url>
 </urlset>
